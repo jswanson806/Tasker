@@ -23,7 +23,8 @@ What data do you plan on using? How are you planning on collecting your data?
 In brief, outline your approach to creating your project (knowing that you may not know everything in advance and that these details might change later). Answer questions like the ones below, but feel free to add more information: 
 
 a.What does your database schema look like? 
-- (will use a database schema tool to visualize)
+- 
+    (will use a database schema tool to visualize)
     1. Users - basic profile information for those who will be posting jobs, reviews, and messages
     2. Workers - basic profile information for those who will be accepting jobs, reviews, and messages
     3. Messages - messages between users and workers
