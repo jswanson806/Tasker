@@ -115,21 +115,27 @@ VALUES
   (8, 'Average Performance', 'The worker did an average job. There were no major issues, but nothing exceptional either.', 3, 4, 8),
   (9, 'Not Recommended', 'I had a negative experience with this worker. I would not recommend their services.', 1, 12, 9);
 
+-- Fake conversation data
+INSERT INTO "conversations" ("id", "created_at")
+VALUES 
+  ('u1u2', '2023-06-03 10:00:00'),
+  ('u1u3', '2023-06-05 09:30:00');
+
 -- Fake message data
-INSERT INTO "messages" ("id", "body", "sent_by", "sent_to", "created_at")
+INSERT INTO "messages" ("id", "body", "conversation_id", "sent_by", "sent_to", "created_at")
 VALUES
-  (1, 'Hi, I''m interested in your job posting.', 2, 1, '2023-06-03 10:00:00'),
-  (2, 'Sure, I can help you with that.', 1, 2, '2023-06-03 11:00:00'),
-  (3, 'When do you need the job to be done?', 2, 1, '2023-06-04 15:30:00'),
-  (4, 'I can start the job next week. Is that fine?', 2, 1, '2023-06-04 16:00:00'),
-  (5, 'I have some previous experience in similar tasks.', 3, 1, '2023-06-05 09:30:00'),
-  (6, 'Can you provide the necessary tools for the job?', 3, 1, '2023-06-05 10:00:00'),
-  (7, 'Yes, I can provide the necessary tools.', 1, 3, '2023-06-05 10:30:00'),
-  (8, 'That is great! Thank you.', 1, 2, '2023-06-05 11:00:00'),
-  (9, 'By the way, do you have any specific preferences for the job?', 2, 1, '2023-06-05 12:30:00'),
-  (10, 'I prefer using eco-friendly cleaning products.', 1, 2, '2023-06-05 13:00:00'),
-  (11, 'Noted. I will make sure to use eco-friendly products.', 2, 1, '2023-06-05 14:30:00'),
-  (12, 'That sounds good. Looking forward to working with you!', 3, 1, '2023-06-05 15:00:00');
+  (1, 'Hi, I''m interested in your job posting.', 'u1u2', 2, 1, '2023-06-03 10:00:00'),
+  (2, 'Sure, I can help you with that.', 'u1u2', 1, 2, '2023-06-03 11:00:00'),
+  (3, 'When do you need the job to be done?', 'u1u2', 2, 1, '2023-06-04 15:30:00'),
+  (4, 'I can start the job next week. Is that fine?', 'u1u2', 2, 1, '2023-06-04 16:00:00'),
+  (5, 'I have some previous experience in similar tasks.', 'u1u3', 3, 1, '2023-06-05 09:30:00'),
+  (6, 'Can you provide the necessary tools for the job?', 'u1u3', 3, 1, '2023-06-05 10:00:00'),
+  (7, 'Yes, I can provide the necessary tools.', 'u1u3', 1, 3, '2023-06-05 10:30:00'),
+  (8, 'That is great! Thank you.', 'u1u2', 1, 2, '2023-06-05 11:00:00'),
+  (9, 'By the way, do you have any specific preferences for the job?', 'u1u2', 2, 1, '2023-06-05 12:30:00'),
+  (10, 'I prefer using eco-friendly cleaning products.', 'u1u2', 1, 2, '2023-06-05 13:00:00'),
+  (11, 'Noted. I will make sure to use eco-friendly products.', 'u1u2', 2, 1, '2023-06-05 14:30:00'),
+  (12, 'That sounds good. Looking forward to working with you!', 'u1u3', 3, 1, '2023-06-05 15:00:00');
 
 -- Fake application data
 INSERT INTO "applications" ("id", "applied_by", "applied_to")
