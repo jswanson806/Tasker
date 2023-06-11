@@ -8,6 +8,7 @@ const { BCRYPT_WORK_FACTOR } = require("../../config.js");
 const testJobIds = [];
 const testUserIds = [];
 const testConvoIds = [];
+const testMsgIds = [];
 
 //********************* Setup *********************
 
@@ -16,6 +17,8 @@ async function commonBeforeAll() {
     await db.query(`DELETE FROM users`);
     // remove all jobs
     await db.query(`DELETE FROM jobs`);
+    // remove all conversations
+    await db.query(`DELETE FROM conversations`);
     // remove all messages
     await db.query(`DELETE FROM messages`);
     // remove all applications
@@ -104,33 +107,31 @@ async function commonBeforeAll() {
         [testUserIds[0], testJobIds[0], testUserIds[1], testJobIds[1]]
     )
 
+    // insert into conversations
+    const convoResults = await db.query(
+        `INSERT INTO conversations(id, created_at)
+        VALUES ($1, '2023-06-01 09:00:00'),
+               ($2, '2023-06-03 10:00:00')
+        RETURNING id`,
+        [`u${testUserIds[0]}u${testUserIds[1]}`, `u${testUserIds[0]}u${testUserIds[2]}`]
+    )
+
+    // insert conversation ids into testConvoIds array
+    testConvoIds.splice(0, 0, ...convoResults.rows.map(r => r.id));
+
     // insert test messages
     const msgResults = await db.query(
-        `INSERT INTO messages(body, sent_by, sent_to, created_at)
-        VALUES ('m1body', $1, $2, '2023-06-01 09:00:00'),
-                ('m2body', $3, $4, '2023-06-01 09:05:00'),
-                ('m3body', $5, $6, '2023-06-02 10:00:00')
-        RETURNING sent_by, sent_to`,
-        [testUserIds[0], testUserIds[1], testUserIds[2], testUserIds[0], testUserIds[2], testUserIds[1]]
+        `INSERT INTO messages(body, conversation_id, sent_by, sent_to, created_at)
+        VALUES ('m1body', '${testConvoIds[0]}', $1, $2, '2023-06-01 09:00:00'),
+                ('m2body', '${testConvoIds[0]}', $3, $4, '2023-06-01 09:05:00'),
+                ('m3body', '${testConvoIds[0]}', $5, $6, '2023-06-02 10:00:00'),
+                ('m4body', '${testConvoIds[1]}', $7, $8, '2023-06-03 10:00:00')
+        RETURNING id`,
+        [testUserIds[0], testUserIds[1], testUserIds[1], testUserIds[0], testUserIds[0], testUserIds[1], testUserIds[0], testUserIds[2]]
     )
-
-
-    // insert concatenated sent_by + sent_to into the testConvoIds array
-    testConvoIds.splice(0, 0, ...Array.from(new Set(msgResults.rows.map(r => {
-        // conditional ensures order of concatenated values are in order from smallest to largest to avoid duplicate conversation references
-        if(r.sent_by > r.sent_to) return r.sent_to.toString() + r.sent_by.toString();
-        return r.sent_by.toString() + r.sent_to.toString();
-    })
-    )));
-
-    // insert into conversations
-    await db.query(
-        `INSERT INTO conversations(id)
-        VALUES ($1),
-                ($2)`,
-        [testConvoIds[0], testConvoIds[1]]
-    )
-
+    // insert message ids into testMsgIds array
+    testMsgIds.splice(0, 0, ...msgResults.rows.map(r => r.id));
+    
     // insert into reviews
     await db.query(
         `INSERT INTO reviews(title, body, stars, reviewed_by, reviewed_for)
@@ -174,5 +175,6 @@ async function commonAfterEach() {
     commonAfterAll,
     testJobIds,
     testUserIds,
-    testConvoIds
+    testConvoIds,
+    testMsgIds
   }
