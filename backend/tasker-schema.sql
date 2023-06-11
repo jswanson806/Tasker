@@ -32,16 +32,18 @@ CREATE TABLE reviews (
   reviewed_for INTEGER REFERENCES users (id) ON DELETE CASCADE
 );
 
+CREATE TABLE conversations (
+  id TEXT PRIMARY KEY,
+  created_at TIMESTAMP NOT NULL
+);
+
 CREATE TABLE messages (
   id SERIAL PRIMARY KEY,
   body VARCHAR NOT NULL,
+  conversation_id TEXT NOT NULL REFERENCES conversations (id) ON DELETE CASCADE,
   sent_by INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
   sent_to INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-  created_at TIMESTAMP
-);
-
-CREATE TABLE conversations (
-  id TEXT PRIMARY KEY
+  created_at TIMESTAMP NOT NULL
 );
 
 CREATE TABLE applications (
