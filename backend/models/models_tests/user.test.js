@@ -1,6 +1,5 @@
 "use strict";
 
-const db = require("../../db.js");
 const {
   NotFoundError,
   BadRequestError,
@@ -13,8 +12,7 @@ const {
   commonAfterEach,
   commonAfterAll,
   testJobIds,
-  testUserIds,
-  testConvoIds
+  testUserIds
 } = require("./common.js");
 
 beforeAll(commonBeforeAll);
