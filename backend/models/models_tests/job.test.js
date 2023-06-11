@@ -4,7 +4,6 @@ const {
   NotFoundError
 } = require("../../expressError.js");
 const Job = require("../job.js");
-const User = require("../user.js");
 const {
   commonBeforeAll,
   commonBeforeEach,
