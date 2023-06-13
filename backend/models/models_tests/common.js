@@ -9,6 +9,7 @@ const testJobIds = [];
 const testUserIds = [];
 const testConvoIds = [];
 const testMsgIds = [];
+const testPayoutIds = [];
 
 //********************* Setup *********************
 
@@ -24,7 +25,7 @@ async function commonBeforeAll() {
     // remove all applications
     await db.query(`DELETE FROM applications`);
     // remove all payouts
-    await db.query(`DELETE FROM payouts`)
+    await db.query(`DELETE FROM payouts`);
 
     // insert test users
     const userResults = await db.query(
@@ -143,13 +144,16 @@ async function commonBeforeAll() {
     )
 
     // insert into payouts
-    await db.query(
-        `INSERT INTO payouts(trans_by, trans_for, subtotal, tax, tip, total)
-        VALUES ($1, $2, 100.00, 3.00, 5.00, 108.00),
-               ($3, $4, 200.00, 6.00, 10.00, 216.00)`,
-               [testUserIds[0], testUserIds[1], testUserIds[2], testUserIds[1]]
+    const payoutResults = await db.query(
+        `INSERT INTO payouts (trans_to, trans_by, subtotal, tax, tip, total, created_at)
+        VALUES ($1, $2, 1000.00, 38.00, 35.00, 1074.00, '2023-04-30 10:00:00'),
+               ($3, $4, 900.00, 38.00, 35.00, 974.00, '2023-05-15 10:00:00'),
+               ($5, $6, 800.00, 38.00, 35.00, 874.00, '2023-05-31 10:00:00')`,
+        [testUserIds[0], testUserIds[1], testUserIds[0], testUserIds[1], testUserIds[0], testUserIds[1]]
     )
 
+    // insert payout ids into testPayoutIds array
+    testPayoutIds.splice(0, 0, ...payoutResults.rows.map(r => r.id));
 }
 
 // isolate changes made during tests to allow for rollback
@@ -176,5 +180,6 @@ async function commonAfterEach() {
     testJobIds,
     testUserIds,
     testConvoIds,
-    testMsgIds
+    testMsgIds,
+    testPayoutIds
   }
