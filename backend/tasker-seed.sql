@@ -152,7 +152,8 @@ VALUES
   (10, 8, 4);
 
 -- Fake payout data
-INSERT INTO "payouts" ("id", "trans_by", "trans_for", "subtotal", "tax", "tip", "total")
+INSERT INTO "payouts" ("id", "trans_to", "trans_by", "subtotal", "tax", "tip", "total", "created_at")
 VALUES
-  (1, 7, 3, 125, 10, 10, 145),
-  (2, 5, 6, 50, 3.75, 5, 58.75);
+  (1, 1, 3, 375.00, 30.00, 30.00, 435.00, '2023-05-15 10:00:00'),
+  (2, 5, 6, 375.00, 30.00, 30.00, 435.00, '2023-05-15 10:00:00'),
+  (3, 7, 3, 375.00, 30.00, 30.00, 435.00, '2023-05-31 10:00:00');
