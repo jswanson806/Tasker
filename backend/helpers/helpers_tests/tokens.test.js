@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
-const { SECRET_KEY } = require('../config.js');
-const { createToken } = require('./tokens.js');
+const { SECRET_KEY } = require('../../config.js');
+const { createToken } = require('../tokens.js');
 
 describe('createToken', function() {
     test('works: worker', function() {
