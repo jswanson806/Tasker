@@ -7,6 +7,8 @@ const authRoutes = require("./routes/auth");
 const usersRoutes = require("./routes/users");
 const jobsRoutes = require("./routes/jobs");
 const messagesRoutes = require("./routes/messages");
+const payoutsRoutes = require("./routes/payouts");
+const reviewsRoutes = require("./routes/reviews");
 
 const morgan = require("morgan");
 
@@ -20,6 +22,8 @@ app.use("/auth", authRoutes);
 app.use("/users", usersRoutes);
 app.use("/jobs", jobsRoutes);
 app.use("/messages", messagesRoutes);
+app.use("/payouts", payoutsRoutes);
+app.use("/reviews", reviewsRoutes);
 
 /** handle 404 errors; matches everything */
 app.use(function (req, res, next) {
