@@ -99,7 +99,6 @@ describe('find all users', function(){
     test('works', async function() {
         const result = await User.findAll();
         expect(result.length).toEqual(3);
-        console.log(result)
     })
 })
 
@@ -128,7 +127,6 @@ describe('retrieves a single user and maps applications to user object', functio
 
 describe('updates a user', function() {
     const data = {
-        email: 'updatedU1@email.com',
         first_name: 'updatedFn1',
         last_name: 'updatedLn1',
         phone: '1111111111',
@@ -136,13 +134,13 @@ describe('updates a user', function() {
     }
 
     test('works', async function() {
-        const result = await User.update('u1@email.com', data)
+        const result = await User.update(testUserIds[0], data)
         expect(result).toEqual({
-            email: 'u1@email.com',
-            first_name: 'updatedFn1',
-            last_name: 'updatedLn1',
+            email: "u1@email.com",
+            firstName: 'updatedFn1',
+            lastName: 'updatedLn1',
             phone: '1111111111',
-            is_worker: false
+            isWorker: false
         })
         // old password does not work after update
         try {
@@ -160,7 +158,7 @@ describe('updates a user', function() {
 
     test('error if user is not found', async function() {
         try{
-            await User.update('nope@email.com', data)
+            await User.update(testUserIds[4], data)
         } catch(err) {
             expect(err instanceof NotFoundError).toBeTruthy();
         }

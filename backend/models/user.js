@@ -7,6 +7,7 @@ const {
     BadRequestError,
     UnauthorizedError,
 } = require("../expressError.js");
+const {partialUpdate} = require("../helpers/partialSqlUpdate.js");
 
 const { BCRYPT_WORK_FACTOR } = require("../config.js");
 
@@ -166,32 +167,39 @@ class User {
      * Throws NotFoundError if user not found in db.
     */
 
-    static async update(email, data){
+    static async update(id, data){
+        const userRes = await db.query(
+            `SELECT id FROM users WHERE id = $1`,
+            [id]
+        )
+
+        const user = userRes.rows[0];
+
+        if(!user) throw new NotFoundError(`User not found with id: ${id}`)
+
         // hash new password with provided in data
         if(data.password){
             data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
         }
-        // deconstruct values from data
-        const { first_name, last_name, phone, password } = data;
+
+        // destructure columns to update and values to insert from helper function
+        const { setCols, setVals } = partialUpdate(data);
+
+        // build the query string from setCols and placeholder values
+        const queryString = 
+            `UPDATE users SET ${setCols}
+             WHERE id = ${id}
+             RETURNING email, first_name AS "firstName", last_name AS "lastName", phone, is_worker AS "isWorker"`
+
+        // query the database with the query string and array of values to insert
+        const result = await db.query(queryString, [...setVals]);
+
+        const updatedUser = result.rows[0];
+
+        // remove user password from data
+        delete updatedUser.password;
         
-        const result = await db.query(
-            `UPDATE users
-            SET first_name = $1,
-                last_name = $2,
-                phone = $3,
-                password = $4
-            WHERE email = $5
-            RETURNING email, password, first_name, last_name, phone, is_worker`,
-            [first_name, last_name, phone, password, email]
-        )
-        
-        const user = result.rows[0];
-        console.log(user);
-        // check if user is valid in db
-        if(!user) throw new NotFoundError(`User not found with email: ${email}`);
-        // remove the password from the user object before returning the user
-        delete user.password;
-        return user;
+        return updatedUser;
     }
 
     /** Remove a user from the database 
