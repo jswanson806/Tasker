@@ -127,7 +127,7 @@ class User {
      * 
      * Throws NotFoundError if user not found in db.
      */
-    static async get(email){
+    static async get(id){
         const result = await db.query(
             `SELECT id,
                     email,
@@ -136,15 +136,15 @@ class User {
                     phone,
                     is_worker AS "isWorker"
             FROM users
-            WHERE email = $1`,
-            [email]
+            WHERE id = $1`,
+            [id]
         );
 
         const user = result.rows[0];
 
         // if no such user, throw BadRequestError
         if(!user){
-            throw new NotFoundError(`User not found with email: ${email}`)
+            throw new NotFoundError(`User not found with id: ${id}`)
         }
 
         // get all jobs to which user has applied
@@ -208,18 +208,18 @@ class User {
      * 
      * Throws NotFoundError if user not found in db.
     */
-    static async remove(email){
+    static async remove(id){
         const result = await db.query(
             `DELETE
             FROM users
-            WHERE email = $1
-            RETURNING email`,
-            [email]
+            WHERE id = $1
+            RETURNING id`,
+            [id]
         )
-
+        
         const user = result.rows[0];
 
-        if(!user) throw new NotFoundError(`User not found with email: ${email}`);
+        if(!user) throw new NotFoundError(`User not found with id: ${id}`);
     }
 
     /** Insert application to job by user into applications table
