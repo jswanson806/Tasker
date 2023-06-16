@@ -2,6 +2,7 @@
 
 const db = require("../db.js");
 const { NotFoundError } = require("../expressError.js");
+const { partialUpdate } = require("../helpers/partialSqlUpdate.js");
 
 class Job {
     
@@ -84,39 +85,33 @@ class Job {
 
     //update
     static async update(id, data){
+        // check for job with id to exist first
+        const jobRes = await db.query(
+            `SELECT id FROM jobs WHERE id = $1`,
+            [id]
+        )
 
-        const setCols = []
-        const setVals = []
-        // starting index for SET placeholder values
-        let idx = 1;
+        const job = jobRes.rows[0];
 
-        // iterate over keys in data
-        for(let key of Object.keys(data)){
-            // push key and index to setCols with form 'key = $idx'
-            setCols.push(`${key} = $${idx}`)
-            // push values of data to setVals
-            setVals.push(data[key])
-            // increment idx after each loop
-            idx++;
-        }
-        // push the id to match in the WHERE statement into the setVals array
-        setVals.push(id)
-        
-        // build the query string from setCols and placeholder values, return the columns that were updated 
-        const queryString = 
-            `UPDATE jobs SET ${setCols.join(", ")}
-             WHERE id = $${idx}
-             RETURNING ${Object.keys(data).join(", ")}`
-        console.log(queryString)
-        // query the database with the query string and array of values to insert
-        const result = await db.query(queryString, setVals);
-        console.log(result)
-        const job = result.rows[0];
         if(!job){
             throw new NotFoundError(`No job found with id: ${id}`)
         }
-        console.log(job)
-        return job;
+
+        // destructure columns to update and values to insert from helper function
+        const { setCols, setVals } = partialUpdate(data);
+        
+        // build the query string from setCols and placeholder values
+        const queryString = 
+            `UPDATE jobs SET ${setCols}
+             WHERE id = ${id}
+             RETURNING title, body, status, address`
+
+        // query the database with the query string and array of values to insert
+        const result = await db.query(queryString, [...setVals]);
+
+        const updatedJob = result.rows[0];
+
+        return updatedJob;
     }
     
     //remove
