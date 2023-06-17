@@ -29,10 +29,10 @@ async function commonBeforeAll() {
 
     // insert test users
     const userResults = await db.query(
-        `INSERT INTO users(password, phone, first_name, last_name, email, is_worker)
-        VALUES ($1, '1231231234', 'fn1', 'ln1', 'u1@email.com', false),
-                ($2, '4324324321', 'fn2', 'ln2', 'u2@email.com', true),
-                ($3, '2342342345', 'fn3', 'ln3', 'u3@email.com', false)
+        `INSERT INTO users(password, phone, first_name, last_name, email, is_worker, is_admin)
+        VALUES ($1, '1231231234', 'fn1', 'ln1', 'u1@email.com', false, false),
+                ($2, '4324324321', 'fn2', 'ln2', 'u2@email.com', true, false),
+                ($3, '2342342345', 'fn3', 'ln3', 'u3@email.com', false, true)
         RETURNING id`,
         [
             await bcrypt.hash("password1", BCRYPT_WORK_FACTOR),

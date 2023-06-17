@@ -29,7 +29,8 @@ class User {
                     first_name AS "firstName",
                     last_name AS "lastName",
                     phone,
-                    is_worker AS "isWorker"
+                    is_worker AS "isWorker",
+                    is_admin AS "isAdmin"
             FROM users
             WHERE email = $1`,
             [email],
@@ -52,12 +53,12 @@ class User {
 
     /** Registers new user with data.
      * 
-     * Returns { id, email, firstName, lastName, phone, isWorker}
+     * Returns { id, email, firstName, lastName, phone, isWorker, isAdmin}
      * 
      * Throws BadRequestError if duplicate user is found
      */
 
-    static async register({email, phone, password, firstName, lastName, isWorker}) {
+    static async register({email, phone, password, firstName, lastName, isWorker, isAdmin}) {
         
         // check for duplicate user email
         const duplicateCheck = await db.query(
@@ -79,9 +80,9 @@ class User {
         // make insertion into database
         const result = await db.query(
             `INSERT INTO users
-            (email, password, first_name, last_name, phone, is_worker)
-            VALUES ($1, $2, $3, $4, $5, $6)
-            RETURNING email, first_name AS "firstName", last_name AS "lastName", phone, is_worker AS "isWorker"`, 
+            (email, password, first_name, last_name, phone, is_worker, is_admin)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            RETURNING email, first_name AS "firstName", last_name AS "lastName", phone, is_worker AS "isWorker", is_admin AS "isAdmin"`, 
             [
                 email,
                 hashedPassword,
@@ -89,6 +90,7 @@ class User {
                 lastName,
                 phone,
                 isWorker,
+                isAdmin,
             ],
         );
 
@@ -99,7 +101,7 @@ class User {
 
     /** Find all users.
    *
-   * Returns [{ id, email, first_name, last_name, phone, is_worker }, ...]
+   * Returns [{ id, email, firstName, lastName, phone, isWorker, isAdmin }, ...]
    **/
 
     static async findAll(){
@@ -109,7 +111,8 @@ class User {
                     first_name AS "firstName",
                     last_name AS "lastName",
                     phone,
-                    is_worker AS "isWorker"
+                    is_worker AS "isWorker",
+                    is_admin AS "isAdmin"
             FROM users
             ORDER by last_name`,
         );
@@ -122,7 +125,7 @@ class User {
      * 
      * Finds all applications made by this user.
      * 
-     * Returns {id, email, first_name, last_name, phone, is_worker, applications}
+     * Returns {id, email, firstName, lastName, phone, isWorker, isAdmin, applications}
      *  where applications is {id, applied_by, applied_to}
      * 
      * Throws NotFoundError if user not found in db.
@@ -134,7 +137,8 @@ class User {
                     first_name AS "firstName",
                     last_name AS "lastName",
                     phone,
-                    is_worker AS "isWorker"
+                    is_worker AS "isWorker",
+                    is_admin AS "isAdmin"
             FROM users
             WHERE id = $1`,
             [id]
@@ -189,7 +193,12 @@ class User {
         const queryString = 
             `UPDATE users SET ${setCols}
              WHERE id = ${id}
-             RETURNING email, first_name AS "firstName", last_name AS "lastName", phone, is_worker AS "isWorker"`
+             RETURNING email, 
+                       first_name AS "firstName", 
+                       last_name AS "lastName", 
+                       phone, 
+                       is_worker AS "isWorker",
+                       is_admin AS "isAdmin"`
 
         // query the database with the query string and array of values to insert
         const result = await db.query(queryString, [...setVals]);
