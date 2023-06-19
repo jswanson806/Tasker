@@ -16,8 +16,8 @@
                 "title",
                 "body",
                 "address",
-                "postedBy",
-                "beforeImageUrl"
+                "posted_by",
+                "before_image_url"
             ],
             "properties": {
                 "id": {
@@ -60,7 +60,7 @@
                         "444 j street"
                     ]
                 },
-                "postedBy": {
+                "posted_by": {
                     "type": "integer",
                     "default": 0,
                     "title": "The postedBy Schema",
@@ -68,7 +68,7 @@
                         1
                     ]
                 },
-                "startTime": {
+                "start_time": {
                     "type": "string",
                     "default": "",
                     "title": "The startTime Schema",
@@ -76,7 +76,7 @@
                         "2023-06-01 09:00:00"
                     ]
                 },
-                "endTime": {
+                "end_time": {
                     "type": "string",
                     "default": "",
                     "title": "The endTime Schema",
@@ -84,7 +84,7 @@
                         "2023-06-01 10:00:00"
                     ]
                 },
-                "assignedTo": {
+                "assigned_to": {
                     "type": "integer",
                     "default": 0,
                     "title": "The assignedTo Schema",
@@ -92,7 +92,7 @@
                         2
                     ]
                 },
-                "paymentDue": {
+                "payment_due": {
                     "type": "number",
                     "default": 0.0,
                     "title": "The paymentDue Schema",
@@ -100,7 +100,7 @@
                         100.25
                     ]
                 },
-                "beforeImageUrl": {
+                "before_image_url": {
                     "type": "string",
                     "default": "",
                     "title": "The beforeImageUrl Schema",
@@ -108,7 +108,7 @@
                         "http://before4.img"
                     ]
                 },
-                "afterImageUrl": {
+                "after_image_url": {
                     "type": "string",
                     "default": "",
                     "title": "The afterImageUrl Schema",
@@ -123,13 +123,13 @@
                 "body": "jb4",
                 "status": "posted",
                 "address": "444 j street",
-                "postedBy": 1,
-                "startTime": "2023-06-01 09:00:00",
-                "endTime": "2023-06-01 10:00:00",
-                "assignedTo": 2,
-                "paymentDue": 100.25,
-                "beforeImageUrl": "http://before4.img",
-                "afterImageUrl": "http://after4.img"
+                "posted_by": 1,
+                "start_time": "2023-06-01 09:00:00",
+                "end_time": "2023-06-01 10:00:00",
+                "assigned_to": 2,
+                "payment_due": 100.25,
+                "before_image_url": "http://before4.img",
+                "after_image_url": "http://after4.img"
             }]
         }
     },
@@ -140,13 +140,13 @@
             "body": "jb4",
             "status": "posted",
             "address": "444 j street",
-            "postedBy": 1,
-            "startTime": "2023-06-01 09:00:00",
-            "endTime": "2023-06-01 10:00:00",
-            "assignedTo": 2,
-            "paymentDue": 100.25,
-            "beforeImageUrl": "http://before4.img",
-            "afterImageUrl": "http://after4.img"
+            "posted_by": 1,
+            "start_time": "2023-06-01 09:00:00",
+            "end_time": "2023-06-01 10:00:00",
+            "assigned_to": 2,
+            "payment_due": 100.25,
+            "before_image_url": "http://before4.img",
+            "after_image_url": "http://after4.img"
         }
     }]
 }
