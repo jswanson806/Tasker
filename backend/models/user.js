@@ -16,7 +16,7 @@ const { BCRYPT_WORK_FACTOR } = require("../config.js");
 class User {
     /** Authenticate user with username, password.
    *
-   * Returns { id, first_name, last_name, email, phone, worker }
+   * Returns { id, firstName, lastName, email, phone, isWorker, isAdmin }
    *
    * Throws UnauthorizedError if user not found or wrong password.
    **/
@@ -82,7 +82,7 @@ class User {
             `INSERT INTO users
             (email, password, first_name, last_name, phone, is_worker, is_admin)
             VALUES ($1, $2, $3, $4, $5, $6, $7)
-            RETURNING email, first_name AS "firstName", last_name AS "lastName", phone, is_worker AS "isWorker", is_admin AS "isAdmin"`, 
+            RETURNING id, email, first_name AS "firstName", last_name AS "lastName", phone, is_worker AS "isWorker", is_admin AS "isAdmin"`, 
             [
                 email,
                 hashedPassword,

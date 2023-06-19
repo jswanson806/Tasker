@@ -1,5 +1,7 @@
 "use strict";
 
+process.env.NODE_ENV = "test";
+
 const {
   NotFoundError,
   BadRequestError,
@@ -79,7 +81,7 @@ describe('register new user', function() {
     test('works', async function() {
         const newUser = await User.register(newUserData);
 
-        expect(newUser).toEqual({
+        expect(newUser).toMatchObject({
             firstName: 'fn4',
             lastName: 'ln4',
             phone: '9999999999',
