@@ -111,7 +111,7 @@ class Job {
         const result = await db.query(queryString, [...setVals]);
 
         const updatedJob = result.rows[0];
-        console.log(updatedJob)
+
         return updatedJob;
     }
     
