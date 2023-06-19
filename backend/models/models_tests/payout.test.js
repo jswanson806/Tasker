@@ -1,5 +1,7 @@
 "use strict";
 
+process.env.NODE_ENV = "test";
+
 const { NotFoundError } = require("../../expressError.js");
 const Payout = require("../payout.js");
 const {
