@@ -7,6 +7,7 @@ const { createToken } = require("../../helpers/tokens.js");
 
 const testJobIds = [];
 const testUserIds = [];
+const testMessageIds = [];
 
 async function commonBeforeAll() {
 
@@ -15,6 +16,10 @@ async function commonBeforeAll() {
   await db.query("DELETE FROM jobs");
 
   await db.query("DELETE FROM applications");
+
+  await db.query("DELETE FROM conversations")
+
+  await db.query("DELETE FROM messages");
 
   /** Test Users */
   
@@ -80,6 +85,31 @@ async function commonBeforeAll() {
 
 
   await User.applyToJob(testUserIds[1], testJobIds[0]);
+
+  /** Test Messages */
+
+  testMessageIds[0] = (await Job.create(
+    { 
+        body: 'jb4',  
+        sent_to: testUserIds[0],
+        sent_by: testUserIds[1], 
+        created_at: '2023-06-01 09:00:00', 
+    })).id;
+  testMessageIds[1] = (await Job.create(
+    { 
+        body: 'jb4',  
+        sent_to: testUserIds[0],
+        sent_by: testUserIds[1], 
+        created_at: '2023-06-01 10:00:00', 
+    })).id;
+  testMessageIds[2] = (await Job.create(
+    { 
+        body: 'jb4',  
+        sent_to: testUserIds[0],
+        sent_by: testUserIds[1], 
+        created_at: '2023-06-01 11:00:00', 
+    })).id;
+
 }
 
 async function commonBeforeEach() {
@@ -107,6 +137,7 @@ module.exports = {
   commonAfterAll,
   testJobIds,
   testUserIds,
+  testMessageIds,
   u1Token,
   u2Token,
   adminToken,
