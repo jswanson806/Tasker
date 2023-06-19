@@ -2,8 +2,8 @@ const express = require('express');
 const router = new express.Router();
 const {ExpressError} = require('../expressError.js');
 const jsonschema = require("jsonschema");
-// const jobUpdateSchema = require("../schemas/jobUpdateSchema.json");
-// const jobSchema = require("../schemas/jobSchema.json");
+const jobUpdateSchema = require("../schemas/jobUpdateSchema.json");
+const jobSchema = require("../schemas/jobSchema.json");
 const Job = require("../models/job.js");
 
 /** GET route for all jobs
@@ -41,12 +41,12 @@ router.get("/:id", async function(req, res, next) {
  */
 router.post("/create", async function(req, res, next) {
     try {
-        // const result = jsonschema.validate(req.body, jobSchema);
-        // if(!result.valid){
-        //     const errorList = result.errors.map(err => err.stack);
-        //     const error = new ExpressError(errorList, 404);
-        //     return next(error);
-        // }
+        const result = jsonschema.validate(req.body, jobSchema);
+        if(!result.valid){
+            const errorList = result.errors.map(err => err.stack);
+            const error = new ExpressError(errorList, 404);
+            return next(error);
+        }
 
         const { job } = req.body;
 
@@ -68,12 +68,12 @@ router.post("/create", async function(req, res, next) {
 
 router.patch("/update/:id", async function(req, res, next) {
     try{
-        // const result = jsonschema.validate(req.body, jobUpdateSchema);
-        // if(!result.valid) {
-        //     const errorList = result.errors.map(err => err.stack);
-        //     const error = new ExpressError(errorList, 404);
-        //     return next(error);
-        // }
+        const result = jsonschema.validate(req.body, jobUpdateSchema);
+        if(!result.valid) {
+            const errorList = result.errors.map(err => err.stack);
+            const error = new ExpressError(errorList, 404);
+            return next(error);
+        }
         const { job } = req.body;
 
 
