@@ -1,16 +1,19 @@
+
+process.env.NODE_ENV = "test";
+
 const jwt = require("jsonwebtoken");
 const { UnauthorizedError } = require("../../expressError.js");
 const {
     authenticateJWT,
     ensureLoggedIn,
     ensureWorker,
-    ensureCorrectUser
+    ensureCorrectUserOrAdmin
 } = require("../auth.js");
 
 const { SECRET_KEY } = require("../../config.js");
 
-const testJwt = jwt.sign({email: "test@email.com", isWorker: false}, SECRET_KEY);
-const badTestJwt = jwt.sign({email: "test@email.com", isWorker: false}, "nope");
+const testJwt = jwt.sign({email: "test@email.com", isWorker: false, isAdmin: true}, SECRET_KEY);
+const badTestJwt = jwt.sign({email: "test@email.com", isWorker: false, isAdmin: false}, "nope");
 
 describe('authenticateJWT', function() {
     test('works', function() {
@@ -25,7 +28,8 @@ describe('authenticateJWT', function() {
             user: {
                 iat: expect.any(Number),
                 email: "test@email.com",
-                isWorker: false
+                isWorker: false,
+                isAdmin: true
             }
         })
     })
@@ -110,14 +114,24 @@ describe('ensureWorker', function() {
 
 describe('ensureCorrectUser', function() {
 
-    test('works', function() {
+    test('works: username matches', function() {
         expect.assertions(1);
         const req = { headers: {authorization: `Bearer ${testJwt}`}};
-        const res = { locals: {user: {email: 'test@email.com', isWorker: false}}};
+        const res = { locals: {user: {email: 'test@email.com', isWorker: false, isAdmin: false}}};
         const next = function(err) {
             expect(err instanceof UnauthorizedError).toBeFalsy();
         }
-        ensureCorrectUser(req, res, next);
+        ensureCorrectUserOrAdmin(req, res, next);
+    })
+
+    test('works: admin is authorized', function() {
+        expect.assertions(1);
+        const req = { params: {email: 'test@email.com'}};
+        const res = { locals: {user: {email: 'test1@email.com', isWorker: false, isAdmin: true}}};
+        const next = function(err) {
+            expect(err instanceof UnauthorizedError).toBeFalsy();
+        }
+        ensureCorrectUserOrAdmin(req, res, next);
     })
 
     test('works: unauthorized', function() {
@@ -127,7 +141,7 @@ describe('ensureCorrectUser', function() {
         const next = function(err) {
             expect(err instanceof UnauthorizedError).toBeTruthy();
         }
-        ensureCorrectUser(req, res, next);
+        ensureCorrectUserOrAdmin(req, res, next);
     })
 
     test('works: no user', function() {
@@ -137,7 +151,7 @@ describe('ensureCorrectUser', function() {
         const next = function(err) {
             expect(err instanceof UnauthorizedError).toBeTruthy();
         }
-        ensureCorrectUser(req, res, next);
+        ensureCorrectUserOrAdmin(req, res, next);
     })
     
 
