@@ -1,0 +1,106 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "The User Schema",
+    "required": [
+        "user"
+    ],
+    "properties": {
+        "user": {
+            "type": "object",
+            "default": {},
+            "title": "The user Schema",
+            "required": [
+                "email",
+                "password",
+                "firstName",
+                "lastName",
+                "isWorker",
+                "isAdmin",
+                "phone"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "default": "",
+                    "format": "email",
+                    "title": "The email Schema",
+                    "examples": [
+                        "u4@email.com"
+                    ]
+                },
+                "password": {
+                    "type": "string",
+                    "default": "",
+                    "pattern": "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-_]).{8,}$",
+                    "title": "The password Schema",
+                    "examples": [
+                        "password"
+                    ]
+                },
+                "firstName": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The firstName Schema",
+                    "examples": [
+                        "fn4"
+                    ]
+                },
+                "lastName": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The lastName Schema",
+                    "examples": [
+                        "ln4"
+                    ]
+                },
+                "isWorker": {
+                    "type": "boolean",
+                    "default": false,
+                    "title": "The isWorker Schema",
+                    "examples": [
+                        false
+                    ]
+                },
+                "isAdmin": {
+                    "type": "boolean",
+                    "default": false,
+                    "title": "The isAdmin Schema",
+                    "examples": [
+                        false
+                    ]
+                },
+                "phone": {
+                    "type": "string",
+                    "default": "",
+                    "pattern": "^(\\([0-9]{3}\\))?[0-9]{3}-[0-9]{4}$",
+                    "title": "The phone Schema",
+                    "examples": [
+                        "(999)999-9999",
+                        "999-9999"
+                    ]
+                }
+            },
+            "examples": [{
+                "email": "u4@email.com",
+                "password": "password",
+                "firstName": "fn4",
+                "lastName": "ln4",
+                "isWorker": false,
+                "phone": "(999)999-9999"
+            }]
+        }
+    },
+    "examples": [{
+        "user": {
+            "email": "u4@email.com",
+            "password": "password",
+            "firstName": "fn4",
+            "lastName": "ln4",
+            "isWorker": false,
+            "phone": "(999)999-9999"
+        }
+    }]
+}
