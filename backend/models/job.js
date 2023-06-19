@@ -41,8 +41,8 @@ class Job {
                     TO_CHAR(start_time, 'MM/DD/YYYY HH:MI AM') AS "startTime", 
                     TO_CHAR(end_time, 'MM/DD/YYYY HH:MI AM') AS "endTime", 
                     payment_due AS "paymentDue", 
-                    before_image_url AS "beforeImage", 
-                    after_image_url AS "afterImage"
+                    before_image_url AS "beforeImageUrl", 
+                    after_image_url AS "afterImageUrl"
             FROM jobs
             WHERE id = $1`,
             [id]
@@ -69,12 +69,13 @@ class Job {
                 posted_by, 
                 before_image_url)
             VALUES ($1, $2, 'posted', $3, $4, $5)
-            RETURNING title, 
+            RETURNING id,
+                      title, 
                       body, 
                       status, 
                       address, 
                       posted_by AS "postedBy", 
-                      before_image_url AS "beforeImage"`,
+                      before_image_url AS "beforeImageUrl"`,
             [title, body, address, posted_by, before_image_url]
         )
 
@@ -110,7 +111,7 @@ class Job {
         const result = await db.query(queryString, [...setVals]);
 
         const updatedJob = result.rows[0];
-
+        console.log(updatedJob)
         return updatedJob;
     }
     
