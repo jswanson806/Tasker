@@ -18,7 +18,7 @@ class Message {
         let convoId = this.generateConvoId(userId1, userId2)
 
         const result = await db.query(
-            `SELECT m.body, TO_CHAR(m.created_at, 'MM/DD/YYYY HH:MI AM')
+            `SELECT m.body, m.created_at
             FROM messages AS m
             JOIN conversations AS c ON m.conversation_id = c.id
             WHERE c.id = $1
@@ -29,7 +29,7 @@ class Message {
         const messages = result.rows;
 
         if(messages.length === 0){ // throws error if no conversation exists between these users
-            throw new NotFoundError(`No messages found with between users: ${userId1} and ${userId2}`)
+            throw new NotFoundError(`No messages found between users: ${userId1} and ${userId2}`)
         }
 
         return messages;
