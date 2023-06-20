@@ -3,6 +3,7 @@
 const db = require("../../db.js");
 const User = require("../../models/user.js");
 const Job = require("../../models/job.js");
+const Message = require("../../models/message.js")
 const { createToken } = require("../../helpers/tokens.js");
 
 const testJobIds = [];
@@ -88,26 +89,23 @@ async function commonBeforeAll() {
 
   /** Test Messages */
 
-  testMessageIds[0] = (await Job.create(
+  testMessageIds[0] = (await Message.create(
     { 
         body: 'jb4',  
         sent_to: testUserIds[0],
-        sent_by: testUserIds[1], 
-        created_at: '2023-06-01 09:00:00', 
+        sent_by: testUserIds[1]
     })).id;
-  testMessageIds[1] = (await Job.create(
+  testMessageIds[1] = (await Message.create(
     { 
-        body: 'jb4',  
+        body: 'jb5',  
         sent_to: testUserIds[0],
-        sent_by: testUserIds[1], 
-        created_at: '2023-06-01 10:00:00', 
+        sent_by: testUserIds[1]
     })).id;
-  testMessageIds[2] = (await Job.create(
+  testMessageIds[2] = (await Message.create(
     { 
-        body: 'jb4',  
+        body: 'jb6',  
         sent_to: testUserIds[0],
-        sent_by: testUserIds[1], 
-        created_at: '2023-06-01 11:00:00', 
+        sent_by: testUserIds[1] 
     })).id;
 
 }
