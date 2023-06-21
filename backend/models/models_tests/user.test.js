@@ -108,7 +108,7 @@ describe('find all users', function(){
     })
 })
 
-describe('retrieves a single user and maps applications to user object', function() {
+describe('retrieves a single user, with applications and avg review star rating', function() {
     test('works', async function() {
         const result = await User.get(testUserIds[0]);
         expect(result).toEqual({
@@ -119,7 +119,8 @@ describe('retrieves a single user and maps applications to user object', functio
             email: 'u1@email.com',
             isWorker: false,
             isAdmin: false,
-            applications: [testJobIds[0]]
+            applications: [testJobIds[0]],
+            avgRating: 3
         })
     })
 
@@ -185,7 +186,8 @@ describe('removes a user', function() {
             email: 'u1@email.com',
             isWorker: false,
             isAdmin: false,
-            applications: [testJobIds[0]]
+            applications: [testJobIds[0]],
+            avgRating: 3
         })
 
         // remove the same user that was just queried
