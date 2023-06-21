@@ -1,0 +1,92 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "review"
+    ],
+    "properties": {
+        "review": {
+            "type": "object",
+            "default": {},
+            "title": "The review Schema",
+            "required": [
+                "title",
+                "body",
+                "stars",
+                "reviewed_by",
+                "reviewed_for"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The id Schema",
+                    "examples": [
+                        1
+                    ]
+                },
+                "title": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The title Schema",
+                    "examples": [
+                        "Great Work"
+                    ]
+                },
+                "body": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The body Schema",
+                    "examples": [
+                        "body of review"
+                    ]
+                },
+                "stars": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The stars Schema",
+                    "examples": [
+                        2
+                    ]
+                },
+                "reviewed_by": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The reviewed_by Schema",
+                    "examples": [
+                        1
+                    ]
+                },
+                "reviewed_for": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The reviewed_for Schema",
+                    "examples": [
+                        2
+                    ]
+                }
+            },
+            "examples": [{
+                "id": 1,
+                "title": "Great Work",
+                "body": "body of review",
+                "stars": 2,
+                "reviewed_by": 1,
+                "reviewed_for": 2
+            }]
+        }
+    },
+    "examples": [{
+        "review": {
+            "id": 1,
+            "title": "Great Work",
+            "body": "body of review",
+            "stars": 2,
+            "reviewed_by": 1,
+            "reviewed_for": 2
+        }
+    }]
+}
