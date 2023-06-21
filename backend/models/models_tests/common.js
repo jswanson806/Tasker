@@ -9,6 +9,7 @@ const testJobIds = [];
 const testUserIds = [];
 const testConvoIds = [];
 const testMsgIds = [];
+const testReviewIds = [];
 const testPayoutIds = [];
 
 //********************* Setup *********************
@@ -24,6 +25,8 @@ async function commonBeforeAll() {
     await db.query(`DELETE FROM messages`);
     // remove all applications
     await db.query(`DELETE FROM applications`);
+    // remove all reviews
+    await db.query(`DELETE FROM reviews`);
     // remove all payouts
     await db.query(`DELETE FROM payouts`);
 
@@ -134,14 +137,17 @@ async function commonBeforeAll() {
     testMsgIds.splice(0, 0, ...msgResults.rows.map(r => r.id));
     
     // insert into reviews
-    await db.query(
+    const reviewRes = await db.query(
         `INSERT INTO reviews(title, body, stars, reviewed_by, reviewed_for)
         VALUES ('rt1', 'rb1', 1, $1, $2),
                 ('rt2', 'rb2', 2, $3, $4),
                 ('rt3', 'rb3', 3, $5, $6),
-                ('rt4', 'rb4', 4, $7, $8)`,
+                ('rt4', 'rb4', 4, $7, $8)
+        RETURNING id`,
                 [testUserIds[0], testUserIds[1], testUserIds[2], testUserIds[1], testUserIds[1], testUserIds[0], testUserIds[1], testUserIds[2]]
     )
+
+    testReviewIds.splice(0, 0, ...reviewRes.rows.map(r => r.id));
 
     // insert into payouts
     const payoutResults = await db.query(
@@ -181,5 +187,6 @@ async function commonAfterEach() {
     testUserIds,
     testConvoIds,
     testMsgIds,
+    testReviewIds,
     testPayoutIds
   }
