@@ -82,13 +82,16 @@ describe('POST create a new message', () => {
             sent_to: testUserIds[1]
         }}  
         
-        try {
         const result = await request(app)
             .post(`/messages/create`)
             .send(message)
-        } catch(err) {
-            expect(err instanceof ExpressError).toBeTruthy();
-        }
+
+        expect(result.body).toEqual({
+            error: {
+              message: [ 'instance.message requires property "body"' ],
+              status: 500
+            }
+          })
 
     })
 })
