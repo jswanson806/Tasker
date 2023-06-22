@@ -10,7 +10,8 @@ const {
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
-  testUserIds
+  testUserIds,
+  testReviewIds
 } = require("./common.js");
 
 beforeAll(commonBeforeAll);
@@ -32,6 +33,24 @@ describe('finds all reviews made FOR a user', function() {
 
         const result3 = await Review.getForUser(testUserIds[2]);
         expect(result3.length).toBe(1);
+    })
+
+    test('works: returns correct data', async function() {
+        const result = await Review.getForUser(testUserIds[1]);
+        expect(result).toEqual([
+            { 
+                id: testReviewIds[1], 
+                title: 'rt2', 
+                body: 'rb2', 
+                stars: 2 
+            },
+            { 
+                id: testReviewIds[0], 
+                title: 'rt1', 
+                body: 'rb1', 
+                stars: 1 
+            }
+        ]);
     })
 
     test('error if invalid user id', async function() {

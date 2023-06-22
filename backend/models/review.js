@@ -73,7 +73,7 @@ class Review {
         const result = await db.query(
             `INSERT INTO reviews(title, body, stars, reviewed_by, reviewed_for)
             VALUES($1, $2, $3, $4, $5)
-            RETURNING title, body, stars, reviewed_by, reviewed_for`,
+            RETURNING id, title, body, stars, reviewed_by, reviewed_for`,
             [title, body, stars, reviewed_by, reviewed_for]
         )
         
