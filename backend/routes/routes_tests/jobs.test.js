@@ -225,6 +225,27 @@ describe("POST /create", () => {
             }
         ]})
     })
+
+    test("error if invalid schema", async () => {
+        // missing title property
+        const newJob = { 
+            body: 'jb7',
+            address: '777 j street',
+            posted_by: testUserIds[0],
+            before_image_url: 'http://before7.img'
+        }
+
+        const resp = await request(app)
+            .post(`/jobs/create`)
+            .send({job: newJob})
+        
+            expect(resp.body).toEqual({
+                error: {
+                    message: [ 'instance.job requires property "title"' ],
+                    status: 500
+                  }
+            })
+    })
 })
 
 describe("PATCH /update", () => {
@@ -282,6 +303,27 @@ describe("PATCH /update", () => {
                 "beforeImageUrl": 'http://before4.img',
                 "afterImageUrl": null
             }})
+    })
+
+    test("error if invalid schema", async () => {
+
+        const newJob = { 
+            body: 'jb7',
+            address: '777 j street',
+            posted_by: testUserIds[0],
+            before_image_url: 'http://before7.img'
+        }
+
+        const resp = await request(app)
+            .post(`/jobs/create`)
+            .send({newJob}) // missing 'job'
+        
+            expect(resp.body).toEqual({
+                error: {
+                    message: [ 'instance requires property "job"' ],
+                    status: 500
+                  }
+            })
     })
 })
 
