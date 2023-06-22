@@ -5,9 +5,11 @@ const User = require("../../models/user.js");
 const Job = require("../../models/job.js");
 const Message = require("../../models/message.js")
 const { createToken } = require("../../helpers/tokens.js");
+const Review = require("../../models/review.js");
 
 const testJobIds = [];
 const testUserIds = [];
+const testReviewIds = [];
 const testMessageIds = [];
 
 async function commonBeforeAll() {
@@ -19,6 +21,8 @@ async function commonBeforeAll() {
   await db.query("DELETE FROM applications");
 
   await db.query("DELETE FROM conversations")
+
+  await db.query("DELETE FROM reviews");
 
   await db.query("DELETE FROM messages");
 
@@ -108,6 +112,36 @@ async function commonBeforeAll() {
         sent_by: testUserIds[1] 
     })).id;
 
+
+
+/** Test Reviews */
+testReviewIds[0] = (await Review.create(
+  { 
+    title: 'rt1', 
+    body: 'rb1', 
+    stars: 1,
+    reviewed_by: testUserIds[0],
+    reviewed_for: testUserIds[1] 
+  })).id;
+  
+  testReviewIds[1] = (await Review.create(
+  { 
+    title: 'rt2', 
+    body: 'rb2', 
+    stars: 2,
+    reviewed_by: testUserIds[0],
+    reviewed_for: testUserIds[1] 
+  })).id;
+  
+  testReviewIds[2] = (await Review.create(
+    { 
+      title: 'rt3', 
+      body: 'rb3', 
+      stars: 3,
+      reviewed_by: testUserIds[0],
+      reviewed_for: testUserIds[1] 
+    })).id;
+
 }
 
 async function commonBeforeEach() {
@@ -136,6 +170,7 @@ module.exports = {
   testJobIds,
   testUserIds,
   testMessageIds,
+  testReviewIds,
   u1Token,
   u2Token,
   adminToken,
