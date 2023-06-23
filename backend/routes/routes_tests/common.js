@@ -4,13 +4,16 @@ const db = require("../../db.js");
 const User = require("../../models/user.js");
 const Job = require("../../models/job.js");
 const Message = require("../../models/message.js")
-const { createToken } = require("../../helpers/tokens.js");
 const Review = require("../../models/review.js");
+const Payout = require("../../models/payout.js");
+
+const { createToken } = require("../../helpers/tokens.js");
 
 const testJobIds = [];
 const testUserIds = [];
 const testReviewIds = [];
 const testMessageIds = [];
+const testPayoutIds = [];
 
 async function commonBeforeAll() {
 
@@ -25,6 +28,8 @@ async function commonBeforeAll() {
   await db.query("DELETE FROM reviews");
 
   await db.query("DELETE FROM messages");
+
+  await db.query("DELETE FROM payouts");
 
   /** Test Users */
   
@@ -142,6 +147,39 @@ testReviewIds[0] = (await Review.create(
       reviewed_for: testUserIds[1] 
     })).id;
 
+
+
+  /** Test Payouts */
+  testPayoutIds[0] = (await Payout.create(
+    {
+      trans_to: testUserIds[0],
+      trans_by: testUserIds[1],
+      subtotal: 50.00,
+      tax: 2.00,
+      tip: 5.00,
+      total: 57.00
+  })).id;
+
+  testPayoutIds[1] = (await Payout.create(
+    {
+      trans_to: testUserIds[0],
+      trans_by: testUserIds[1],
+      subtotal: 60.00,
+      tax: 3.00,
+      tip: 6.00,
+      total: 69.00
+  })).id;
+
+  testPayoutIds[2] = (await Payout.create(
+    {
+      trans_to: testUserIds[0],
+      trans_by: testUserIds[1],
+      subtotal: 40.00,
+      tax: 1.00,
+      tip: 4.00,
+      total: 45.00
+  })).id;
+
 }
 
 async function commonBeforeEach() {
@@ -171,6 +209,7 @@ module.exports = {
   testUserIds,
   testMessageIds,
   testReviewIds,
+  testPayoutIds,
   u1Token,
   u2Token,
   adminToken,
