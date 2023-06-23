@@ -121,7 +121,7 @@ class Payout {
         const result = await db.query(
             `INSERT INTO payouts(trans_to, trans_by, subtotal, tax, tip, total, created_at)
             VALUES($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP)
-            RETURNING trans_to, trans_by, subtotal, tax, tip, total, created_at`,
+            RETURNING id, trans_to, trans_by, subtotal, tax, tip, total, created_at`,
             [trans_to, trans_by, subtotal, tax, tip, total]
         )
 
