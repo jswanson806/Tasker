@@ -12,7 +12,6 @@ const {
     testUserIds,
     testReviewIds,
 } = require("./common.js");
-const { ExpressError } = require("../../expressError.js");
 
 beforeAll(commonBeforeAll);
 beforeEach(commonBeforeEach);

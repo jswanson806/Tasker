@@ -30,14 +30,15 @@ router.get("/conversation/:u1_id/:u2_id", async function(req, res, next) {
  * Returns {Message: 'Message Sent'}
  */
 router.post("/create", async function(req, res, next) {
-    try {
+    
         const result = jsonschema.validate(req.body, messageSchema);
         if(!result.valid){
             const errorList = result.errors.map(err => err.stack);
             const error = new ExpressError(errorList, 404);
             return next(error);
         }
-
+        
+    try {
         const { message } = req.body;
         const messageRes = await Message.create(message)
 

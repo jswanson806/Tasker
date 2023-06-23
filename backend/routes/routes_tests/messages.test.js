@@ -9,10 +9,8 @@ const {
     commonBeforeEach,
     commonAfterEach,
     commonAfterAll,
-    testUserIds,
-    testMessageIds
+    testUserIds
 } = require("./common.js");
-const { NotFoundError, ExpressError } = require("../../expressError.js");
 
 beforeAll(commonBeforeAll);
 beforeEach(commonBeforeEach);

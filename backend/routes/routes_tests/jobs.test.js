@@ -12,7 +12,6 @@ const {
     testJobIds,
     testUserIds
 } = require("./common.js");
-const { NotFoundError } = require("../../expressError.js");
 
 beforeAll(commonBeforeAll);
 beforeEach(commonBeforeEach);

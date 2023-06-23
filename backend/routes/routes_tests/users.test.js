@@ -11,8 +11,6 @@ const {
     commonAfterAll,
     testJobIds,
     testUserIds,
-    u1Token,
-    u2Token,
     adminToken
 } = require("./common.js");
 
