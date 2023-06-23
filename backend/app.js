@@ -8,7 +8,7 @@ const usersRoutes = require("./routes/users.js");
 const jobsRoutes = require("./routes/jobs.js");
 const messagesRoutes = require("./routes/messages.js");
 
-// const payoutsRoutes = require("./routes/payouts");
+const payoutsRoutes = require("./routes/payouts");
 const reviewsRoutes = require("./routes/reviews");
 
 const morgan = require("morgan");
@@ -23,7 +23,7 @@ app.use(morgan("tiny"));
 app.use("/users", usersRoutes);
 app.use("/jobs", jobsRoutes);
 app.use("/messages", messagesRoutes);
-// app.use("/payouts", payoutsRoutes);
+app.use("/payouts", payoutsRoutes);
 app.use("/reviews", reviewsRoutes);
 
 /** handle 404 errors; matches everything */
