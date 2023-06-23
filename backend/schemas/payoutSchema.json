@@ -1,0 +1,103 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "payout"
+    ],
+    "properties": {
+        "payout": {
+            "type": "object",
+            "default": {},
+            "title": "The payout Schema",
+            "required": [
+                "trans_to",
+                "trans_by",
+                "subtotal",
+                "tax",
+                "tip",
+                "total"
+            ],
+            "properties": {
+                "trans_to": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The trans_to Schema",
+                    "examples": [
+                        0
+                    ]
+                },
+                "trans_by": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The trans_by Schema",
+                    "examples": [
+                        1
+                    ]
+                },
+                "subtotal": {
+                    "type": "number",
+                    "default": 0.0,
+                    "title": "The subtotal Schema",
+                    "examples": [
+                        50.00
+                    ]
+                },
+                "tax": {
+                    "type": "number",
+                    "default": 0.0,
+                    "title": "The tax Schema",
+                    "examples": [
+                        2.00
+                    ]
+                },
+                "tip": {
+                    "type": "number",
+                    "default": 0.0,
+                    "title": "The tip Schema",
+                    "examples": [
+                        5.00
+                    ]
+                },
+                "total": {
+                    "type": "number",
+                    "default": 0.0,
+                    "title": "The total Schema",
+                    "examples": [
+                        57.00
+                    ]
+                },
+                "created_at": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The created_at Schema",
+                    "examples": [
+                        "2023-04-30 10:00:00"
+                    ]
+                }
+            },
+            "examples": [{
+                "trans_to": 0,
+                "trans_by": 1,
+                "subtotal": 50.00,
+                "tax": 2.00,
+                "tip": 5.00,
+                "total": 57.00,
+                "created_at": "2023-04-30 10:00:00"
+            }]
+        }
+    },
+    "examples": [{
+        "payout": {
+            "trans_to": 0,
+            "trans_by": 1,
+            "subtotal": 50.00,
+            "tax": 2.00,
+            "tip": 5.00,
+            "total": 57.00,
+            "created_at": "2023-04-30 10:00:00"
+        }
+    }]
+}
