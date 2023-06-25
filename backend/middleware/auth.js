@@ -48,7 +48,7 @@ function ensureLoggedIn(req, res, next){
 
 function ensureWorker(req, res, next){
     try {
-        if(!res.locals.user || !res.locals.user.isWorker) throw new UnauthorizedError();
+        if(!res.locals.user || res.locals.user.isWorker !== true) throw new UnauthorizedError();
         return next();
     } catch(err) {
         return next(err);
@@ -65,9 +65,8 @@ function ensureWorker(req, res, next){
 
 function ensureCorrectUserOrAdmin(req, res, next){
     try {
-        console.log('User auth', res.locals.user)
         const user = res.locals.user;
-        if(!(user && (user.isAdmin || user.id === req.params.id))){
+        if(!user || !(user.isAdmin === true || user.email === req.params.email)){
             throw new UnauthorizedError();
         }
         return next();

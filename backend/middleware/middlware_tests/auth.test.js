@@ -112,11 +112,11 @@ describe('ensureWorker', function() {
     })
 })
 
-describe('ensureCorrectUser', function() {
+describe('ensureCorrectUserOrAdmin', function() {
 
-    test('works: username matches', function() {
+    test('works: email matches', function() {
         expect.assertions(1);
-        const req = { headers: {authorization: `Bearer ${testJwt}`}};
+        const req = { params: {email: 'test@email.com'}};
         const res = { locals: {user: {email: 'test@email.com', isWorker: false, isAdmin: false}}};
         const next = function(err) {
             expect(err instanceof UnauthorizedError).toBeFalsy();
@@ -137,7 +137,7 @@ describe('ensureCorrectUser', function() {
     test('works: unauthorized', function() {
         expect.assertions(1);
         const req = { params: {email: 'test@email.com'}};
-        const res = { locals: {user: {email: 'test1@email.com', isWorker: false}}};
+        const res = { locals: {user: {email: 'test1@email.com', isWorker: false, isAdmin: false}}};
         const next = function(err) {
             expect(err instanceof UnauthorizedError).toBeTruthy();
         }
