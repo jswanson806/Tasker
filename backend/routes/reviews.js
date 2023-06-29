@@ -4,6 +4,7 @@ const {ExpressError} = require('../expressError.js');
 const jsonschema = require("jsonschema");
 const reviewSchema = require("../schemas/reviewSchema.json");
 const Review = require("../models/review.js");
+const { ensureCorrectUserOrAdmin, ensureLoggedIn } = require('../middleware/auth.js');
 
 /** GET route for reviews made FOR a single user 
  * 
@@ -23,7 +24,7 @@ router.get("/for/:id", async function(req, res, next){
  * 
  * Returns { Reviews: [{id, title, body, stars, reviewed_by, reviewed_for}, ...] }
  */
-router.get("/from/:id", async function(req, res, next) {
+router.get("/from/:id", ensureCorrectUserOrAdmin, async function(req, res, next) {
     const { id } = req.params;
     try {
         const result = await Review.getFromUser(id);
@@ -37,7 +38,7 @@ router.get("/from/:id", async function(req, res, next) {
  * 
  * Returns { Message: 'Review submitted for user: <user_id>'}
  */
-router.post("/create", async function(req, res, next) {
+router.post("/create", ensureLoggedIn, async function(req, res, next) {
     const result = jsonschema.validate(req.body, reviewSchema);
 
     if(!result.valid){

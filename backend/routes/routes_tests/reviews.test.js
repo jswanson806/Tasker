@@ -11,6 +11,9 @@ const {
     commonAfterAll,
     testUserIds,
     testReviewIds,
+    u3Token,
+    u1Token,
+    adminToken
 } = require("./common.js");
 
 beforeAll(commonBeforeAll);
@@ -50,10 +53,13 @@ describe('GET route for retrieving reviews FOR single user', () => {
 })
 
 describe('GET route for retrieving reviews FROM single user', () => {
-    test('works', async () => {
+    
+    test('works: admin', async () => {
         expect.assertions(2);
         const resp = await request(app)
             .get(`/reviews/from/${testUserIds[0]}`)
+            .set('authorization', `Bearer ${adminToken}`)
+
         expect(resp.status).toBe(200);
         expect(resp.body).toEqual({ Reviews: [
             { 
@@ -76,6 +82,16 @@ describe('GET route for retrieving reviews FROM single user', () => {
             }
         ]})
     })
+
+    test('error if not user or admin', async () => {
+        expect.assertions(1);
+        const resp = await request(app)
+            .get(`/reviews/from/${testUserIds[0]}`)
+            .set('authorization', `Bearer ${u3Token}`)
+
+        expect(resp.status).toBe(500);
+    
+    })
 })
 
 describe('POST route for creating a new review', () => {
@@ -92,8 +108,9 @@ describe('POST route for creating a new review', () => {
 
         const resp = await request(app)
             .post(`/reviews/create`)
+            .set('authorization', `Bearer ${u3Token}`)
             .send({review: newReview})
-            console.log(resp)
+
         expect(resp.status).toBe(201);
         expect(resp.body).toEqual({ Message: `Review submitted for user: ${testUserIds[1]}` })
     })
@@ -112,6 +129,7 @@ describe('POST route for creating a new review', () => {
         // insert new review
         const resp = await request(app)
             .post(`/reviews/create`)
+            .set('authorization', `Bearer ${u3Token}`)
             .send({review: newReview})
 
         expect(resp.status).toBe(201);
@@ -162,6 +180,7 @@ describe('POST route for creating a new review', () => {
 
         const resp = await request(app)
             .post(`/reviews/create`)
+            .set('authorization', `Bearer ${u3Token}`)
             .send({review: newReview})
         
         expect(resp.body).toEqual({
@@ -171,6 +190,24 @@ describe('POST route for creating a new review', () => {
             }
           })
 
+    })
+
+    test('error if not logged in', async () => {
+        expect.assertions(1);
+        
+        const newReview = 
+            { 
+                body: 'rb4', 
+                stars: 4,
+                reviewed_for: testUserIds[1],
+                reviewed_by: testUserIds[0]
+            };
+
+        const resp = await request(app)
+            .post(`/reviews/create`)
+            .send({review: newReview})
+        
+        expect(resp.status).toBe(500)
     })
     
 })

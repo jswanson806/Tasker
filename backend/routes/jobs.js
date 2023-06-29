@@ -5,12 +5,13 @@ const jsonschema = require("jsonschema");
 const jobUpdateSchema = require("../schemas/jobUpdateSchema.json");
 const jobSchema = require("../schemas/jobSchema.json");
 const Job = require("../models/job.js");
+const { ensureLoggedIn, ensureIsAdmin } = require('../middleware/auth.js');
 
 /** GET route for all jobs
  * 
  * Returns { allJobs: [{id, title, body, status, address, postedBy, assignedTo, startTime, endTime, paymentDue, beforeImage, afterImage}, ...]}
  */
-router.get("/", async function(req, res, next) {
+router.get("/", ensureLoggedIn, async function(req, res, next) {
     try {
         const allJobs = await Job.findAll();
         return res.status(200).json({ allJobs: allJobs });
@@ -24,7 +25,7 @@ router.get("/", async function(req, res, next) {
  * Returns { job: {id, title, body, status, address, postedBy, assignedTo, startTime, endTime, paymentDue, beforeImage, afterImage}}
  */
 
-router.get("/:id", async function(req, res, next) {
+router.get("/:id", ensureLoggedIn, async function(req, res, next) {
     try {
         const job = await Job.get(req.params.id);
         return res.status(200).json({ job: job });
@@ -39,7 +40,7 @@ router.get("/:id", async function(req, res, next) {
  * 
  * Returns { Message: `Created new job with id: ${newJob.id} }`
  */
-router.post("/create", async function(req, res, next) {
+router.post("/create", ensureLoggedIn, async function(req, res, next) {
     try {
         const result = jsonschema.validate(req.body, jobSchema);
         if(!result.valid){
@@ -66,7 +67,7 @@ router.post("/create", async function(req, res, next) {
  * Returns { Message: `Updated job ${job.id}: ${updateRes}`}
 */
 
-router.patch("/update/:id", async function(req, res, next) {
+router.patch("/update/:id", ensureIsAdmin, async function(req, res, next) {
     try{
         const result = jsonschema.validate(req.body, jobUpdateSchema);
         if(!result.valid) {
@@ -89,7 +90,7 @@ router.patch("/update/:id", async function(req, res, next) {
  * 
  * Returns status 201, { Message: `Job ${job_id} has been removed`}
   */
-router.delete("/remove/:id", async function(req, res, next) {
+router.delete("/remove/:id", ensureIsAdmin, async function(req, res, next) {
     try {
         await Job.remove(req.params.id);
         return res.status(201).json({ Message: `Job ${req.params.id} has been removed`});

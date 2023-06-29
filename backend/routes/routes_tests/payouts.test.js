@@ -10,7 +10,8 @@ const {
     commonAfterEach,
     commonAfterAll,
     testUserIds,
-    testPayoutIds
+    testPayoutIds,
+    adminToken
 } = require("./common.js");
 
 beforeAll(commonBeforeAll);
@@ -21,11 +22,12 @@ afterAll(commonAfterAll);
 // ******** Tests ********
 
 describe('GET route for retrieving payouts FOR a single user', () => {
-    test('works', async () => {
+    test('works: admin', async () => {
         expect.assertions(2);
 
         const result = await request(app)
-            .get(`/payouts/for/${testUserIds[0]}`);
+            .get(`/payouts/for/${testUserIds[0]}`)
+            .set('authorization', `Bearer ${adminToken}`)
 
         expect(result.status).toBe(200);
         expect(result.body).toMatchObject({ payouts: [
@@ -56,11 +58,12 @@ describe('GET route for retrieving payouts FOR a single user', () => {
 })
 
 describe('GET route for retrieving payouts FROM a single user', () => {
-    test('works', async () => {
+    test('works: admin', async () => {
         expect.assertions(2);
 
         const result = await request(app)
-            .get(`/payouts/from/${testUserIds[1]}`);
+            .get(`/payouts/from/${testUserIds[1]}`)
+            .set('authorization', `Bearer ${adminToken}`)
 
         expect(result.status).toBe(200);
         expect(result.body).toMatchObject({ payouts: [
@@ -91,12 +94,13 @@ describe('GET route for retrieving payouts FROM a single user', () => {
 });
 
 describe('POST route for creating a new payout', () => {
-    test('works', async () => {
+    test('works: admin', async () => {
         expect.assertions(6);
 
         // check length of payouts returned from user -> should be 3
         const result = await request(app)
-            .get(`/payouts/from/${testUserIds[1]}`);
+            .get(`/payouts/from/${testUserIds[1]}`)
+            .set('authorization', `Bearer ${adminToken}`)
 
         expect(result.status).toBe(200);
         expect(result.body.payouts.length).toBe(3);
@@ -113,7 +117,8 @@ describe('POST route for creating a new payout', () => {
 
         // post request to create route
         const result2 = await request(app)
-            .post(`/payouts/create`)
+            .post(`/payouts/create/${testUserIds[0]}`)
+            .set('authorization', `Bearer ${adminToken}`)
             .send(payout);
 
             expect(result2.status).toBe(201);
@@ -121,7 +126,8 @@ describe('POST route for creating a new payout', () => {
 
         // check length of payouts returned from user -> should now be 4
         const result3 = await request(app)
-            .get(`/payouts/from/${testUserIds[1]}`);
+            .get(`/payouts/from/${testUserIds[1]}`)
+            .set('authorization', `Bearer ${adminToken}`)
 
         expect(result3.status).toBe(200);
         expect(result3.body.payouts.length).toBe(4);
@@ -132,7 +138,8 @@ describe('POST route for creating a new payout', () => {
 
         // check length of payouts returned from user -> should be 3
         const result = await request(app)
-            .get(`/payouts/from/${testUserIds[1]}`);
+            .get(`/payouts/from/${testUserIds[1]}`)
+            .set('authorization', `Bearer ${adminToken}`)
 
         expect(result.status).toBe(200);
         expect(result.body.payouts.length).toBe(3);
@@ -149,7 +156,8 @@ describe('POST route for creating a new payout', () => {
 
         // post request to create route
         const result2 = await request(app)
-            .post(`/payouts/create`)
+            .post(`/payouts/create/${testUserIds[0]}`)
+            .set('authorization', `Bearer ${adminToken}`)
             .send(payout);
 
         expect(result2.status).toBe(201);
@@ -157,7 +165,8 @@ describe('POST route for creating a new payout', () => {
 
         // check data returned from user -> should contain new payout data
         const result3 = await request(app)
-            .get(`/payouts/from/${testUserIds[1]}`);
+            .get(`/payouts/from/${testUserIds[1]}`)
+            .set('authorization', `Bearer ${adminToken}`)
 
         expect(result3.status).toBe(200);
         expect(result3.body).toMatchObject({ payouts: [
@@ -205,7 +214,8 @@ describe('POST route for creating a new payout', () => {
 
         // post request to create route
         const result = await request(app)
-        .post(`/payouts/create`)
+        .post(`/payouts/create/${testUserIds[0]}`)
+        .set('authorization', `Bearer ${adminToken}`)
         .send(payout);
 
         expect(result.body).toEqual({

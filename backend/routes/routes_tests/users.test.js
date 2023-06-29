@@ -1,7 +1,6 @@
 "use strict";
 
 process.env.NODE_ENV = "test"
-
 const request = require("supertest");
 const app = require("../../app.js");
 const {
@@ -11,7 +10,9 @@ const {
     commonAfterAll,
     testJobIds,
     testUserIds,
-    adminToken
+    adminToken,
+    u1Token,
+    u3Token
 } = require("./common.js");
 
 beforeAll(commonBeforeAll);
@@ -67,8 +68,10 @@ describe('GET: /users/:id', function() {
         
         const resp = await request(app)
             .get(`/users/${id}`)
-            .set('authorization', `Bearer ${adminToken}`)
+            .set('authorization', `Bearer ${u1Token}`)
+
         expect(resp.status).toBe(200);
+        
         expect(resp.body).toEqual({"user": {
             "id": testUserIds[0],
             "email": 'u4@email.com',
@@ -77,42 +80,70 @@ describe('GET: /users/:id', function() {
             "isWorker": false,
             "isAdmin": true,
             "phone": '444-444-4444',
+            "avgRating": null,
             "applications": []
         }});
+    })
+
+    test('works: cannot get user by id if not logged in', async function(){
+        expect.assertions(1);
+        const id = testUserIds[0];
+        
+        const resp = await request(app)
+            .get(`/users/${id}`)
+
+        expect(resp.status).toBe(500);
+        
     })
 })
 
 describe('POST: /users/:user_id/apply/:job_id', function() {
-    test('works: add application to user', async function(){
+    test('works: admin add application to user', async function(){
         expect.assertions(4);
 
-        const user_id = testUserIds[0];
+        const user_id = testUserIds[1];
         const job_id = testJobIds[0];
-        
+
         const resp = await request(app)
             .post(`/users/${user_id}/apply/${job_id}`)
             .set('authorization', `Bearer ${adminToken}`)
-
+            
         expect(resp.status).toBe(201);
 
         expect(resp.body).toEqual({ Message: `User ${user_id} applied to job ${job_id}` });
 
         const resp2 = await request(app)
             .get(`/users/${user_id}`)
-            .set('authorization', `Bearer ${adminToken}`)
+            .set('authorization', `Bearer ${u1Token}`)
         expect(resp2.status).toBe(200);
         expect(resp2.body).toEqual({"user": {
-            "id": testUserIds[0],
-            "email": 'u4@email.com',
-            "firstName": 'fn4',
-            "lastName": 'ln4',
+            "id": testUserIds[1],
+            "email": 'u5@email.com',
+            "firstName": 'fn5',
+            "lastName": 'ln5',
             "isWorker": false,
-            "isAdmin": true,
-            "phone": '444-444-4444',
-            "applications": [job_id]
+            "isAdmin": false,
+            "phone": '555-555-5555',
+            "avgRating": 2,
+            "applications": [testJobIds[0], job_id]
         }});
     })
+
+    test('works: correct user add application to user', async function(){
+        expect.assertions(1);
+
+        const user_id = testUserIds[1];
+        const job_id = testJobIds[0];
+
+        const resp = await request(app)
+            .post(`/users/${user_id}/apply/${job_id}`)
+            .set('authorization', `Bearer ${u1Token}`)
+            
+        expect(resp.status).toBe(201);
+
+    })
 })
+
 
 describe('PATCH: /users/update/:id', function() {
     test('works: update a user', async function(){
@@ -133,6 +164,7 @@ describe('PATCH: /users/update/:id', function() {
             "isWorker": false,
             "isAdmin": true,
             "phone": '444-444-4444',
+            "avgRating": null,
             "applications": []
         }});
 
@@ -168,13 +200,14 @@ describe('PATCH: /users/update/:id', function() {
             "isWorker": false,
             "isAdmin": true,
             "phone": '444-444-4444',
+            "avgRating": null,
             "applications": []
         }});
     })
 })
 
 describe('DELETE: /users/:id', function() {
-    test('works: update a user', async function(){
+    test('works: admin can delete a user', async function(){
         expect.assertions(4);
 
         const user_id = testUserIds[0];
@@ -214,5 +247,19 @@ describe('DELETE: /users/:id', function() {
             "isAdmin": false,
             "phone": '666-666-6666'
         }]});
+    })
+
+    test('works: error if not admin', async function(){
+        expect.assertions(1);
+
+        const user_id = testUserIds[0];
+
+        // ********* remove user *********
+        const resp = await request(app)
+            .delete(`/users/remove/${user_id}`)
+            .set('authorization', `Bearer ${u3Token}`)
+
+        expect(resp.status).toBe(500);
+
     })
 })

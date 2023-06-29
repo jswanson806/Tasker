@@ -9,7 +9,8 @@ const {
     commonBeforeEach,
     commonAfterEach,
     commonAfterAll,
-    testUserIds
+    testUserIds,
+    u3Token
 } = require("./common.js");
 
 beforeAll(commonBeforeAll);
@@ -25,6 +26,7 @@ describe('GET route for conversation between two users', () => {
 
         const result = await request(app)
             .get(`/messages/conversation/${testUserIds[0]}/${testUserIds[1]}`)
+            .set('authorization', `Bearer ${u3Token}`)
 
             const expectedConversation = [{
                 body: 'jb6',
@@ -43,6 +45,16 @@ describe('GET route for conversation between two users', () => {
         expect(result.body.conversation).toEqual(expectedConversation)
         
     })
+
+    test('error if not logged in', async () => {
+        expect.assertions(1)
+
+        const result = await request(app)
+            .get(`/messages/conversation/${testUserIds[0]}/${testUserIds[1]}`)
+            
+        expect(result.status).toBe(500);
+        
+    })
 })
 
 describe('POST create a new message', () => {
@@ -51,6 +63,8 @@ describe('POST create a new message', () => {
         // query the existing conversation -> length should be 3
         const convoRes = await request(app)
             .get(`/messages/conversation/${testUserIds[0]}/${testUserIds[1]}`)
+            .set('authorization', `Bearer ${u3Token}`)
+
         expect(convoRes.body.conversation.length).toBe(3);
 
         const message = {message: {
@@ -61,6 +75,7 @@ describe('POST create a new message', () => {
 
         const result = await request(app)
             .post(`/messages/create`)
+            .set('authorization', `Bearer ${u3Token}`)
             .send(message)
 
         expect(result.body).toEqual({ Message: 'Message sent'})
@@ -68,6 +83,7 @@ describe('POST create a new message', () => {
         // query the conversation again -> length should be 4
         const convoRes2 = await request(app)
             .get(`/messages/conversation/${testUserIds[0]}/${testUserIds[1]}`)
+            .set('authorization', `Bearer ${u3Token}`)
         expect(convoRes2.body.conversation.length).toBe(4);
     })
 
@@ -82,6 +98,7 @@ describe('POST create a new message', () => {
         
         const result = await request(app)
             .post(`/messages/create`)
+            .set('authorization', `Bearer ${u3Token}`)
             .send(message)
 
         expect(result.body).toEqual({
@@ -90,6 +107,23 @@ describe('POST create a new message', () => {
               status: 500
             }
           })
+
+    })
+
+    test('error if not logged in', async () => {
+        expect.assertions(1)
+
+        // missing body property
+        const message = {message: {
+            sent_by: testUserIds[0],
+            sent_to: testUserIds[1]
+        }}  
+        
+        const result = await request(app)
+            .post(`/messages/create`)
+            .send(message)
+
+        expect(result.status).toBe(500);
 
     })
 })

@@ -4,9 +4,10 @@ const {ExpressError} = require('../expressError.js');
 const jsonschema = require("jsonschema");
 const payoutSchema = require("../schemas/payoutSchema.json");
 const Payout = require("../models/payout.js");
+const { ensureCorrectUserOrAdmin, ensureIsAdmin } = require("../middleware/auth.js");
 
 /** GET route for payouts FOR a single user */
-router.get("/for/:id", async function(req, res, next){
+router.get("/for/:id", ensureCorrectUserOrAdmin, async function(req, res, next){
     const { id } = req.params;
     try {
         const resp = await Payout.getFor(id);
@@ -17,7 +18,7 @@ router.get("/for/:id", async function(req, res, next){
 });
 
 /** GET route for payouts FROM a single user */
-router.get("/from/:id", async function(req, res, next){
+router.get("/from/:id", ensureCorrectUserOrAdmin, async function(req, res, next){
     const { id } = req.params;
     try {
         const resp = await Payout.getFrom(id);
@@ -28,7 +29,7 @@ router.get("/from/:id", async function(req, res, next){
 });
 
 /** POST route for creating a payout */
-router.post("/create", async function(req, res, next){
+router.post("/create/:id", ensureIsAdmin, async function(req, res, next){
     
     const result = jsonschema.validate(req.body, payoutSchema);
     if(!result.valid){
@@ -40,7 +41,7 @@ router.post("/create", async function(req, res, next){
     try {
         const { payout } = req.body;
         const resp = await Payout.create(payout);
-        return res.status(201).json({ Message: `Created new payout for user: ${payout.trans_to}`})
+        return res.status(201).json({ Message: `Created new payout for user: ${req.params.id}`})
     } catch(err) {
         return next(err);
     }

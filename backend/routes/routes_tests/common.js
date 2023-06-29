@@ -195,9 +195,10 @@ async function commonAfterAll() {
 }
 
 
-const u1Token = createToken({ email: "u5@email.com", isWorker: false, isAdmin: false });
-const u2Token = createToken({ email: "u6@email.com", isWorker: true, isAdmin: false });
-const adminToken = createToken({ email: "u4@email.com", isWorker: false, isAdmin: true });
+const u1Token = createToken({id: 1, email: "u7@email.com", isWorker: false, isAdmin: true });
+const u2Token = createToken({id: 2, email: "u8@email.com", isWorker: true, isAdmin: false });
+const u3Token = createToken({id: testUserIds[1], email: "u5@email.com", isWorker: false, isAdmin: false });
+const adminToken = createToken({id: 3, email: "u4@email.com", isWorker: false, isAdmin: true });
 
 
 module.exports = {
@@ -212,5 +213,6 @@ module.exports = {
   testPayoutIds,
   u1Token,
   u2Token,
+  u3Token,
   adminToken,
 };

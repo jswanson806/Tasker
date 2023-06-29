@@ -4,6 +4,7 @@ const {ExpressError} = require('../expressError.js');
 const jsonschema = require("jsonschema");
 const messageSchema = require("../schemas/messageSchema.json");
 const Message = require("../models/message.js");
+const { ensureLoggedIn } = require("../middleware/auth.js");
 
 /** GET route for conversation between two users
  * 
@@ -12,7 +13,7 @@ const Message = require("../models/message.js");
  * Returns {"Messages": [{id, body, sentBy, sentTo, createdAt}, ...]}
  * 
  */
-router.get("/conversation/:u1_id/:u2_id", async function(req, res, next) {
+router.get("/conversation/:u1_id/:u2_id", ensureLoggedIn, async function(req, res, next) {
     const u1 = req.params.u1_id;
     const u2 = req.params.u2_id;
     try {
@@ -29,7 +30,7 @@ router.get("/conversation/:u1_id/:u2_id", async function(req, res, next) {
  * 
  * Returns {Message: 'Message Sent'}
  */
-router.post("/create", async function(req, res, next) {
+router.post("/create", ensureLoggedIn, async function(req, res, next) {
     
         const result = jsonschema.validate(req.body, messageSchema);
         if(!result.valid){
