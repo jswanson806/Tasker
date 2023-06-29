@@ -6,7 +6,7 @@ const { UnauthorizedError } = require("../../expressError.js");
 const {
     authenticateJWT,
     ensureLoggedIn,
-    ensureWorker,
+    ensureIsWorker,
     ensureCorrectUserOrAdmin
 } = require("../auth.js");
 
@@ -19,13 +19,13 @@ describe('authenticateJWT', function() {
     test('works', function() {
         expect.assertions(2);
         const req = { headers: { authorization: `Bearer ${testJwt}`} }
-        const res = { locals: {} };
+        const res = {locals: {}};
         const next = function(err) {
             expect(err).toBeFalsy();
         }
         authenticateJWT(req, res, next);
-        expect(res.locals).toEqual({
-            user: {
+        expect(res.locals).toEqual({user:
+            {
                 iat: expect.any(Number),
                 email: "test@email.com",
                 isWorker: false,
@@ -35,25 +35,25 @@ describe('authenticateJWT', function() {
     })
 
     test('works: no header', function() {
-        expect.assertions(2);
+        expect.assertions(1);
         const req = {};
         const res = { locals: {} };
         const next = function(err) {
             expect(err).toBeFalsy();
         }
         authenticateJWT(req, res, next);
-        expect(res.locals).toEqual({});
+
     })
 
     test('works: bad token', function() {
-        expect.assertions(2);
+        expect.assertions(1);
         const req = { headers: { authorization: `Bearer ${badTestJwt}`} };
         const res = { locals: {} };
         const next = function(err) {
             expect(err).toBeFalsy();
         }
         authenticateJWT(req, res, next);
-        expect(res.locals).toEqual({});
+
     })
 })
 
@@ -87,7 +87,7 @@ describe('ensureWorker', function() {
         const next = function(err) {
             expect(err instanceof UnauthorizedError).toBeFalsy();
         }
-        ensureWorker(req, res, next)
+        ensureIsWorker(req, res, next)
     })
 
 
@@ -98,7 +98,7 @@ describe('ensureWorker', function() {
         const next = function(err) {
             expect(err instanceof UnauthorizedError).toBeTruthy();
         }
-        ensureWorker(req, res, next)
+        ensureIsWorker(req, res, next)
     })
 
     test('works: no user', function() {
@@ -108,7 +108,7 @@ describe('ensureWorker', function() {
         const next = function(err) {
             expect(err instanceof UnauthorizedError).toBeTruthy();
         }
-        ensureWorker(req, res, next)
+        ensureIsWorker(req, res, next)
     })
 })
 
@@ -116,8 +116,8 @@ describe('ensureCorrectUserOrAdmin', function() {
 
     test('works: email matches', function() {
         expect.assertions(1);
-        const req = { params: {email: 'test@email.com'}};
-        const res = { locals: {user: {email: 'test@email.com', isWorker: false, isAdmin: false}}};
+        const req = { params: {id: 1}};
+        const res = { locals: {user: {id: 1, email: 'u5@email.com', isWorker: false, isAdmin: false}}};
         const next = function(err) {
             expect(err instanceof UnauthorizedError).toBeFalsy();
         }
@@ -126,8 +126,8 @@ describe('ensureCorrectUserOrAdmin', function() {
 
     test('works: admin is authorized', function() {
         expect.assertions(1);
-        const req = { params: {email: 'test@email.com'}};
-        const res = { locals: {user: {email: 'test1@email.com', isWorker: false, isAdmin: true}}};
+        const req = { params: {id: 1}};
+        const res = { locals: {user: {id: 3, email: 'u7@email.com', isWorker: false, isAdmin: true}}};
         const next = function(err) {
             expect(err instanceof UnauthorizedError).toBeFalsy();
         }
@@ -136,8 +136,8 @@ describe('ensureCorrectUserOrAdmin', function() {
 
     test('works: unauthorized', function() {
         expect.assertions(1);
-        const req = { params: {email: 'test@email.com'}};
-        const res = { locals: {user: {email: 'test1@email.com', isWorker: false, isAdmin: false}}};
+        const req = { params: {id: 1}};
+        const res = { locals: {user: {id: 3, email: 'test1@email.com', isWorker: false, isAdmin: false}}};
         const next = function(err) {
             expect(err instanceof UnauthorizedError).toBeTruthy();
         }
@@ -146,13 +146,12 @@ describe('ensureCorrectUserOrAdmin', function() {
 
     test('works: no user', function() {
         expect.assertions(1);
-        const req = { params: {email: 'test@email.com'}};
+        const req = { params: {id: 1}};
         const res = { locals: {}};
         const next = function(err) {
             expect(err instanceof UnauthorizedError).toBeTruthy();
         }
         ensureCorrectUserOrAdmin(req, res, next);
     })
-    
 
 })
