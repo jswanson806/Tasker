@@ -101,27 +101,28 @@ class Review {
 
         const reviews = result.rows
 
-        if(reviews.length === 0){ // throw error if no reviews exist for this user
-            throw new NotFoundError(`No reviews available for user: ${id}`)
+        if(reviews.length !== 0){ // throw error if no reviews exist for this user
+
+            // hold ratingTotal
+            let ratingTotal = 0;
+            // hold iteration count
+            let count = 0;
+            // iterate over reviews
+            for(let review of reviews){
+                // increment count
+                count++;
+                // add star value of each review to ratingTotal
+                ratingTotal += review.stars;
+            }
+            // calculate average rating
+            const avgRating = ratingTotal/count;
+            // convert to number and round to 1 decimal place
+            const roundedAverage = +avgRating.toFixed(1);
+
+            return roundedAverage;
         }
 
-        // hold ratingTotal
-        let ratingTotal = 0;
-        // hold iteration count
-        let count = 0;
-        // iterate over reviews
-        for(let review of reviews){
-            // increment count
-            count++;
-            // add star value of each review to ratingTotal
-            ratingTotal += review.stars;
-        }
-        // calculate average rating
-        const avgRating = ratingTotal/count;
-        // convert to number and round to 1 decimal place
-        const roundedAverage = +avgRating.toFixed(1);
-
-        return roundedAverage;
+        return null;
     }
 }
 
