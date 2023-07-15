@@ -78,7 +78,7 @@ router.patch("/update/:id", ensureCorrectUserOrAdmin, async function(req, res, n
 
 /** Delete route to remove user by id
  * 
- * Middleware verifies user id matches that of user in res.locals or that user is admin
+ * Middleware verifies that user is admin
  * 
  * Returns status 201, { Message: `User ${req.params.id} has been removed` }
  */
