@@ -9,7 +9,7 @@ const { ensureCorrectUserOrAdmin, ensureIsAdmin, ensureLoggedIn } = require('../
 /** Get route for all users.
  * 
  * Returns object with array of user objects
- *  { allUsers: [{ id, email, first_name, last_name, phone, is_worker }, ...] }
+ *  { allUsers: [{ id, email, firstName, lastName, phone, isWorker, isAdmin }, ...] }
  */
 router.get("/", ensureIsAdmin, async function(req, res, next) {
     try {
