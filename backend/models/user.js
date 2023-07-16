@@ -38,16 +38,17 @@ class User {
         );
 
         const user = result.rows[0];
-
+        
         // user was found in db
         if(user){
             // use bcrypt to compare password
-            const isValid = bcrypt.compare(password, user.password);
+            const isValid = await bcrypt.compare(password, user.password);
             if(isValid){ //password is valid
                 delete user.password;
                 return user;
             }
         }
+
         // user information was invalid
         throw new UnauthorizedError("Invalid email/password");
     }
@@ -61,6 +62,7 @@ class User {
 
     static async register({email, phone, password, firstName, lastName, isWorker, isAdmin}) {
         
+        console.log(password)
         // check for duplicate user email
         const duplicateCheck = await db.query(
             `SELECT email
