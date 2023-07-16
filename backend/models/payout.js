@@ -99,7 +99,7 @@ class Payout {
 
     /** Create payout for a single user 
      * 
-     * Returns {payout_to, subtotal, tax, tip, total, created_at}
+     * Returns {id, trans_to, trans_by, subtotal, tax, tip, total, created_at}
      * 
      * Throws error if user is invalid
     */
