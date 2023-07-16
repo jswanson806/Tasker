@@ -17,8 +17,6 @@
                 "password",
                 "firstName",
                 "lastName",
-                "isWorker",
-                "isAdmin",
                 "phone"
             ],
             "properties": {
@@ -100,6 +98,7 @@
             "firstName": "fn4",
             "lastName": "ln4",
             "isWorker": false,
+            "isAdmin": false,
             "phone": "(999)999-9999"
         }
     }]
