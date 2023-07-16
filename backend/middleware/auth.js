@@ -19,7 +19,6 @@ function authenticateJWT(req, res, next){
             const token = authHeader.replace(/^[Bb]earer /, "").trim();
             const payload = jwt.verify(token, SECRET_KEY);
             res.locals.user = payload;
-            console.log(res.locals)
         }
         return next();
     } catch(err) {
@@ -84,8 +83,6 @@ function ensureIsAdmin(req, res, next) {
  */
 
 function ensureCorrectUserOrAdmin(req, res, next){
-    console.log(req.params)
-    console.log(res.locals)
     if(!(res.locals.user && (res.locals.user.isAdmin || req.params.id === res.locals.user.id))){
         const e = new UnauthorizedError();
     
