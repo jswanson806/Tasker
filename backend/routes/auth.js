@@ -1,6 +1,6 @@
 const express = require('express');
 const router = new express.Router();
-const {BadRequestError} = require('../expressError.js');
+const {BadRequestError, UnauthorizedError} = require('../expressError.js');
 const jsonschema = require("jsonschema");
 const { createToken } = require("../helpers/tokens.js");
 const userAuthSchema = require('../schemas/userAuthSchema.json');
@@ -23,8 +23,8 @@ router.post("/token", async function (req, res, next) {
             throw new BadRequestError(errs);
         }
 
-        const { username, password } = req.body;
-        const user = await User.authenticate(username, password);
+        const { email, password } = req.body;
+        const user = await User.authenticate(email, password);
         const token = createToken(user);
         return res.json({token});
     } catch(err) {
@@ -35,7 +35,7 @@ router.post("/token", async function (req, res, next) {
 
 /** POST /auth/register:   { user } => { token }
  *
- * user must include { username, password, firstName, lastName, email }
+ * user must include { email, password, firstName, lastName, phone }
  *
  * Returns JWT token which can be used to authenticate further requests.
  *
@@ -50,10 +50,14 @@ router.post("/register", async function (req, res, next) {
             throw new BadRequestError(errs);
         }
 
-        const newUser = await User.register({...req.body, isAdmin: false, isWorker: false})
+        const { user } = req.body;
+
+        const newUser = await User.register({...user, isAdmin: false, isWorker: false})
+        console.log(newUser)
         const token = createToken(newUser);
         return res.status(201).json({token});
     } catch(err) {
+        console.log(err)
         return next(err);
     }
 })
