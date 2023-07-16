@@ -64,7 +64,7 @@ router.post("/create", ensureLoggedIn, async function(req, res, next) {
  * 
  * Updates job information with complete or partial information
  * 
- * Returns { Message: `Updated job ${job.id}: ${updateRes}`}
+ * Returns { Message: `Updated job: ${updateRes}`}
 */
 
 router.patch("/update/:id", ensureIsAdmin, async function(req, res, next) {
