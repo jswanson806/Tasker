@@ -92,7 +92,7 @@ describe('GET: /users/:id', function() {
         const resp = await request(app)
             .get(`/users/${id}`)
 
-        expect(resp.status).toBe(500);
+        expect(resp.status).toBe(401);
         
     })
 })
@@ -259,7 +259,7 @@ describe('DELETE: /users/:id', function() {
             .delete(`/users/remove/${user_id}`)
             .set('authorization', `Bearer ${u3Token}`)
 
-        expect(resp.status).toBe(500);
+        expect(resp.status).toBe(401);
 
     })
 })
