@@ -15,7 +15,7 @@ class TaskerApi {
         try {
             return (await axios({ url, method, data, params, headers })).data;
         } catch(err) {
-            console.err("API Error:", err.response);
+            console.error("API Error:", err.response);
             let message = err.response.data.error.message;
             throw Array.isArray(message) ? message : [message];
         }
@@ -27,6 +27,7 @@ class TaskerApi {
     static async registerUser(userInfo) {
         try {
             const res = await this.request(`auth/register`, userInfo, "post");
+            console.log("RES:", res)
             return res.token;
         } catch(err) {
             console.log("Error in registerUser method of the TaskerApi:", err);
@@ -145,7 +146,7 @@ class TaskerApi {
     /** PATCH single job by id*/
     static async updateSingleJob(job_info) {
         try{
-            const res = await this.request(`jobs/update/${id}`, job_info, "patch");
+            const res = await this.request(`jobs/update/${job_info.id}`, job_info, "patch");
             return res;
         } catch(err) {
             console.log("Error in updateSingleJob method of the TaskerApi:", err);
@@ -168,7 +169,7 @@ class TaskerApi {
     // ************** MESSAGES **************
 
     /** GET conversation between two users by id */
-    static async getConversationBetween() {
+    static async getConversationBetween(u1_id, u2_id) {
         try{
             const res = await this.request(`messages/conversation/${u1_id}/${u2_id}`);
             return res;
