@@ -1,5 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import TaskerApi from "../api";
+
+
+/**
+ * SignUp component for user registration.
+ *
+ * This component renders a sign-up form where users can enter their email, first name,
+ * last name, phone number, and password to register for an account. Upon successful
+ * registration, the user is logged in, and their token is stored in the local storage
+ * for further authentication. The user is then redirected to the dashboard.
+ *
+ * @returns {JSX.Element} The rendered sign-up form component.
+ */
+
 
 const SignUp = () => {
 
@@ -23,7 +37,7 @@ const SignUp = () => {
         }))
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const userInfo = {
@@ -34,9 +48,19 @@ const SignUp = () => {
             password: formData.password,
         }
         
-        // register user call goes here
-
+        // register call to api
+        const registerToken = await TaskerApi.registerUser(userInfo);
+        // check for registerToken to be true
+        if(registerToken) {
+            // login call to api
+            const loginToken = await TaskerApi.login(userInfo.email, userInfo.password);
+            // set token in local storage for further authentication
+            localStorage.setItem('userToken', loginToken)
+        }
+        
+        // clear the form data
         setFormData(INITIAL_STATE);
+        // redirect to dashboard
         navigate("/dashboard");
     }
 
@@ -48,11 +72,12 @@ const SignUp = () => {
                 <h1>Sign Up</h1>
                 <form onSubmit={handleSubmit}>
                     <label htmlFor="email">Email</label>
-                    <input
+                    <input 
                         id="email"
                         type="text"
                         name="email"
                         placeholder="Email Address"
+                        data-testid="signup-form-email-input"
                         value={FormData.email}
                         onChange={handleChange}
                     />
@@ -62,6 +87,7 @@ const SignUp = () => {
                         type="text"
                         name="firstName"
                         placeholder="First Name"
+                        data-testid="signup-form-first-name-input"
                         value={FormData.firstName}
                         onChange={handleChange}
                     />
@@ -71,6 +97,7 @@ const SignUp = () => {
                         type="text"
                         name="lastName"
                         placeholder="Last Name"
+                        data-testid="signup-form-last-name-input"
                         value={FormData.lastName}
                         onChange={handleChange}
                     />
@@ -80,6 +107,7 @@ const SignUp = () => {
                         type="text"
                         name="phone"
                         placeholder="Phone"
+                        data-testid="signup-form-phone-input"
                         value={FormData.phone}
                         onChange={handleChange}
                     />
@@ -89,10 +117,13 @@ const SignUp = () => {
                         type="password"
                         name="password"
                         placeholder=""
+                        data-testid="signup-form-password-input"
                         value={FormData.password}
                         onChange={handleChange}
                     />
+                    <button type="submit" data-testid="signup-form-button">Signup</button>
                 </form>
+                
             </div>
         </div>
     );
