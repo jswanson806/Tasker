@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`signup form smoke and snapshot tests should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="signup-container"
+  >
+    <div
+      class="signup-card"
+    >
+      <h1>
+        Sign Up
+      </h1>
+      <form>
+        <label
+          for="email"
+        >
+          Email
+        </label>
+        <input
+          data-testid="signup-form-email-input"
+          id="email"
+          name="email"
+          placeholder="Email Address"
+          type="text"
+          value=""
+        />
+        <label
+          for="firstName"
+        >
+          First Name
+        </label>
+        <input
+          data-testid="signup-form-first-name-input"
+          id="firstName"
+          name="firstName"
+          placeholder="First Name"
+          type="text"
+          value=""
+        />
+        <label
+          for="lastName"
+        >
+          Last Name
+        </label>
+        <input
+          data-testid="signup-form-last-name-input"
+          id="lastName"
+          name="lastName"
+          placeholder="Last Name"
+          type="text"
+          value=""
+        />
+        <label
+          for="phone"
+        >
+          Phone
+        </label>
+        <input
+          data-testid="signup-form-phone-input"
+          id="phone"
+          name="phone"
+          placeholder="Phone"
+          type="text"
+          value=""
+        />
+        <label
+          for="password"
+        >
+          Password
+        </label>
+        <input
+          data-testid="signup-form-password-input"
+          id="password"
+          name="password"
+          placeholder=""
+          type="password"
+          value=""
+        />
+        <button
+          data-testid="signup-form-button"
+          type="submit"
+        >
+          Signup
+        </button>
+      </form>
+    </div>
+  </div>
+</DocumentFragment>
+`;
