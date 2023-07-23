@@ -67,7 +67,7 @@ function ensureIsWorker(req, res, next){
 
 function ensureIsAdmin(req, res, next) {
 
-    if(!res.locals || res.locals.user.isAdmin !== true) {
+    if(!res.locals.user || res.locals.user.isAdmin !== true) {
         return next(new UnauthorizedError())
     } else {
         return next();
