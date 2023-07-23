@@ -1,22 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { TokenContext } from '../helpers/TokenContext.js';
 import { useNavigate } from "react-router-dom";
-import TaskerApi from "../api";
+import TaskerApi from "../api.js";
+
 
 /**
  * Login component for user authentication.
  *
  * This component renders a login form where users can enter their email and password
- * to authenticate themselves. Upon successful login, the user's token is stored in
- * the local storage for further authentication. The user is then redirected to the
+ * to authenticate themselves. The user is then redirected to the
  * dashboard.
  *
  * @returns {JSX.Element} The rendered login form component.
  */
 
 const Login = () => {
-
     
     const navigate = useNavigate();
+
+    const { token, updateToken } = useContext(TokenContext);
 
     const INITIAL_STATE = {
         email: '',
@@ -41,18 +43,18 @@ const Login = () => {
             password: formData.password,
         }
 
-        const res = await TaskerApi.getAllJobs();
-        console.log(res)
+        try {
+            
+            const token = await TaskerApi.login(userInfo.email, userInfo.password);
+            updateToken(token);
 
-        // // call api to login the user
-        // const token = await TaskerApi.login(userInfo.email, userInfo.password);
-        // // set the returned token in localStorage for further authentication
-        // localStorage.setItem('userToken', token)
-
-        // clear the form data
-        setFormData(INITIAL_STATE);
-        // redirect to dashboard
-        navigate("/dashboard");
+            // clear the form data
+            setFormData(INITIAL_STATE);
+            // redirect to dashboard
+            navigate("/dashboard");
+        } catch(err) {
+            return err;
+        }
     }
 
 

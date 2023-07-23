@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { TokenContext } from "../helpers/TokenContext";
 import TaskerApi from "../api";
 
 
@@ -19,6 +20,7 @@ const SignUp = () => {
 
     const navigate = useNavigate();
 
+    
     const INITIAL_STATE = {
         email: '',
         firstName: '',
@@ -28,6 +30,7 @@ const SignUp = () => {
     }
 
     const [formData, setFormData] = useState(INITIAL_STATE);
+    const { token, updateToken } = useContext(TokenContext);
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -40,31 +43,36 @@ const SignUp = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const userInfo = {
+        const userInfo = {user: {
             email: formData.email,
             firstName: formData.firstName,
             lastName: formData.lastName,
             phone: formData.phone,
             password: formData.password,
+        }}
+        
+        try {
+            // register call to api
+            const registerToken = await TaskerApi.registerUser(userInfo);
+        
+            // check for registerToken to be true
+            if(registerToken) {
+                // login call to api
+                const loginToken = await TaskerApi.login(userInfo.user.email, userInfo.user.password);
+                // set token in local storage for further auth
+                updateToken(loginToken);
+            }
+
+            // clear the form data
+            setFormData(INITIAL_STATE);
+            // redirect to dashboard
+            navigate("/dashboard");
+
+        } catch(err) {
+            return err;
         }
         
-        // register call to api
-        const registerToken = await TaskerApi.registerUser(userInfo);
-        // check for registerToken to be true
-        if(registerToken) {
-            // login call to api
-            const loginToken = await TaskerApi.login(userInfo.email, userInfo.password);
-            // set token in local storage for further authentication
-            localStorage.setItem('userToken', loginToken)
-        }
-        
-        // clear the form data
-        setFormData(INITIAL_STATE);
-        // redirect to dashboard
-        navigate("/dashboard");
     }
-
-
 
     return (
         <div className="signup-container">
