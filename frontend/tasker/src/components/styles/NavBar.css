@@ -1,0 +1,48 @@
+.Navbar .container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #c5dacc;
+    font-family: 'Raleway', sans-serif;
+    font-weight: bold;
+  }
+  
+  .Navbar .Navbar-nav {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .Navbar .Navbar-nav li {
+    margin-right: 20px;
+  }
+  
+  .Navbar .navbar-nav li:last-child {
+    margin-right: 0;
+  }
+  
+  .Navbar .Navlink {
+    color: #0f5959;
+    text-decoration: none;
+  }
+
+  .Navbar .Navlink-dashboard {
+    color: #0f5959;
+    text-decoration: none;
+  }
+  
+  .Navbar .Navlink.active {
+    color: #f1bb7b;
+  }
+
+  .Navbar .Navlink-button {
+    background: none;
+    border: none;
+    font-family: 'Raleway', sans-serif;
+    font-weight: bold;
+    font-size: small;
+    color: #0f5959;
+    text-decoration: none;
+    cursor: pointer;
+  }
