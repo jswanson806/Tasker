@@ -1,15 +1,15 @@
 import axios from 'axios';
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3000";
+const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
 
 class TaskerApi {
-    static token;
+    static token = localStorage.getItem('token') || null;
 
     static async request(endpoint, data = {}, method = "get") {
         console.debug("API Call:", endpoint, data, method);
 
         const url = `${BASE_URL}/${endpoint}`
-        const headers = { Authorization: `Bearer ${TaskerApi.token}` };
+        const headers = { Authorization: `Bearer ${this.token}` };
         const params = (method === "get") ? data : {};
 
         try {
@@ -42,7 +42,7 @@ class TaskerApi {
                 email: email, 
                 password: password
             }, "post");
-            return res.token;
+            return res;
         } catch(err) {
             console.log("Error in login method of the TaskerApi:", err);
             throw err;
@@ -75,9 +75,12 @@ class TaskerApi {
     }
 
     /** POST application for job by id from user by id */
-    static async applyToJob(id, job_id) {
+    static async applyToJob(user_id, job_id) {
         try{
-            const res = await this.request(`users/${id}/apply/${job_id}`, {}, "post");
+            const res = await this.request(`users/apply`, {
+                user_id: user_id, 
+                job_id: job_id
+            }, "post");
             return res;
         } catch(err) {
             console.log("Error in applyToJob method of the TaskerApi:", err);
