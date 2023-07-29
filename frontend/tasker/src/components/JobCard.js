@@ -11,7 +11,11 @@ const JobCard = ({user, job}) => {
     };
 
     const applyToJob = async (user_id, job_id) => {
-        const res = await TaskerApi.applyToJob(job_id);
+        try {
+        const res = await TaskerApi.applyToJob(user_id, job_id);
+        } catch(err) {
+            throw err;
+        }
     }
 
     return (
