@@ -4,6 +4,7 @@ const JobDetails = ({job}) => {
     return(
         <>
         <h1>{job.title}</h1>
+        <p>{job.body}</p>
         </>
     )
 }
