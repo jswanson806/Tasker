@@ -1,7 +1,7 @@
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   password TEXT NOT NULL,
-  phone VARCHAR(10) NOT NULL,
+  phone VARCHAR(12) NOT NULL,
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
   email TEXT UNIQUE NOT NULL CHECK (position('@' IN email) > 1),
