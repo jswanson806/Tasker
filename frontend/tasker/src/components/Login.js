@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { TokenContext } from '../helpers/TokenContext.js';
 import { useNavigate } from "react-router-dom";
 import TaskerApi from "../api.js";
+import { UserContext } from "../helpers/UserContext.js";
 
 
 /**
@@ -18,7 +19,8 @@ const Login = () => {
     
     const navigate = useNavigate();
 
-    const { token, updateToken } = useContext(TokenContext);
+    const { updateToken } = useContext(TokenContext);
+    const { updateUser } = useContext(UserContext);
 
     const INITIAL_STATE = {
         email: '',
@@ -45,8 +47,13 @@ const Login = () => {
 
         try {
             
-            const token = await TaskerApi.login(userInfo.email, userInfo.password);
+            const res = await TaskerApi.login(userInfo.email, userInfo.password);
+            const { token, user } = res;
+            const newUser = JSON.stringify({id: user.id, email: user.email});
+            
+            // update localStorage token and user
             updateToken(token);
+            updateUser(newUser);
 
             // clear the form data
             setFormData(INITIAL_STATE);
