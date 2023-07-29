@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import TaskerApi from '../api';
 import JobCard from './JobCard.js';
+import { UserContext } from '../helpers/UserContext';
 
 const Jobs = () => {
 
     const [jobs, setJobs] = useState([]);
     const [jobCards, setJobCards] = useState([]);
+    const {user} = useContext(UserContext)
 
     useEffect(() => {
         /** Retrieves all jobs from api
@@ -27,7 +29,7 @@ const Jobs = () => {
 
     useEffect(() => {
         setJobCards(jobs.map((job) => {
-            return <JobCard job={job} key={job.id}/>
+            return <JobCard user={JSON.parse(user)} job={job} key={job.id}/>
         }));
     }, [jobs])
 
