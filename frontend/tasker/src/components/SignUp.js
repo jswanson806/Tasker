@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { TokenContext } from "../helpers/TokenContext";
+import { UserContext } from "../helpers/UserContext";
 import TaskerApi from "../api";
 
 
@@ -31,6 +32,7 @@ const SignUp = () => {
 
     const [formData, setFormData] = useState(INITIAL_STATE);
     const { token, updateToken } = useContext(TokenContext);
+    const { user, updateUser } = useContext(UserContext);
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -58,9 +60,12 @@ const SignUp = () => {
             // check for registerToken to be true
             if(registerToken) {
                 // login call to api
-                const loginToken = await TaskerApi.login(userInfo.user.email, userInfo.user.password);
+                const res = await TaskerApi.login(userInfo.user.email, userInfo.user.password);
+                const { token, user } = res;
+                const newUser = JSON.stringify({id: user.id, email: user.email});
                 // set token in local storage for further auth
-                updateToken(loginToken);
+                updateToken(token);
+                updateUser(newUser);
             }
 
             // clear the form data
