@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Navbar, Nav, NavItem } from 'reactstrap';
 import { TokenContext } from "../helpers/TokenContext";
+import { UserContext } from "../helpers/UserContext";
 import './styles/NavBar.css';
 
 
@@ -10,12 +11,17 @@ const NavBar = () => {
     const navigate = useNavigate();
 
     const { token, updateToken } = useContext(TokenContext);
+    const { user, updateUser } = useContext(UserContext);
 
     let loggedIn = (token && token !== '') ? true : false;
 
-    /** Removes token and user from localStorage */
+    /** Removes token and user from localStorage 
+     * 
+     * Redirects to /login
+    */
     const logOut = () => {
         updateToken('');
+        updateUser('');
         navigate("/login");
     }
 
