@@ -3,6 +3,7 @@ import Router from './Router.js';
 import NavBar from './NavBar.js';
 import './styles/App.css';
 import { TokenProvider } from '../helpers/TokenContext.js';
+import { UserProvider } from '../helpers/UserContext.js';
 
 /** App Component
  * 
@@ -16,8 +17,10 @@ function App() {
 
   return (
         <TokenProvider>
+        <UserProvider>
           <NavBar />
           <Router />
+        </UserProvider>
         </TokenProvider>
   );
 }
