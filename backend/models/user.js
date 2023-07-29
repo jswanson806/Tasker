@@ -25,7 +25,8 @@ class User {
     static async authenticate(email, password) {
         // find the user in db
         const result = await db.query(
-            `SELECT email,
+            `SELECT id,
+                    email,
                     password,
                     first_name AS "firstName",
                     last_name AS "lastName",
