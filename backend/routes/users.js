@@ -37,12 +37,11 @@ router.get("/:id", ensureLoggedIn, async function(req, res, next) {
 
 })
 
-router.post("/:id/apply/:job_id", ensureCorrectUserOrAdmin, async function(req, res, next) {
-    const { id, job_id } = req.params;
+router.post("/apply", async function(req, res, next) {
+    const { user_id, job_id } = req.body;
     try {
-        const resp = await User.applyToJob(id, job_id);
-        console.log(resp)
-        return res.status(201).json({ Message: `User ${id} applied to job ${job_id}` });
+        await User.applyToJob(user_id, job_id);
+        return res.status(201).json({ Message: `User ${user_id} applied to job ${job_id}` });
     } catch(err) {
         return next(err);
     }
