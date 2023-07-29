@@ -15,7 +15,7 @@ import Account from '../components/Account.js';
 
 const Router = () => {
 
-    const { token, updateToken } = useContext(TokenContext);
+    const { token } = useContext(TokenContext);
 
     const loggedIn = (token && token !== '') ? true : false;
 
