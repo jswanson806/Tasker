@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import JobDetails from './JobDetails.js';
 import TaskerApi from '../api.js';
 
-const JobCard = ({user, job}) => {
+const JobCard = ({user, job, fetchCurrUser}) => {
 
     const [showDetails, setShowDetails] = useState(false);
 
@@ -12,13 +12,16 @@ const JobCard = ({user, job}) => {
 
     const applyToJob = async (user_id, job_id) => {
         try {
-        const res = await TaskerApi.applyToJob(user_id, job_id);
+        await TaskerApi.applyToJob(user_id, job_id);
+        toggleDetails();
+        await fetchCurrUser(user.id);
         } catch(err) {
             throw err;
         }
     }
 
     return (
+        
         <div className="jobCard-container">
             <button onClick={toggleDetails}>
                 <div className="jobCard-card">
