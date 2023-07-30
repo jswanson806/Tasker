@@ -9,8 +9,8 @@ import TaskerApi from "../api";
  * SignUp component for user registration.
  *
  * This component renders a sign-up form where users can enter their email, first name,
- * last name, phone number, and password to register for an account. Upon successful
- * registration, the user is logged in, and their token is stored in the local storage
+ * last name, phone number, and password to register for an account. Users can select either 'user' or 'worker' as the registration type.
+ * Upon successful registration, the user is logged in, and their token is stored in the local storage
  * for further authentication. The user is then redirected to the dashboard.
  *
  * @returns {JSX.Element} The rendered sign-up form component.
@@ -31,6 +31,7 @@ const SignUp = () => {
     }
 
     const [formData, setFormData] = useState(INITIAL_STATE);
+    const [ isWorker, setIsWorker ] = useState(false);
     const { token, updateToken } = useContext(TokenContext);
     const { user, updateUser } = useContext(UserContext);
 
@@ -45,14 +46,20 @@ const SignUp = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const userInfo = {user: {
+        let userInfo = {user: {
             email: formData.email,
             firstName: formData.firstName,
             lastName: formData.lastName,
             phone: formData.phone,
             password: formData.password,
-        }}
-        
+            isWorker: false,
+        }};
+
+        // set isWorker property on userInfo object based on state of isWorker
+        if(isWorker){
+            userInfo.user.isWorker = true;
+        }
+
         try {
             // register call to api
             const registerToken = await TaskerApi.registerUser(userInfo);
@@ -62,7 +69,7 @@ const SignUp = () => {
                 // login call to api
                 const res = await TaskerApi.login(userInfo.user.email, userInfo.user.password);
                 const { token, user } = res;
-                const newUser = JSON.stringify({id: user.id, email: user.email});
+                const newUser = JSON.stringify({id: user.id, email: user.email, isWorker: user.isWorker});
                 // set token in local storage for further auth
                 updateToken(token);
                 updateUser(newUser);
@@ -79,10 +86,28 @@ const SignUp = () => {
         
     }
 
+    // toggles state of isWorker boolean
+    const toggleIsWorker = () => {
+        setIsWorker(!isWorker);
+    }
+
     return (
         <div className="signup-container">
             <div className="signup-card">
-                <h1>Sign Up</h1>
+
+                {/* render title depending on state of isWorker */}
+                <h1>{!isWorker ? 'Sign Up to Post Jobs' : 'Sign Up to Find Jobs'}</h1>
+
+                {/* render button to toggle between user and worker signup */}
+                {!isWorker && (
+                    <button data-testid="signup-form-toggle" onClick={toggleIsWorker}>Worker</button>
+                )}
+
+                {isWorker && (
+                    <button data-testid="signup-form-toggle" onClick={toggleIsWorker}>User</button>
+                )}
+                
+                {/* form for registering */}
                 <form onSubmit={handleSubmit}>
                     <label htmlFor="email">Email</label>
                     <input 

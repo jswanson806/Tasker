@@ -49,7 +49,7 @@ const Login = () => {
             
             const res = await TaskerApi.login(userInfo.email, userInfo.password);
             const { token, user } = res;
-            const newUser = JSON.stringify({id: user.id, email: user.email});
+            const newUser = JSON.stringify({id: user.id, email: user.email, isWorker: user.isWorker});
             
             // update localStorage token and user
             updateToken(token);
