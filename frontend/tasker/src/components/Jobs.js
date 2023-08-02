@@ -23,7 +23,6 @@ const Jobs = () => {
 
     // creates job cards if currUser and jobs are populated.
     useEffect(() => {
-        
         // only call once jobs have been populated
         if(jobs.length && currUser) {
             createJobCards();
@@ -38,18 +37,20 @@ const Jobs = () => {
     *
     */
     async function createJobCards(){
+
         // create Set from existing user applications
         const applications = new Set(currUser.applications);
         
         // sets state of jobCards based on filtering logic related to user applications
         setJobCards(jobs.map((job) => {
+            
             // filter out jobs to which user has already applied
             if(!applications.has(job.id) && !showUserJobs) {
-                return <JobCard user={JSON.parse(user)} job={job} fetchCurrUser={fetchCurrUser} key={job.id}/>
+                return <JobCard user={JSON.parse(user)} job={job} fetchCurrUser={fetchCurrUser} key={job.id} data-testid="jobCard-component"/>
             }
             // filter out jobs to which user has not already applied
             if(applications.has(job.id) && showUserJobs) {
-                return <JobCard user={JSON.parse(user)} job={job} fetchCurrUser={fetchCurrUser} key={job.id}/>
+                return <JobCard user={JSON.parse(user)} job={job} fetchCurrUser={fetchCurrUser} key={job.id} data-testid="jobCard-component"/>
             }
         }));
     }
@@ -100,7 +101,7 @@ const Jobs = () => {
     // conditionally renders a button element depending on isWorker property of user
     const toggleJobsButton = JSON.parse(user).isWorker === true 
         ? 
-        <button onClick={toggleUserJobs}>{showUserJobs ? 'All Jobs' 
+        <button data-testid="jobs-button" onClick={toggleUserJobs}>{showUserJobs ? 'All Jobs' 
         : 
         'My Jobs'}</button> : '';
 
