@@ -9,8 +9,10 @@ const Jobs = () => {
 
     const [jobs, setJobs] = useState([]);
     const [jobCards, setJobCards] = useState([]);
-    const [showUserJobs, setShowUserJobs] = useState(false);
+    const [showActiveUserJobs, setShowActiveUserJobs] = useState(false);
+    const [showWorkerJobs, setShowWorkerJobs] = useState(false);
     const [currUser, setCurrUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     
     // on initial render, calls functions to set state of currUser and jobs
     useEffect(() => {
@@ -23,13 +25,27 @@ const Jobs = () => {
 
     // creates job cards if currUser and jobs are populated.
     useEffect(() => {
+
         // only call once jobs have been populated
         if(jobs.length && currUser) {
             createJobCards();
         }
         
-    }, [jobs, showUserJobs, currUser])
+    }, [jobs, showActiveUserJobs, showWorkerJobs, currUser])
 
+    
+    useEffect(() => {
+        if(jobs.length && currUser){
+            setIsLoading(false);
+        }
+
+        if(currUser && currUser.isWorker === true) {
+            setShowWorkerJobs(true);
+        } else {
+            setShowActiveUserJobs(true);
+        }
+    
+    }, [jobs, currUser])
 
     /**
     * Fetches the current user's data, filters out already applied jobs,
@@ -38,21 +54,39 @@ const Jobs = () => {
     */
     async function createJobCards(){
 
-        // create Set from existing user applications
-        const applications = new Set(currUser.applications);
-        
-        // sets state of jobCards based on filtering logic related to user applications
-        setJobCards(jobs.map((job) => {
+        if(currUser.isWorker === true){
+            // create Set from existing user applications
+            const applications = new Set(currUser.applications);
             
-            // filter out jobs to which user has already applied
-            if(!applications.has(job.id) && !showUserJobs) {
-                return <JobCard user={JSON.parse(user)} job={job} fetchCurrUser={fetchCurrUser} key={job.id} data-testid="jobCard-component"/>
-            }
-            // filter out jobs to which user has not already applied
-            if(applications.has(job.id) && showUserJobs) {
-                return <JobCard user={JSON.parse(user)} job={job} fetchCurrUser={fetchCurrUser} key={job.id} data-testid="jobCard-component"/>
-            }
-        }));
+            // sets state of jobCards based on filtering logic related to user applications
+            setJobCards(jobs.map((job) => {
+                
+                // filter out jobs to which user has already applied
+                if(!applications.has(job.id) && !showWorkerJobs) {
+                    return <JobCard user={JSON.parse(user)} job={job} fetchCurrUser={fetchCurrUser} key={job.id} data-testid="jobCard-component"/>
+                }
+                // filter out jobs to which user has not already applied
+                if(applications.has(job.id) && showWorkerJobs) {
+                    return <JobCard user={JSON.parse(user)} job={job} fetchCurrUser={fetchCurrUser} key={job.id} data-testid="jobCard-component"/>
+                }
+            }));
+
+        } else {
+
+            // sets state of jobCards based on filtering logic for jobs posted by user
+            setJobCards(jobs.map((job) => {
+                
+                // filter out jobs not posted by user -> show 'pending' status jobs
+                if(job.postedBy === currUser.id && !showActiveUserJobs) {
+                    return <JobCard user={JSON.parse(user)} job={job} fetchCurrUser={fetchCurrUser} key={job.id} data-testid="jobCard-component"/>
+                }
+                // filter out pending jobs -> show 'active' status jobs
+                if(job.postedBy === currUser.id && job.status === 'active' && showActiveUserJobs) {
+                    return <JobCard user={JSON.parse(user)} job={job} fetchCurrUser={fetchCurrUser} key={job.id} data-testid="jobCard-component"/>
+                }
+            }));
+        }
+
     }
 
 
@@ -95,20 +129,47 @@ const Jobs = () => {
      * Sets state of showUserJobs
     */
     const toggleUserJobs = () => {
-        setShowUserJobs(!showUserJobs);
+        setShowActiveUserJobs(!showActiveUserJobs);
+    }
+
+    /** Inverts the state of showWorkerJobs 
+     * 
+     * Sets state of showWorkerJobs
+    */
+    const toggleWorkerJobs = () => {
+        setShowWorkerJobs(!showWorkerJobs);
     }
 
     // conditionally renders a button element depending on isWorker property of user
-    const toggleJobsButton = JSON.parse(user).isWorker === true 
+    const toggleJobsButton = JSON.parse(user).isWorker == true
         ? 
-        <button data-testid="jobs-button" onClick={toggleUserJobs}>{showUserJobs ? 'All Jobs' 
+        <button data-testid="jobs-worker-button" onClick={toggleWorkerJobs}>{showWorkerJobs ? 'All Jobs' 
         : 
-        'My Jobs'}</button> : '';
+        'My Jobs'}</button>
+        : 
+        <button data-testid="jobs-user-button" onClick={toggleUserJobs}>{showActiveUserJobs ? 'Pending Jobs' 
+        : 
+        'Active Jobs'}</button>;
+
+
+    // conditionally renders header depending on isWorker property of user
+    const userHeader = JSON.parse(user).isWorker === true
+    ?
+    <h1>{showWorkerJobs ? 'My Jobs' : 'All Jobs'}</h1>
+    :
+    <h1>{showActiveUserJobs ? 'Active Jobs' : 'Pending Jobs'}</h1>;
+
+
+    if(isLoading){
+        return (<div>loading...</div>)
+    }
 
 
     return (
         <div>
-            <h1>{showUserJobs ? 'My Jobs' : 'All Jobs'}</h1>
+            <div>
+                {userHeader}
+            </div>
             <div>
                 {toggleJobsButton}
             </div>
