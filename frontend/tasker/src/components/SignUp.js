@@ -99,11 +99,11 @@ const SignUp = () => {
                 <h1>{!isWorker ? 'Sign Up to Post Jobs' : 'Sign Up to Find Jobs'}</h1>
 
                 {/* render button to toggle between user and worker signup */}
-                {!isWorker && (
+                {isWorker && (
                     <button data-testid="signup-form-toggle" onClick={toggleIsWorker}>Worker</button>
                 )}
 
-                {isWorker && (
+                {!isWorker && (
                     <button data-testid="signup-form-toggle" onClick={toggleIsWorker}>User</button>
                 )}
                 
