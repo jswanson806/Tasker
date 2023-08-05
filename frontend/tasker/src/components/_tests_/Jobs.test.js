@@ -6,6 +6,7 @@ import TaskerApi from '../../api.js';
 
 
 const userValue = { user: '{"id": 1, "email": "test@email.com", "isWorker": true}' };
+const userValue2 = { user: '{"id": 1, "email": "test@email.com", "isWorker": false}' };
 
 const getSingleUser = jest.spyOn(TaskerApi, 'getSingleUser')
 const getAllJobs = jest.spyOn(TaskerApi, 'getAllJobs')
@@ -55,10 +56,10 @@ describe('smoke and snapshot tests', () => {
 
 
 
-describe('useEffect hooks', () => {
+describe('useEffect hooks - worker', () => {
 
     beforeEach(() => {
-        getSingleUser.mockResolvedValueOnce({user: {id: 1, applications: [2]}});
+        getSingleUser.mockResolvedValueOnce({user: {id: 1, isWorker: true, applications: [2]}});
         getAllJobs.mockResolvedValueOnce({allJobs: [{id: 1, title: 'testing jobs 1', body: 'job 1 body for testing the job card'}, {id: 2, title: 'testing jobs 2', body: 'job 2 body'}]});
         
     });
@@ -103,11 +104,59 @@ describe('useEffect hooks', () => {
 
 });
 
-
-describe('createJobCards filtering', () => {
+describe('useEffect hooks - user', () => {
 
     beforeEach(() => {
-        getSingleUser.mockResolvedValueOnce({user: {id: 1, applications: [2]}});
+        getSingleUser.mockResolvedValueOnce({user: {id: 1, isWorker: false}});
+        getAllJobs.mockResolvedValueOnce({allJobs: [{id: 1, title: 'testing jobs 1', body: 'job 1 body for testing the job card', postedBy: 1, status: 'active'}, {id: 2, title: 'testing jobs 2', body: 'job 2 body', status: 'pending'}]});
+        
+    });
+      
+    afterEach(() => {
+      jest.clearAllMocks(); // Clears all mocked function calls
+    });
+    
+    test('Jobs hooks - first useEffect', async () => {
+
+        expect.assertions(2);
+
+        await act(async () => {render(
+            <UserContext.Provider value={userValue2}>
+                <Jobs />
+            </UserContext.Provider>
+        )
+        });
+
+        expect(getSingleUser).toHaveBeenCalledTimes(1);
+        expect(getAllJobs).toHaveBeenCalledTimes(1);
+
+    });
+
+    test('Jobs hooks - second useEffect creates jobCard(s)', async () => {
+
+        expect.assertions(1);
+
+        await act(async () => {render(
+            <UserContext.Provider value={userValue2}>
+                <Jobs />
+            </UserContext.Provider>
+        )
+        });
+
+        await waitFor(() => {
+            const jobCard = document.querySelector('.jobCard-card');
+            expect(jobCard).toBeInTheDocument();
+        })
+
+    });
+
+});
+
+
+describe('createJobCards filtering - worker', () => {
+
+    beforeEach(() => {
+        getSingleUser.mockResolvedValueOnce({user: {id: 1, isWorker: true, applications: [2]}});
         getAllJobs.mockResolvedValueOnce({allJobs: [{id: 1, title: 'testing jobs 1', body: 'job 1 body for testing the job card'}, {id: 2, title: 'testing jobs 2', body: 'job 2 body'}]});
         
     });
@@ -158,7 +207,70 @@ describe('createJobCards filtering', () => {
         })
 
         // click the button
-        const button = screen.getByTestId('jobs-button');
+        const button = screen.getByTestId('jobs-worker-button');
+        fireEvent.click(button);
+        
+        // should now show job 2 and not job 1
+        expect(container).toHaveTextContent('testing jobs 2');
+        expect(container).not.toHaveTextContent('testing jobs 1');
+    });
+
+});
+
+describe('createJobCards filtering - user', () => {
+
+    beforeEach(() => {
+        getSingleUser.mockResolvedValueOnce({user: {id: 1, isWorker: false}});
+        getAllJobs.mockResolvedValueOnce({allJobs: [{id: 1, title: 'testing jobs 1', body: 'job 1 body for testing the job card', postedBy: 1, status: 'active'}, {id: 2, title: 'testing jobs 2', body: 'job 2 body', postedBy: 1, status: 'pending'}]});
+        
+    });
+      
+    afterEach(() => {
+      jest.clearAllMocks(); // Clears all mocked function calls
+    });
+
+    test('job cards are filtered based on job.postedBy && status', async () => {
+
+        // expect.assertions(2);
+
+        let renderResult;
+
+        await act(async () => {renderResult = render(
+            <UserContext.Provider value={userValue2}>
+                <Jobs />
+            </UserContext.Provider>
+        )
+        });
+        const { container } = renderResult;
+
+        await waitFor(() => {
+            expect(container).toHaveTextContent('testing jobs 1');
+            expect(container).not.toHaveTextContent('testing jobs 2');
+        })
+
+    });
+
+    test('button shows/hides pending jobs / active jobs', async () => {
+
+        expect.assertions(4);
+
+        let renderResult;
+
+        await act(async () => {renderResult = render(
+            <UserContext.Provider value={userValue2}>
+                <Jobs />
+            </UserContext.Provider>
+        )
+        });
+        const { container } = renderResult;
+
+        await waitFor(() => {
+            expect(container).toHaveTextContent('testing jobs 1');
+            expect(container).not.toHaveTextContent('testing jobs 2');
+        })
+
+        // click the button
+        const button = screen.getByTestId('jobs-user-button');
         fireEvent.click(button);
         
         // should now show job 2 and not job 1
@@ -169,10 +281,10 @@ describe('createJobCards filtering', () => {
 });
 
 
-describe('jobCard integration', () => {
+describe('jobCard integration - worker', () => {
 
     beforeEach(() => {
-        getSingleUser.mockResolvedValueOnce({user: {id: 1, applications: [2]}});
+        getSingleUser.mockResolvedValueOnce({user: {id: 1, isWorker: true, applications: [2]}});
         getAllJobs.mockResolvedValueOnce({allJobs: [{id: 1, title: 'testing jobs 1', body: 'job 1 body for testing the job card'}, {id: 2, title: 'testing jobs 2', body: 'job 2 body'}]});
         
     });
@@ -240,11 +352,82 @@ describe('jobCard integration', () => {
 
 });
 
-
-describe('jobDetails integration', () => {
+describe('jobCard integration - user', () => {
 
     beforeEach(() => {
-        getSingleUser.mockResolvedValueOnce({user: {id: 1, applications: [2]}});
+        getSingleUser.mockResolvedValueOnce({user: {id: 1, isWorker: false}});
+        getAllJobs.mockResolvedValueOnce({allJobs: [{id: 1, title: 'testing jobs 1', body: 'job 1 body for testing the job card', postedBy: 1, status: 'active'}, {id: 2, title: 'testing jobs 2', body: 'job 2 body', postedBy: 1, status: 'pending'}]});
+        
+    });
+      
+    afterEach(() => {
+      jest.clearAllMocks(); // Clears all mocked function calls
+    });
+
+
+    test('should show sliced job body to 30 characters', async () => {
+
+        expect.assertions(3);
+
+        let renderResult;
+
+        await act(async () => {renderResult = render(
+            <UserContext.Provider value={userValue2}>
+                <Jobs />
+            </UserContext.Provider>
+        )
+        });
+        const { container } = renderResult;
+
+        // should show job 1 and not job 2
+        await waitFor(() => {
+            expect(container).toHaveTextContent('testing jobs 1');
+        })
+
+        expect(container).toHaveTextContent('job 1 body for testing the job...');
+        expect(container).not.toHaveTextContent('job 1 body for testing the job card');
+
+    });
+
+    test('should show/hide job details', async () => {
+
+        expect.assertions(3);
+
+        let renderResult;
+
+        await act(async () => {renderResult = render(
+            <UserContext.Provider value={userValue2}>
+                <Jobs />
+            </UserContext.Provider>
+        )
+        });
+        const { container } = renderResult;
+
+        // should show job 1 and not job 2
+        await waitFor(() => {
+            expect(container).toHaveTextContent('testing jobs 1');
+        })
+
+
+        const jobCard = document.querySelector('.jobCard-card');
+
+        // click the jobCard
+        fireEvent.click(jobCard);
+
+        // should show job details card
+        const jobDetails = screen.getByTestId('jobDetails-card');
+        expect(jobDetails).toBeInTheDocument();
+        expect(container).toHaveTextContent('job 1 body for testing the job card');
+
+    });
+
+});
+
+
+describe('jobDetails integration - worker', () => {
+
+    beforeEach(() => {
+        getSingleUser.mockResolvedValueOnce({user: {id: 1, isWorker: true, applications: [2]}});
         getAllJobs.mockResolvedValueOnce({allJobs: [{id: 1, title: 'testing jobs 1', body: 'job 1 body for testing the job card'}, {id: 2, title: 'testing jobs 2', body: 'job 2 body'}]});
         applyToJob.mockResolvedValueOnce('');
         
@@ -364,7 +547,7 @@ describe('jobDetails integration', () => {
         // click 'apply' and wait for state update
         await act(async () => {
             fireEvent.click(applyButton);
-            getSingleUser.mockResolvedValueOnce({user: {id: 1, applications: [2, 1]}})
+            getSingleUser.mockResolvedValueOnce({user: {id: 1, isWorker: true, applications: [2, 1]}})
         })
         
         // should no longer show job 1 or job 2
@@ -372,11 +555,198 @@ describe('jobDetails integration', () => {
         expect(container).not.toHaveTextContent('testing jobs 2')
 
         // click the my jobs button
-        const button = screen.getByTestId('jobs-button');
+        const button = screen.getByTestId('jobs-worker-button');
         fireEvent.click(button);
 
         // should now show job 1 and job 2
         expect(container).toHaveTextContent('testing jobs 1')
         expect(container).toHaveTextContent('testing jobs 2')
     });
+});
+
+describe('jobDetails integration - user', () => {
+
+    beforeEach(() => {
+        getSingleUser.mockResolvedValueOnce({user: {id: 1, isWorker: false}});
+        getAllJobs.mockResolvedValueOnce({allJobs: [{id: 1, title: 'testing jobs 1', body: 'job 1 body for testing the job card', postedBy: 1, status: 'active'}, {id: 2, title: 'testing jobs 2', body: 'job 2 body', postedBy: 1, status: 'pending'}]});
+        
+    });
+      
+    afterEach(() => {
+      jest.clearAllMocks(); // Clears all mocked function calls
+    });
+
+    test('close button hides details', async () => {
+
+        expect.assertions(3);
+
+        let renderResult;
+
+        await act(async () => {renderResult = render(
+            <UserContext.Provider value={userValue2}>
+                <Jobs />
+            </UserContext.Provider>
+        )
+        });
+        const { container } = renderResult;
+
+        // should show job 1 and not job 2
+        await waitFor(() => {
+            expect(container).toHaveTextContent('testing jobs 1');
+        })
+
+        const jobCard = document.querySelector('.jobCard-card');
+
+        // click the jobCard
+        fireEvent.click(jobCard);
+
+        // should show job details card
+        expect(container).toHaveTextContent('job 1 body for testing the job card');
+
+        const closeButton = screen.getByTestId('jobDetails-close-button')
+
+        // click 'apply' and wait for state update
+        await act(async () => {
+            fireEvent.click(closeButton);
+        })
+        
+        // should have hidden the job details after applying
+        expect(container).not.toHaveTextContent('job 1 body for testing the job card')
+    });
+
+    test('apply button is not rendered', async () => {
+
+        expect.assertions(4);
+
+        let renderResult;
+
+        await act(async () => {renderResult = render(
+            <UserContext.Provider value={userValue2}>
+                <Jobs />
+            </UserContext.Provider>
+        )
+        });
+        const { container } = renderResult;
+
+        // should show job 1 and not job 2
+        await waitFor(() => {
+            expect(container).toHaveTextContent('testing jobs 1');
+        })
+
+        const jobCard = document.querySelector('.jobCard-card');
+
+        // click the jobCard
+        fireEvent.click(jobCard);
+
+        // should show job details card
+        expect(container).toHaveTextContent('job 1 body for testing the job card');
+        // should have hidden the job details after applying
+        expect(container).toHaveTextContent('Close')
+        expect(container).not.toHaveTextContent('Apply')
+    });
+
+});
+
+
+describe('createJob integration', () => {
+
+    beforeEach(() => {
+        
+        getAllJobs.mockResolvedValueOnce({allJobs: [{id: 1, title: 'testing jobs 1', body: 'job 1 body for testing the job card', postedBy: 1, status: 'active'}, {id: 2, title: 'testing jobs 2', body: 'job 2 body', postedBy: 1, status: 'pending'}]});
+        
+    });
+      
+    afterEach(() => {
+      jest.clearAllMocks(); // Clears all mocked function calls
+    });
+
+    test('does not render for worker', async () => {
+
+        expect.assertions(1);
+
+        getSingleUser.mockResolvedValueOnce({user: {id: 1, isWorker: true}});
+        
+        let renderResult;
+
+        await act(async () => {renderResult = render(
+            <UserContext.Provider value={userValue}>
+                <Jobs />
+            </UserContext.Provider>
+        )
+        });
+        const { container } = renderResult;
+
+        // button should not be rendered
+        expect(container).not.toHaveTextContent('Create New Job');
+    
+
+    });
+
+    test('renders for user', async () => {
+
+        expect.assertions(1);
+
+        getSingleUser.mockResolvedValueOnce({user: {id: 1, isWorker: false}});
+
+        let renderResult;
+
+        await act(async () => {renderResult = render(
+            <UserContext.Provider value={userValue2}>
+                <Jobs />
+            </UserContext.Provider>
+        )
+        });
+        const { container } = renderResult;
+
+        // button should be rendered
+        expect(container).toHaveTextContent('Create New Job');
+   
+
+    });
+
+    test('button reveals/hides createJob form', async () => {
+
+        expect.assertions(9);
+
+        getSingleUser.mockResolvedValueOnce({user: {id: 1, isWorker: false}});
+
+        let renderResult;
+
+        await act(async () => {renderResult = render(
+            <UserContext.Provider value={userValue2}>
+                <Jobs />
+            </UserContext.Provider>
+        )
+        });
+        const { container } = renderResult;
+
+        // these should be hidden
+        expect(container).not.toHaveTextContent('Job Title:')
+        expect(container).not.toHaveTextContent('Job Description:')
+        expect(container).not.toHaveTextContent('Address:')
+
+        const button = screen.getByTestId("jobs-create-job-button");
+
+        // click the create job button
+        await act(async () => {
+            fireEvent.click(button);
+        })
+
+        // these should now be visible
+        expect(container).toHaveTextContent('Job Title:')
+        expect(container).toHaveTextContent('Job Description:')
+        expect(container).toHaveTextContent('Address:')
+
+        // click the create job button again
+        await act(async () => {
+            fireEvent.click(button);
+        })
+
+        // these should be hidden
+        expect(container).not.toHaveTextContent('Job Title:')
+        expect(container).not.toHaveTextContent('Job Description:')
+        expect(container).not.toHaveTextContent('Address:')
+
+    });
+
 });
