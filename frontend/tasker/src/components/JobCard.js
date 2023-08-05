@@ -31,11 +31,20 @@ const JobCard = ({user, job, fetchCurrUser}) => {
             </button>
 
             {/* Render the JobDetails component as a pop-up based on showDetails status */}
-            {showDetails && (
+            {showDetails && user.isWorker && (
             <div className="jobDetails-container">
                 <div className="jobDetails-card" data-testid="jobDetails-card">
                     <JobDetails job={job} key={job.id}/>
                     <button data-testid="jobDetails-apply-button" onClick={() => applyToJob(user.id, job.id)}>Apply</button>
+                    <button data-testid="jobDetails-close-button" onClick={toggleDetails}>Close</button>
+                </div>
+            </div>
+            )}
+
+            {showDetails && !user.isWorker && (
+            <div className="jobDetails-container">
+                <div className="jobDetails-card" data-testid="jobDetails-card">
+                    <JobDetails job={job} key={job.id}/>
                     <button data-testid="jobDetails-close-button" onClick={toggleDetails}>Close</button>
                 </div>
             </div>
