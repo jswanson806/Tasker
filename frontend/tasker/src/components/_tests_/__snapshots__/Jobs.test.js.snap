@@ -3,34 +3,23 @@
 exports[`smoke and snapshot tests should match snapshot 1`] = `
 <DocumentFragment>
   <div>
-    <h1>
-      All Jobs
-    </h1>
+    <div>
+      <h1
+        data-testid="jobs-worker-title"
+      >
+        All Jobs
+      </h1>
+    </div>
+    <div />
+    <div />
     <div>
       <button
-        data-testid="jobs-button"
+        data-testid="jobs-worker-button"
       >
         My Jobs
       </button>
     </div>
-    <div>
-      <div
-        class="jobCard-container"
-      >
-        <button>
-          <div
-            class="jobCard-card"
-          >
-            <h3>
-              testing jobs 1
-            </h3>
-            <p>
-              job 1 body for testing the job...
-            </p>
-          </div>
-        </button>
-      </div>
-    </div>
+    <div />
   </div>
 </DocumentFragment>
 `;
