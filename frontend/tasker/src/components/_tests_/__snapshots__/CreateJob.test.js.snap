@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createJob form smoke and snapshot tests should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="createJob-container"
+    data-testid="createJob-form-container"
+  >
+    <form>
+      <label
+        for="title"
+      >
+        Job Title: 
+      </label>
+      <input
+        data-testid="createJob-form-title-input"
+        id="title"
+        name="title"
+        placeholder="Job Title"
+        type="text"
+        value=""
+      />
+      <label
+        for="body"
+      >
+        Job Description: 
+      </label>
+      <textarea
+        cols="40"
+        data-testid="createJob-form-body-input"
+        id="body"
+        name="body"
+        placeholder="Briefly describe the job..."
+        rows="6"
+      />
+      <label
+        for="address"
+      >
+        Address: 
+      </label>
+      <input
+        data-testid="createJob-form-address-input"
+        id="address"
+        name="address"
+        placeholder="Adress"
+        type="text"
+        value=""
+      />
+      <button
+        data-testid="createJob-form-button"
+        type="submit"
+      >
+        Post Job
+      </button>
+    </form>
+  </div>
+</DocumentFragment>
+`;
