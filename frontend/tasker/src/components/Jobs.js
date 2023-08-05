@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import TaskerApi from '../api';
 import JobCard from './JobCard.js';
 import { UserContext } from '../helpers/UserContext';
+import CreateJob from './CreateJob.js';
 
 const Jobs = () => {
 
@@ -9,8 +10,9 @@ const Jobs = () => {
 
     const [jobs, setJobs] = useState([]);
     const [jobCards, setJobCards] = useState([]);
-    const [showActiveUserJobs, setShowActiveUserJobs] = useState(false);
+    const [showActiveUserJobs, setShowActiveUserJobs] = useState(true);
     const [showWorkerJobs, setShowWorkerJobs] = useState(false);
+    const [showCreateJob, setShowCreateJob] = useState(false)
     const [currUser, setCurrUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     
@@ -33,16 +35,10 @@ const Jobs = () => {
         
     }, [jobs, showActiveUserJobs, showWorkerJobs, currUser])
 
-    
+
     useEffect(() => {
         if(jobs.length && currUser){
             setIsLoading(false);
-        }
-
-        if(currUser && currUser.isWorker === true) {
-            setShowWorkerJobs(true);
-        } else {
-            setShowActiveUserJobs(true);
         }
     
     }, [jobs, currUser])
@@ -77,7 +73,7 @@ const Jobs = () => {
             setJobCards(jobs.map((job) => {
                 
                 // filter out jobs not posted by user -> show 'pending' status jobs
-                if(job.postedBy === currUser.id && !showActiveUserJobs) {
+                if(job.postedBy === currUser.id && job.status === 'pending' && !showActiveUserJobs) {
                     return <JobCard user={JSON.parse(user)} job={job} fetchCurrUser={fetchCurrUser} key={job.id} data-testid="jobCard-component"/>
                 }
                 // filter out pending jobs -> show 'active' status jobs
@@ -141,7 +137,7 @@ const Jobs = () => {
     }
 
     // conditionally renders a button element depending on isWorker property of user
-    const toggleJobsButton = JSON.parse(user).isWorker == true
+    const toggleJobsButton = JSON.parse(user).isWorker === true
         ? 
         <button data-testid="jobs-worker-button" onClick={toggleWorkerJobs}>{showWorkerJobs ? 'All Jobs' 
         : 
@@ -151,14 +147,27 @@ const Jobs = () => {
         : 
         'Active Jobs'}</button>;
 
+    
+    const toggleCreateJob = () => {
+        setShowCreateJob(!showCreateJob);
+    }
+
+    
 
     // conditionally renders header depending on isWorker property of user
     const userHeader = JSON.parse(user).isWorker === true
     ?
-    <h1>{showWorkerJobs ? 'My Jobs' : 'All Jobs'}</h1>
+    <h1 data-testid="jobs-worker-title">{showWorkerJobs ? 'My Jobs' : 'All Jobs'}</h1>
     :
-    <h1>{showActiveUserJobs ? 'Active Jobs' : 'Pending Jobs'}</h1>;
+    <h1 data-testid="jobs-user-title">{showActiveUserJobs ? 'Active Jobs' : 'Pending Jobs'}</h1>;
 
+
+    // create job button only rendered for users
+    const createJobButton = JSON.parse(user).isWorker === false 
+    ? 
+    <button data-testid="jobs-create-job-button" onClick={toggleCreateJob}>Create New Job</button>
+    :
+    "";
 
     if(isLoading){
         return (<div>loading...</div>)
@@ -169,6 +178,14 @@ const Jobs = () => {
         <div>
             <div>
                 {userHeader}
+            </div>
+            <div>
+                {createJobButton}
+            </div>
+            <div>
+                {showCreateJob && ( 
+                    <CreateJob toggleCreateJob={toggleCreateJob}/> 
+                )}
             </div>
             <div>
                 {toggleJobsButton}
