@@ -42,7 +42,7 @@ describe('TaskerApi', () => {
 
       const token = await TaskerApi.login();
 
-      expect(token).toEqual('dummyToken');
+      expect(token).toEqual(responseData);
     });
 
   describe('user tests', () => {
