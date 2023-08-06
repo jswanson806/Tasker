@@ -2,17 +2,24 @@ import React from 'react';
 import SignUp from '../SignUp.js';
 import {act, render, screen, fireEvent} from '@testing-library/react';
 import { MemoryRouter } from "react-router-dom";
+import { TokenContext } from '../../helpers/TokenContext.js';
 import TaskerApi from '../../api.js';
+import { UserContext } from '../../helpers/UserContext.js';
 
+const userValue = { user: '{"id": 1, "email": "test@email.com", "isWorker": true}' };
 
 describe("signup form smoke and snapshot tests", () => {
 
     it("should render without crashing", async () => {
 
         await act(async () => {render(
-                <MemoryRouter>
-                    <SignUp />
-                </MemoryRouter>
+            <MemoryRouter>
+                <TokenContext.Provider value={'dummyToken'}>
+                    <UserContext.Provider value={userValue}>
+                        <SignUp />
+                    </UserContext.Provider>
+                </TokenContext.Provider>
+            </MemoryRouter>
         )
         });
     });
@@ -21,9 +28,13 @@ describe("signup form smoke and snapshot tests", () => {
         let asFragment;
 
         await act(async () => {const {asFragment: fragment} = render(
-                <MemoryRouter>
-                    <SignUp />
-                </MemoryRouter>
+            <MemoryRouter>
+                <TokenContext.Provider value={'dummyToken'}>
+                    <UserContext.Provider value={userValue}>
+                        <SignUp />
+                    </UserContext.Provider>
+                </TokenContext.Provider>
+            </MemoryRouter>
         )
         asFragment = fragment;
         });
@@ -36,9 +47,13 @@ describe("Handles form input correctly", () => {
 
     it('updates form input correctly', async () => {
         await act(async () => {render(
-                <MemoryRouter>
-                    <SignUp />
-                </MemoryRouter>
+            <MemoryRouter>
+                <TokenContext.Provider value={'dummyToken'}>
+                    <UserContext.Provider value={userValue}>
+                        <SignUp />
+                    </UserContext.Provider>
+                </TokenContext.Provider>
+            </MemoryRouter>
         )
         });
 
@@ -68,9 +83,13 @@ describe("Handles form input correctly", () => {
         const mockLogin = jest.spyOn(TaskerApi, 'login')
 
         await act(async () => {render(
-                <MemoryRouter>
-                    <SignUp />
-                </MemoryRouter>
+            <MemoryRouter>
+                <TokenContext.Provider value={'dummyToken'}>
+                    <UserContext.Provider value={userValue}>
+                        <SignUp />
+                    </UserContext.Provider>
+                </TokenContext.Provider>
+            </MemoryRouter>
         )
         });
 
@@ -91,13 +110,14 @@ describe("Handles form input correctly", () => {
             fireEvent.click(btn);
         })
 
-        expect(mockRegisterUser).toHaveBeenCalledWith({ 
+        expect(mockRegisterUser).toHaveBeenCalledWith({user: { 
             email: "test@email.com", 
             firstName: "Testy",
             lastName: "McTesty",
+            isWorker: false,
             phone: "(444)444-4444",
             password: "Password1"
-        });
+        }});
 
         expect(mockLogin).toHaveBeenCalledWith("test@email.com", "Password1")
     })
