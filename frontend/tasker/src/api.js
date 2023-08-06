@@ -27,7 +27,6 @@ class TaskerApi {
     static async registerUser(userInfo) {
         try {
             const res = await this.request(`auth/register`, userInfo, "post");
-            console.log("RES:", res)
             return res.token;
         } catch(err) {
             console.log("Error in registerUser method of the TaskerApi:", err);
