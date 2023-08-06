@@ -14,7 +14,7 @@ router.get("/for/:id", async function(req, res, next){
     const { id } = req.params;
     try {
         const result = await Review.getForUser(id);
-        return res.status(200).json({Reviews: result });
+        return res.status(200).json({reviews: result });
     } catch(err) {
         return next(err);
     }
@@ -28,7 +28,7 @@ router.get("/from/:id", ensureCorrectUserOrAdmin, async function(req, res, next)
     const { id } = req.params;
     try {
         const result = await Review.getFromUser(id);
-        return res.status(200).json({Reviews: result});
+        return res.status(200).json({reviews: result});
     } catch(err) {
         return next(err);
     }
