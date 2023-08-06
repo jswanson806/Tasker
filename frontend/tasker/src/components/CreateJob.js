@@ -13,7 +13,7 @@ const CreateJob = ({toggleCreateJob}) => {
     }
 
     const [formData, setFormData] = useState(INITIAL_STATE);
-    const { user, updateUser } = useContext(UserContext);
+    const { user } = useContext(UserContext);
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -21,7 +21,7 @@ const CreateJob = ({toggleCreateJob}) => {
             ...formData,
             [name]: value
         }))
-    }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
