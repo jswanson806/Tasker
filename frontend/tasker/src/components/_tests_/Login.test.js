@@ -1,19 +1,25 @@
 import React from 'react';
-import 'jest-localstorage-mock';
 import {act, render, screen, fireEvent} from '@testing-library/react';
 import { MemoryRouter } from "react-router-dom";
+import { TokenContext } from '../../helpers/TokenContext.js';
+import { UserContext } from '../../helpers/UserContext.js';
 import TaskerApi from '../../api.js';
 import Login from '../Login.js';
 
+const userValue = { user: '{"id": 1, "email": "test@email.com", "isWorker": true}' };
 
 describe("login form smoke and snapshot tests", () => {
 
     it("should render without crashing", async () => {
 
         await act(async () => {render(
-                <MemoryRouter>
-                    <Login />
-                </MemoryRouter>
+            <MemoryRouter>
+                <TokenContext.Provider value={'dummyToken'}>
+                    <UserContext.Provider value={userValue}>
+                        <Login />
+                    </UserContext.Provider>
+                </TokenContext.Provider>
+            </MemoryRouter>
         )
         });
     });
@@ -22,9 +28,13 @@ describe("login form smoke and snapshot tests", () => {
         let asFragment;
 
         await act(async () => {const {asFragment: fragment} = render(
-                <MemoryRouter>
-                    <Login />
-                </MemoryRouter>
+            <MemoryRouter>
+                <TokenContext.Provider value={'dummyToken'}>
+                    <UserContext.Provider value={userValue}>
+                        <Login />
+                    </UserContext.Provider>
+                </TokenContext.Provider>
+            </MemoryRouter>
         )
         asFragment = fragment;
         });
@@ -37,9 +47,13 @@ describe("Handles form input correctly", () => {
 
     it('updates form input correctly', async () => {
         await act(async () => {render(
-                <MemoryRouter>
-                    <Login />
-                </MemoryRouter>
+            <MemoryRouter>
+                <TokenContext.Provider value={'dummyToken'}>
+                    <UserContext.Provider value={userValue}>
+                        <Login />
+                    </UserContext.Provider>
+                </TokenContext.Provider>
+            </MemoryRouter>
         )
         });
 
@@ -58,9 +72,13 @@ describe("Handles form input correctly", () => {
         const mockLogin = jest.spyOn(TaskerApi, 'login')
 
         await act(async () => {render(
-                <MemoryRouter>
-                    <Login />
-                </MemoryRouter>
+            <MemoryRouter>
+                <TokenContext.Provider value={'dummyToken'}>
+                    <UserContext.Provider value={userValue}>
+                        <Login />
+                    </UserContext.Provider>
+                </TokenContext.Provider>
+            </MemoryRouter>
         )
         });
 
