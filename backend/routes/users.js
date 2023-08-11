@@ -29,7 +29,6 @@ router.get("/", ensureIsAdmin, async function(req, res, next) {
 router.get("/:id", ensureLoggedIn, async function(req, res, next) {
     try {
         const user = await User.get(req.params.id)
-        console.log("User.get response: ", user);
         return res.status(200).json({ user })
     } catch(err) {
         return next(err);
@@ -37,11 +36,21 @@ router.get("/:id", ensureLoggedIn, async function(req, res, next) {
 
 })
 
-router.post("/apply", async function(req, res, next) {
+router.post("/apply", ensureCorrectUserOrAdmin, async function(req, res, next) {
     const { user_id, job_id } = req.body;
     try {
         await User.applyToJob(user_id, job_id);
         return res.status(201).json({ Message: `User ${user_id} applied to job ${job_id}` });
+    } catch(err) {
+        return next(err);
+    }
+})
+
+router.post("/withdraw", ensureCorrectUserOrAdmin, async function(req, res, next) {
+    const { user_id, job_id } = req.body;
+    try {
+        await User.withdrawApplication(user_id, job_id);
+        return res.status(201).json({ Message: `User ${user_id} withdrew application to job ${job_id}` });
     } catch(err) {
         return next(err);
     }
