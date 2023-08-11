@@ -97,15 +97,16 @@ describe('GET: /users/:id', function() {
     })
 })
 
-describe('POST: /users/:user_id/apply/:job_id', function() {
+describe('POST: /users/apply', function() {
     test('works: admin add application to user', async function(){
         expect.assertions(4);
 
         const user_id = testUserIds[1];
-        const job_id = testJobIds[0];
+        const job_id = testJobIds[1];
 
         const resp = await request(app)
-            .post(`/users/${user_id}/apply/${job_id}`)
+            .post(`/users/apply`)
+            .send({user_id, job_id})
             .set('authorization', `Bearer ${adminToken}`)
             
         expect(resp.status).toBe(201);
@@ -133,10 +134,85 @@ describe('POST: /users/:user_id/apply/:job_id', function() {
         expect.assertions(1);
 
         const user_id = testUserIds[1];
-        const job_id = testJobIds[0];
+        const job_id = testJobIds[1];
 
         const resp = await request(app)
-            .post(`/users/${user_id}/apply/${job_id}`)
+            .post(`/users/apply`)
+            .send({user_id, job_id})
+            .set('authorization', `Bearer ${u1Token}`)
+            
+        expect(resp.status).toBe(201);
+
+    })
+})
+
+describe('POST: /users/withdraw', function() {
+    test('works: admin add application to user', async function(){
+        expect.assertions(8);
+
+        const user_id = testUserIds[1];
+        const job_id = testJobIds[1];
+
+        const resp = await request(app)
+            .post(`/users/apply`)
+            .send({user_id, job_id})
+            .set('authorization', `Bearer ${adminToken}`)
+            
+        expect(resp.status).toBe(201);
+
+        expect(resp.body).toEqual({ Message: `User ${user_id} applied to job ${job_id}` });
+
+        const resp2 = await request(app)
+            .get(`/users/${user_id}`)
+            .set('authorization', `Bearer ${u1Token}`)
+        expect(resp2.status).toBe(200);
+        expect(resp2.body).toEqual({"user": {
+            "id": testUserIds[1],
+            "email": 'u5@email.com',
+            "firstName": 'fn5',
+            "lastName": 'ln5',
+            "isWorker": false,
+            "isAdmin": false,
+            "phone": '555-555-5555',
+            "avgRating": 2,
+            "applications": [testJobIds[0], job_id]
+        }});
+
+        const resp3 = await request(app)
+            .post(`/users/withdraw`)
+            .send({user_id, job_id})
+            .set('authorization', `Bearer ${adminToken}`)
+            
+        expect(resp3.status).toBe(201);
+
+        expect(resp3.body).toEqual({ Message: `User ${user_id} withdrew application to job ${job_id}` });
+
+        const resp4 = await request(app)
+            .get(`/users/${user_id}`)
+            .set('authorization', `Bearer ${u1Token}`)
+        expect(resp4.status).toBe(200);
+        expect(resp4.body).toEqual({"user": {
+            "id": testUserIds[1],
+            "email": 'u5@email.com',
+            "firstName": 'fn5',
+            "lastName": 'ln5',
+            "isWorker": false,
+            "isAdmin": false,
+            "phone": '555-555-5555',
+            "avgRating": 2,
+            "applications": [testJobIds[0]]
+        }});
+    })
+
+    test('works: correct user add application to user', async function(){
+        expect.assertions(1);
+
+        const user_id = testUserIds[1];
+        const job_id = testJobIds[1];
+
+        const resp = await request(app)
+            .post(`/users/apply`)
+            .send({user_id, job_id})
             .set('authorization', `Bearer ${u1Token}`)
             
         expect(resp.status).toBe(201);
