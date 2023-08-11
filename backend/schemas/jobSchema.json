@@ -49,7 +49,7 @@
                     "default": "",
                     "title": "The status Schema",
                     "examples": [
-                        "posted"
+                        "pending"
                     ]
                 },
                 "address": {
