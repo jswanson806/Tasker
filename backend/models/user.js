@@ -63,7 +63,6 @@ class User {
 
     static async register({email, phone, password, firstName, lastName, isWorker, isAdmin}) {
         
-        console.log(password)
         // check for duplicate user email
         const duplicateCheck = await db.query(
             `SELECT email
@@ -164,6 +163,7 @@ class User {
         );
 
         const userAvgRating = await Review.getAverageRating(id);
+        console.log('userApps', userApplicationsRes.rows)
 
         // map id of all jobs to which user has applied to array as value for "applications" key on user object
         user.applications = userApplicationsRes.rows.map(a => a.applied_to);
@@ -273,6 +273,45 @@ class User {
         await db.query(
             `INSERT INTO applications (applied_by, applied_to)
             VALUES ($1, $2)`,
+            [user_id, job_id]
+        )
+    }
+
+    /** Insert application to job by user into applications table
+     * 
+     * Returns undefined
+     * 
+     * Throws NotFoundError if user or job is not found in db
+     */
+    static async withdrawApplication(user_id, job_id){
+        // query user
+        const checkUser = await db.query(
+            `SELECT id
+            FROM users
+            WHERE id = $1`,
+            [user_id]
+        )
+
+        const user = checkUser.rows[0];
+        // check for valid user in db
+        if(!user) throw new NotFoundError(`User not found with id: ${user_id}`);
+
+        // query job
+        const checkJob = await db.query(
+            `SELECT id
+            FROM jobs
+            WHERE id = $1`,
+            [job_id]
+        )
+        
+        const job = checkJob.rows[0];
+        // check for valid job in db
+        if(!job) throw new NotFoundError(`Job not found with id: ${job_id}`);
+        
+        // insert user_id and job_id into applications table
+        await db.query(
+            `DELETE FROM applications 
+            WHERE applied_by = $1 AND applied_to = $2`,
             [user_id, job_id]
         )
     }
