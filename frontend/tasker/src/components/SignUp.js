@@ -35,12 +35,40 @@ const SignUp = () => {
     const { token, updateToken } = useContext(TokenContext);
     const { user, updateUser } = useContext(UserContext);
 
+    // accepts a value and removes non-integer characters and inserts hyphens
+    function formatPhoneNumber(value) {
+        let cleanedValue = value.replace(/\D/g, '');
+        let match = cleanedValue.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
+        
+        if (!match) return cleanedValue;
+    
+        return match[1] + (match[1] && match[2] ? '-' : '') + match[2] + (match[3] ? '-' : '') + match[3];
+      }
+
+
     const handleChange = (e) => {
         const {name, value} = e.target;
-        setFormData(formData => ({
-            ...formData,
-            [name]: value
-        }))
+
+        // conditionally format field for phone number or else just update the field
+        if(name === "phone"){
+            let inputValue = e.target.value.replace(/\D/g, ''); // Remove non-digit characters
+            let formattedValue = formatPhoneNumber(inputValue);
+            
+            // update field with formatted value as user types
+            e.target.value = formattedValue;
+
+            setFormData(formData => ({
+                ...formData,
+                [name]: formattedValue
+            }))
+
+        } else {
+
+            setFormData(formData => ({
+                ...formData,
+                [name]: value
+            }))
+        }
     }
 
     const handleSubmit = async (e) => {
@@ -54,6 +82,8 @@ const SignUp = () => {
             password: formData.password,
             isWorker: false,
         }};
+
+        
 
         // set isWorker property on userInfo object based on state of isWorker
         if(isWorker){
@@ -142,7 +172,7 @@ const SignUp = () => {
                     <label htmlFor="phone">Phone</label>
                     <input
                         id="phone"
-                        type="text"
+                        type="tel"
                         name="phone"
                         placeholder="Phone"
                         data-testid="signup-form-phone-input"
