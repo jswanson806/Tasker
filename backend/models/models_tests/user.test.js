@@ -51,6 +51,7 @@ describe('authenticate user', function() {
             firstName: 'fn1',
             lastName: 'ln1',
             phone: '1231231234',
+            id: expect.any(Number),
             email: 'u1@email.com',
             isWorker: false,
             isAdmin: false
@@ -245,4 +246,52 @@ describe('applies to a job', function () {
             expect(err instanceof NotFoundError).toBeTruthy();
         }
     })
+
+describe('withdraws job application', function () {
+    test('works', async function() {
+        // query an existing user
+        const result = await User.get(testUserIds[0]);
+        // length of applications array should be 1
+        expect(result.applications.length).toBe(1)
+        // first test job's id should be in applications array
+        expect(result.applications[0]).toBe(testJobIds[0])
+
+        // add a new application for test job 2
+        await User.applyToJob(testUserIds[0], testJobIds[1]);
+
+        // query same user
+        const result3 = await User.get(testUserIds[0]);
+        // length of applications array should be 2
+        expect(result3.applications.length).toBe(2)
+        // first test job's id should be in applications array
+        expect(result3.applications[1]).toBe(testJobIds[1])
+
+        // withdraw application for tesst job 2
+        await User.withdrawApplication(testUserIds[0], testJobIds[1]);
+
+        // query same user
+        const result4 = await User.get(testUserIds[0]);
+        // length of applications array should be 1
+        expect(result4.applications.length).toBe(1)
+        // first test job's id should not be in applications array
+        expect(result4.applications[1]).toBe(undefined)
+    })
+
+    test('error if not a valid user', async function() {
+        try {
+            await User.withdrawApplication(99999999, testJobIds[1]);
+        } catch(err) {
+            expect(err instanceof NotFoundError).toBeTruthy();
+        }
+    })
+
+    test('error if not a valid job', async function() {
+        try {
+            await User.withdrawApplication(testUserIds[0], 99999999);
+        } catch(err) {
+            expect(err instanceof NotFoundError).toBeTruthy();
+        }
+    })
 })
+
+});
