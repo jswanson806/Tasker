@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`smoke and snapshot tests should match the snapshot 1`] = `
+<DocumentFragment>
+  <div>
+    <h1>
+      Reviews
+    </h1>
+    <div>
+      <div>
+        <h1>
+          test review 1
+        </h1>
+        <h3>
+          4
+        </h3>
+        <p>
+          test review 1 body
+        </p>
+      </div>
+      <div>
+        <h1>
+          test review 2
+        </h1>
+        <h3>
+          3
+        </h3>
+        <p>
+          test review 2 body
+        </p>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
