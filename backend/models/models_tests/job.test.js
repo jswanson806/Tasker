@@ -3,7 +3,7 @@
 process.env.NODE_ENV = "test";
 
 const {
-  NotFoundError
+  NotFoundError, ExpressError
 } = require("../../expressError.js");
 const Job = require("../job.js");
 const {
@@ -26,12 +26,98 @@ afterAll(commonAfterAll);
 
 describe('find all jobs', function() {
     test('works', async function() {
-        // query all jobs
+
         const result = await Job.findAll();
-        // length of returned result should be 3 to match test data
-        expect(result.length).toBe(3);
+        // length of returned result should be 4 to match test data
+        expect(result.length).toBe(4);
     })
 })
+
+describe('find jobs by filter ', function() {
+    test('works - status active', async function() {
+        const data = {
+            status: 'active'
+        }
+
+        const result = await Job.findAndFilterJobs(data);
+        // length of returned result should be 1 to match test data
+        expect(result.length).toBe(1);
+    })
+
+    test('works - status pending', async function() {
+        const data = {
+            status: 'pending'
+        }
+
+        const result = await Job.findAndFilterJobs(data);
+        // length of returned result should be 1 to match test data
+        expect(result.length).toBe(1);
+    })
+
+    test('works - status complete', async function() {
+        const data = {
+            status: 'complete'
+        }
+
+        const result = await Job.findAndFilterJobs(data);
+        // length of returned result should be 2 to match test data
+        expect(result.length).toBe(2);
+    })
+
+    test('works - assigned_to', async function() {
+        const data = {
+            assigned_to: testUserIds[1]
+        }
+
+        const result = await Job.findAndFilterJobs(data);
+        // length of returned result should be 4 to match test data
+        expect(result.length).toBe(4);
+    })
+
+    test('works - posted_by', async function() {
+        const data = {
+            posted_by: testUserIds[0]
+        }
+
+        const result = await Job.findAndFilterJobs(data);
+        // length of returned result should be 2 to match test data
+        expect(result.length).toBe(2);
+    })
+
+    test('works - multiple filters', async function() {
+        const data = {
+            assigned_to: testUserIds[1],
+            status: 'complete'
+        }
+
+        const result = await Job.findAndFilterJobs(data);
+        // length of returned result should be 2 to match test data
+        expect(result.length).toBe(2);
+    })
+
+    test('works - no data throws error', async function() {
+
+        try{
+            await Job.findAndFilterJobs();
+        } catch(err) {
+            expect(err instanceof ExpressError).toBeTruthy();
+        }
+    })
+
+    test('works - invalid data throws error', async function() {
+        try{
+            const data = {
+                status: 'nope'
+            }
+            
+            await Job.findAndFilterJobs(data);
+        } catch(err) {
+            expect(err instanceof NotFoundError).toBeTruthy();
+        }
+    })
+
+
+});
 
 describe('find a single job', function() {
     test('works', async function() {
@@ -43,15 +129,15 @@ describe('find a single job', function() {
             'id': testJobIds[0],
             'title': 'j1', 
             'body': 'jb1', 
-            'status': 'completedj1', 
+            'status': 'complete', 
             'address': '111 j street',
             'postedBy': testUserIds[0], 
             'assignedTo': testUserIds[1], 
             'startTime': `06/01/2023 09:00 AM`, 
             'endTime': `06/01/2023 10:00 AM`, 
             'paymentDue': 111.11, 
-            'beforeImage': 'http://before1.img', 
-            'afterImage': 'http://after1.img'
+            'beforeImageUrl': 'http://before1.img', 
+            'afterImageUrl': 'http://after1.img'
         })
     })
 
@@ -69,27 +155,28 @@ describe('create a new job', function() {
     test('works', async function() {
         // new job data
         const newJobData = {
-            title: 'j4', 
-            body: 'jb4',  
-            address: '444 j street',
+            title: 'j5', 
+            body: 'jb5',  
+            address: '555 j street',
             posted_by: testUserIds[0], 
-            before_image_url: 'http://before4.img', 
+            before_image_url: 'http://before5.img', 
         }
         // call Job.create with expected data
         const result = await Job.create(newJobData);
         // expect the resulting new job data to be returned
         expect(result).toEqual({
-            'title': 'j4', 
-            'body': 'jb4', 
-            'status': 'posted', 
-            'address': '444 j street',
+            'title': 'j5', 
+            'body': 'jb5',
+            'id': expect.any(Number),
+            'status': 'pending', 
+            'address': '555 j street',
             'postedBy': testUserIds[0],
-            'beforeImage': 'http://before4.img',
+            'beforeImageUrl': 'http://before5.img',
         })
         // query all jobs
         const result2 = await Job.findAll();
         // result should now be length of 4 (+1 compared to test data)
-        expect(result2.length).toBe(4);
+        expect(result2.length).toBe(5);
     })
 })
 
@@ -100,7 +187,7 @@ describe('updates a job', function() {
             title: 'updatedj1', 
             body: 'updatedjb1',  
             address: '444 update street',
-            status: 'accepted'
+            status: 'active'
         }
         // update job
         const result = await Job.update(testJobIds[0], updateData);
@@ -109,7 +196,7 @@ describe('updates a job', function() {
             'title': 'updatedj1', 
             'body': 'updatedjb1',  
             'address': '444 update street',
-            'status': 'accepted'
+            'status': 'active'
         })
         // query the job that was just updated
         const result2 = await Job.get(testJobIds[0]);
@@ -118,15 +205,15 @@ describe('updates a job', function() {
             'id': testJobIds[0],
             'title': 'updatedj1', 
             'body': 'updatedjb1', 
-            'status': 'accepted', 
+            'status': 'active', 
             'address': '444 update street',
             'postedBy': testUserIds[0], 
             'assignedTo': testUserIds[1], 
             'startTime': `06/01/2023 09:00 AM`, 
             'endTime': `06/01/2023 10:00 AM`, 
             'paymentDue': 111.11, 
-            'beforeImage': 'http://before1.img', 
-            'afterImage': 'http://after1.img'
+            'beforeImageUrl': 'http://before1.img', 
+            'afterImageUrl': 'http://after1.img'
         })
     })
 
@@ -135,7 +222,7 @@ describe('updates a job', function() {
             title: 'updatedj1', 
             body: 'updatedjb1',  
             address: '444 update street',
-            status: 'accepted'
+            status: 'active'
         }
         // call update function with invalid job id
         try {
@@ -151,7 +238,7 @@ describe('removes a job', function() {
         // query all jobs
         const result = await Job.findAll();
         // expect length of 3 test jobs
-        expect(result.length).toBe(3);
+        expect(result.length).toBe(4);
 
         // remove first test job
         await Job.remove(testJobIds[0]);
@@ -159,7 +246,7 @@ describe('removes a job', function() {
         // query all jobs again
         const result2 = await Job.findAll();
         // length should now be 2
-        expect(result2.length).toBe(2);
+        expect(result2.length).toBe(3);
 
         // try to query first test job by id
         try {
