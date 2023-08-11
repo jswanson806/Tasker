@@ -1,7 +1,8 @@
 "use strict";
 
 const db = require("../db.js");
-const { NotFoundError } = require("../expressError.js");
+const { NotFoundError, ExpressError } = require("../expressError.js");
+const { filterQuery } = require("../helpers/filterSqlQuery.js");
 const { partialUpdate } = require("../helpers/partialSqlUpdate.js");
 
 class Job {
@@ -24,8 +25,35 @@ class Job {
                     after_image_url AS "afterImageUrl"
             FROM jobs
             ORDER BY title`
-    )
-    return result.rows;
+        );
+        return result.rows;
+    }
+
+    /** Find all jobs in the database */
+
+    static async findAndFilterJobs(data){
+
+        if(!data) {
+            throw new ExpressError('No data provided')
+        }
+
+        const {matchers, setVals} = filterQuery(data);
+    
+        const queryString =
+            `SELECT *
+            FROM jobs
+            WHERE ${matchers}
+            ORDER BY title`;
+
+        const result = await db.query(queryString, [...setVals]);
+        
+        const jobs = result.rows;
+
+        if(!jobs) {
+            throw new NotFoundError(`No matching jobs found`)
+        }
+
+        return result.rows;
     }
 
     //find one
@@ -68,7 +96,7 @@ class Job {
                 address,
                 posted_by, 
                 before_image_url)
-            VALUES ($1, $2, 'posted', $3, $4, $5)
+            VALUES ($1, $2, 'pending', $3, $4, $5)
             RETURNING id,
                       title, 
                       body, 
