@@ -163,11 +163,11 @@ class User {
         );
 
         const userAvgRating = await Review.getAverageRating(id);
-        console.log('userApps', userApplicationsRes.rows)
 
         // map id of all jobs to which user has applied to array as value for "applications" key on user object
         user.applications = userApplicationsRes.rows.map(a => a.applied_to);
         user.avgRating = userAvgRating
+        
         return user;
     }
 
