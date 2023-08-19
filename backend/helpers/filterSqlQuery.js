@@ -1,6 +1,6 @@
 "use strict";
 
-function filterQuery(data){
+function filterSqlQuery(data){
     // if id was passed in data, delete it before mapping columns
     if(data.id) {
         delete data.id;
@@ -14,4 +14,4 @@ function filterQuery(data){
     };
 }
 
-module.exports = { filterQuery };
+module.exports = { filterSqlQuery };
