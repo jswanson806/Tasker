@@ -4,7 +4,7 @@ const {ExpressError} = require('../expressError.js');
 const jsonschema = require("jsonschema");
 const userUpdateSchema = require("../schemas/userUpdateSchema.json");
 const User = require("../models/user.js");
-const { ensureCorrectUserOrAdmin, ensureIsAdmin, ensureLoggedIn } = require('../middleware/auth.js');
+const { ensureCorrectUserOrAdmin, ensureIsAdmin, ensureLoggedIn, ensureIsWorker } = require('../middleware/auth.js');
 
 /** Get route for all users.
  * 
@@ -36,7 +36,7 @@ router.get("/:id", ensureLoggedIn, async function(req, res, next) {
 
 })
 
-router.post("/apply", ensureCorrectUserOrAdmin, async function(req, res, next) {
+router.post("/apply", ensureIsWorker, async function(req, res, next) {
     const { user_id, job_id } = req.body;
     try {
         await User.applyToJob(user_id, job_id);
@@ -46,7 +46,7 @@ router.post("/apply", ensureCorrectUserOrAdmin, async function(req, res, next) {
     }
 })
 
-router.post("/withdraw", ensureCorrectUserOrAdmin, async function(req, res, next) {
+router.post("/withdraw", ensureIsWorker, async function(req, res, next) {
     const { user_id, job_id } = req.body;
     try {
         await User.withdrawApplication(user_id, job_id);
