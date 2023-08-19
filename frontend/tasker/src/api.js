@@ -87,6 +87,20 @@ class TaskerApi {
         }
     }
 
+    /** POST withdraw application to job by id from user by id */
+    static async withdrawApplication(user_id, job_id) {
+        try{
+            const res = await this.request(`users/withdraw`, {
+                user_id: user_id, 
+                job_id: job_id
+            }, "post");
+            return res;
+        } catch(err) {
+            console.log("Error in withdrawApplication method of the TaskerApi:", err);
+            throw err;
+        }
+    }
+
     /** PATCH single user by id */
     static async updateSingleUser(id) {
         try{
@@ -119,6 +133,19 @@ class TaskerApi {
             return res;
         } catch(err) {
             console.log("Error in getAllJobs method of the TaskerApi:", err);
+            throw err;
+        }
+    }
+
+    /** GET jobs with filter */
+    static async findAndFilterJobs(filters) {
+        try {
+            
+            const res = await this.request(`jobs/filter`, filters);
+            console.log('res', res);
+            return res;
+        } catch(err) {
+            console.log("Error in findAndFilterJobs method of the TaskerApi:", err);
             throw err;
         }
     }
