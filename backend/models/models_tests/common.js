@@ -101,7 +101,7 @@ async function commonBeforeAll() {
                 'pending', 
                 '444 j street', 
                 $2, 
-                $6, 
+                NULL, 
                 NULL, 
                 NULL,  
                 NULL, 
@@ -119,8 +119,19 @@ async function commonBeforeAll() {
     await db.query(
         `INSERT INTO applications (applied_by, applied_to)
         VALUES ($1, $2),
-                ($3, $4)`,
-        [testUserIds[0], testJobIds[0], testUserIds[1], testJobIds[1]]
+                ($3, $4),
+                ($5, $6),
+                ($7, $8)`,
+        [
+            testUserIds[0], 
+            testJobIds[0], 
+            testUserIds[1], 
+            testJobIds[1], 
+            testUserIds[0], 
+            testJobIds[3],
+            testUserIds[1], 
+            testJobIds[3]
+        ]
     )
 
     // insert into conversations
