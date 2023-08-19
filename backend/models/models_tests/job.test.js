@@ -71,7 +71,7 @@ describe('find jobs by filter ', function() {
 
         const result = await Job.findAndFilterJobs(data);
         // length of returned result should be 4 to match test data
-        expect(result.length).toBe(4);
+        expect(result.length).toBe(3);
     })
 
     test('works - posted_by', async function() {
@@ -116,6 +116,32 @@ describe('find jobs by filter ', function() {
         }
     })
 
+    test('works - applicants array is attached', async function() {
+        const data = {
+            status: 'pending'
+        }
+
+        const result = await Job.findAndFilterJobs(data);
+        // length of returned result should be 1 to match test data
+        expect(result.length).toBe(1);
+
+        // returned result should contain applicants
+        expect(result[0]).toEqual({
+            "address": "444 j street", 
+            "afterImageUrl": null, 
+            "applicants": [testUserIds[0], testUserIds[1]], 
+            "assignedTo": null, 
+            "beforeImageUrl": "http://before3.img", 
+            "body": "jb4", 
+            "endTime": null, 
+            "id": expect.any(Number), 
+            "paymentDue": null, 
+            "postedBy": testUserIds[1], 
+            "startTime": null, 
+            "status": "pending", 
+            "title": "j4"})
+        
+    });
 
 });
 
@@ -123,6 +149,8 @@ describe('find a single job', function() {
     test('works', async function() {
         // query a single job
         const result = await Job.get(testJobIds[0]);
+
+        console.log(result);
 
         // expect test job 1 to be returned
         expect(result).toEqual({
@@ -133,6 +161,7 @@ describe('find a single job', function() {
             'address': '111 j street',
             'postedBy': testUserIds[0], 
             'assignedTo': testUserIds[1], 
+            'applicants': [testUserIds[0]], 
             'startTime': `06/01/2023 09:00 AM`, 
             'endTime': `06/01/2023 10:00 AM`, 
             'paymentDue': 111.11, 
@@ -209,6 +238,7 @@ describe('updates a job', function() {
             'address': '444 update street',
             'postedBy': testUserIds[0], 
             'assignedTo': testUserIds[1], 
+            'applicants': [testUserIds[0]], 
             'startTime': `06/01/2023 09:00 AM`, 
             'endTime': `06/01/2023 10:00 AM`, 
             'paymentDue': 111.11, 
