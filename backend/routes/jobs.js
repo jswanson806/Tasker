@@ -20,6 +20,19 @@ router.get("/", ensureLoggedIn, async function(req, res, next) {
     }
 })
 
+/** GET route for filtering jobs
+ * 
+ * Returns { jobs: [{id, title, body, status, address, postedBy, assignedTo, startTime, endTime, paymentDue, beforeImage, afterImage}, ...]}
+ */
+router.get("/filter", ensureLoggedIn, async function(req, res, next) {
+    try {
+        const filteredJobs = await Job.findAndFilterJobs(req.query);
+        return res.status(200).json({ jobs: filteredJobs });
+    } catch(err) {
+        return next(err);
+    }
+})
+
 /** GET route for single job by id
  * 
  * Returns { job: {id, title, body, status, address, postedBy, assignedTo, startTime, endTime, paymentDue, beforeImage, afterImage}}
