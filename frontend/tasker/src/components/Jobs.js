@@ -6,91 +6,177 @@ import CreateJob from './CreateJob.js';
 
 const Jobs = () => {
 
+    const jobCardsInitialState = [];
+
     const {user} = useContext(UserContext)
 
     const [jobs, setJobs] = useState([]);
-    const [jobCards, setJobCards] = useState([]);
-    const [showActiveUserJobs, setShowActiveUserJobs] = useState(true);
+    const [jobCards, setJobCards] = useState(jobCardsInitialState);
+    const [showUserJobs, setShowUserJobs] = useState(false);
+    const [showAvailableJobs, setShowAvailableJobs] = useState(false);
     const [showWorkerJobs, setShowWorkerJobs] = useState(false);
     const [showCreateJob, setShowCreateJob] = useState(false)
+    const [showPendingReviewJobs, setShowPendingReviewJobs] = useState(false);
+    const [showAppliedJobs, setShowAppliedJobs] = useState(false);
     const [currUser, setCurrUser] = useState(null);
+    const [header, setHeader] = useState('');
+    const [buttons, setButtons] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     
-    // on initial render, calls functions to set state of currUser and jobs
+    /** On initial render, calls functions to set state of currUser and jobs
+     * 
+     *  Sets inital view toggle based on user isWorker property
+     */
     useEffect(() => {
+        // parsed user string received from user context
+        const parsedUser = JSON.parse(user);
 
-        fetchCurrUser(JSON.parse(user).id);
-        fetchAndSetJobs();
+        // call api to get user from db and set state of currUser
+        fetchCurrUser(parsedUser.id);
+
+        // set initial view toggle based on user isWorker property
+        if(parsedUser.isWorker) {
+            setShowAvailableJobs(true);
+        } else {
+            setShowUserJobs(true);
+        }
         
     }, []);
 
 
-    // creates job cards if currUser and jobs are populated.
+    /** Calls functions to create and set job cards, set header, and set state of isLoading
+     *  
+     * Waits for jobs and currUser to be populated
+     * 
+    */
     useEffect(() => {
 
-        // only call once jobs have been populated
+        // only call once jobs and user have been populated
         if(jobs.length && currUser) {
+            // create the job cards
             createJobCards();
-        }
-        
-    }, [jobs, showActiveUserJobs, showWorkerJobs, currUser])
-
-
-    useEffect(() => {
-        if(jobs.length && currUser){
+            // set the page header
+            setHeader(renderHeader());
+            setButtons(renderButtons(currUser));
+            // set isLoading to false
             setIsLoading(false);
         }
-    
-    }, [jobs, currUser])
+
+        // no jobs were returned when toggling own jobs, reset jobCards to initial state
+        if(!jobs.length && (showWorkerJobs || showUserJobs || showPendingReviewJobs)) {
+            setJobCards(jobCardsInitialState);
+            setHeader(renderHeader());
+        }
+        
+    }, [
+        jobs, 
+        currUser
+    ]);
+
+    /** Calls function to fetch, filter, and set state of jobs 
+     * 
+     * Uses switch statement to check status of view toggles and set data object properties for filtering logic
+    */
+    useEffect(() => {
+
+        // if user and jobs are populated
+        if(currUser){
+
+            // variable holds object containing filter parameters
+            let data;
+
+            // uses toggled state to determine filter parameters 
+            switch(true){
+                case showUserJobs:
+                    data = {
+                        posted_by: currUser.id
+                    };
+                    break;
+                case showWorkerJobs:
+                    data = {
+                        status: 'active',
+                        assigned_to: currUser.id
+                    };
+                    break;
+                case showAppliedJobs:
+                case showAvailableJobs:
+                    data = {
+                        status: 'pending'
+                    };
+                    break;
+                case showPendingReviewJobs:
+                    data = {
+                        status: 'pending review',
+                        posted_by: currUser.id
+                    };
+                    break;
+                default:
+                    data = null;
+                    break;
+            }
+            // fetches jobs from database with filter parameters
+            fetchAndSetFilteredJobs(data);
+        }
+
+    }, [
+        currUser,
+        showUserJobs, 
+        showWorkerJobs, 
+        showPendingReviewJobs,
+        showAppliedJobs,
+        showAvailableJobs
+    ]);
 
     /**
-    * Fetches the current user's data, filters out already applied jobs,
-    * and creates JobCard components for each unapplied job in the 'jobs' list.
-    *
+    * Sets state of JobCards based on current view toggles.
+    * 
+    * Uses filtering based on the current user, view toggle states, and existing filtered jobs to map JobCard components to jobCards state
+    * 
     */
     async function createJobCards(){
 
-        if(currUser.isWorker === true){
-            // create Set from existing user applications
-            const applications = new Set(currUser.applications);
+        // create Set from existing user applications
+        const applications = new Set(currUser.applications);
+
+        if(currUser.isWorker === true) {
             
+
             // sets state of jobCards based on filtering logic related to user applications
             setJobCards(jobs.map((job) => {
-                
-                // filter out jobs to which user has already applied
-                if(!applications.has(job.id) && !showWorkerJobs) {
-                    return <JobCard user={JSON.parse(user)} job={job} fetchCurrUser={fetchCurrUser} key={job.id} data-testid="jobCard-component"/>
-                }
-                // filter out jobs to which user has not already applied
-                if(applications.has(job.id) && showWorkerJobs) {
-                    return <JobCard user={JSON.parse(user)} job={job} fetchCurrUser={fetchCurrUser} key={job.id} data-testid="jobCard-component"/>
-                }
+                // show the jobs that are 'pending' status
+                if (showAvailableJobs) {
+                    return <JobCard user={currUser} applications={applications} job={job} fetchCurrUser={fetchCurrUser} key={job.id} data-testid="jobCard-component"/>
+
+                // show the jobs that are 'pending' and to which the user has applied
+                } else if(showAppliedJobs && applications.has(job.id)) {
+                    return <JobCard user={currUser} applications={applications} job={job} fetchCurrUser={fetchCurrUser} key={job.id} data-testid="jobCard-component"/>
+
+                // show the jobs assigned to the worker and not 'complete'
+                } else if(showWorkerJobs && job.status !== 'complete') {
+                    return <JobCard user={currUser} applications={applications} job={job} fetchCurrUser={fetchCurrUser} key={job.id} data-testid="jobCard-component"/>
+                };
             }));
 
-        } else {
+        } else { // user is not a worker
 
             // sets state of jobCards based on filtering logic for jobs posted by user
             setJobCards(jobs.map((job) => {
-                
-                // filter out jobs not posted by user -> show 'pending' status jobs
-                if(job.postedBy === currUser.id && job.status === 'pending' && !showActiveUserJobs) {
-                    return <JobCard user={JSON.parse(user)} job={job} fetchCurrUser={fetchCurrUser} key={job.id} data-testid="jobCard-component"/>
-                }
-                // filter out pending jobs -> show 'active' status jobs
-                if(job.postedBy === currUser.id && job.status === 'active' && showActiveUserJobs) {
-                    return <JobCard user={JSON.parse(user)} job={job} fetchCurrUser={fetchCurrUser} key={job.id} data-testid="jobCard-component"/>
-                }
+                // show the jobs that user posted but are not yet 'pending review' or 'complete
+                if(showUserJobs && (job.status === 'pending' || job.status === 'active')) {
+                    return <JobCard user={currUser} job={job} applications={applications} fetchCurrUser={fetchCurrUser} key={job.id}data-testid="jobCard-component"/>
+                // show the jobs that are 'pending review'
+                } else if (showPendingReviewJobs) {
+                    return <JobCard user={currUser} job={job} applications={applications} fetchCurrUser={fetchCurrUser} key={job.id}data-testid="jobCard-component"/>
+                };
             }));
-        }
-
-    }
+        };
+    };
 
 
     /**
     * Fetches data for a single user from the Tasker API based on the given ID.
     *
     * @async
-    * @function fetchCurrUser
     * @param {number} id - The ID of the user to fetch.
     * @returns {Promise<object>} A Promise that resolves with the user data as an object.
     * @throws {Error} If there's an error during the API call or the user data cannot be retrieved.
@@ -101,98 +187,164 @@ const Jobs = () => {
             const { user } = res;
             setCurrUser(user);
         } catch(err) {
-            throw err;
+            console.error(err);
         }
     }
 
-
-    /** Retrieves all jobs from api
-    * 
-    * Sets state of jobs
+    /**
+    * Fetches data for jobs matching filter(s) passed as an argument
+    *
+    * @async
+    * @param {object} filters - Object containing filter parameters
+    * @returns {Promise<object>} A Promise that resolves with the jobs data as an object.
+    * @throws {Error} If there's an error during the API call or the user data cannot be retrieved.
     */
-    async function fetchAndSetJobs() {
-        try{
-            const jobsRes = await TaskerApi.getAllJobs();
-            const { allJobs } = jobsRes;
-            setJobs(allJobs);
+    async function fetchAndSetFilteredJobs(filters) {
+        try {
+            const filteredRes = await TaskerApi.findAndFilterJobs(filters);
+            const { jobs } = filteredRes;
+            setJobs(jobs);
         } catch(err) {
-            return err;
+            console.error(err);
         }
     }
 
-    /** Inverts the state of showUserJobs 
-     * 
-     * Sets state of showUserJobs
-    */
     const toggleUserJobs = () => {
-        setShowActiveUserJobs(!showActiveUserJobs);
+        setShowWorkerJobs(false);
+        setShowPendingReviewJobs(false);
+        setShowCreateJob(false);
+        setShowAppliedJobs(false);
+        setShowAvailableJobs(false);
+
+        setShowUserJobs(true);
     }
 
-    /** Inverts the state of showWorkerJobs 
-     * 
-     * Sets state of showWorkerJobs
-    */
     const toggleWorkerJobs = () => {
-        setShowWorkerJobs(!showWorkerJobs);
+        setShowUserJobs(false);
+        setShowPendingReviewJobs(false);
+        setShowCreateJob(false);
+        setShowAppliedJobs(false);
+        setShowAvailableJobs(false);
+
+        setShowWorkerJobs(true);
     }
 
-    // conditionally renders a button element depending on isWorker property of user
-    const toggleJobsButton = JSON.parse(user).isWorker === true
-        ? 
-        <button data-testid="jobs-worker-button" onClick={toggleWorkerJobs}>{showWorkerJobs ? 'All Jobs' 
-        : 
-        'My Jobs'}</button>
-        : 
-        <button data-testid="jobs-user-button" onClick={toggleUserJobs}>{showActiveUserJobs ? 'Pending Jobs' 
-        : 
-        'Active Jobs'}</button>;
+    const toggleAvailableJobs = () => {
+        setShowUserJobs(false);
+        setShowPendingReviewJobs(false);
+        setShowCreateJob(false);
+        setShowAppliedJobs(false);
+        setShowWorkerJobs(false);
 
-    
+        setShowAvailableJobs(true);
+
+    }
+
+    const toggleAppliedJobs = () => {
+        setShowUserJobs(false);
+        setShowPendingReviewJobs(false);
+        setShowCreateJob(false);
+        setShowWorkerJobs(false);
+        setShowAvailableJobs(false);
+
+        setShowAppliedJobs(true);
+    }
+
+    const togglePendingReviewJobs = () => {
+        setShowWorkerJobs(false);
+        setShowUserJobs(false);
+        setShowCreateJob(false);
+        setShowAppliedJobs(false);
+        setShowAvailableJobs(false);
+
+        setShowPendingReviewJobs(true);
+    }
+
     const toggleCreateJob = () => {
-        setShowCreateJob(!showCreateJob);
+        setShowWorkerJobs(false);
+        setShowUserJobs(false);
+        setShowPendingReviewJobs(false);
+        setShowAppliedJobs(false);
+        setShowAvailableJobs(false);
+
+        setShowCreateJob(true);
     }
 
-    
 
-    // conditionally renders header depending on isWorker property of user
-    const userHeader = JSON.parse(user).isWorker === true
-    ?
-    <h1 data-testid="jobs-worker-title">{showWorkerJobs ? 'My Jobs' : 'All Jobs'}</h1>
-    :
-    <h1 data-testid="jobs-user-title">{showActiveUserJobs ? 'Active Jobs' : 'Pending Jobs'}</h1>;
+    const renderHeader = () => {
+        // check isWorker property of currUser and render different headers based on state values
+        if(currUser.isWorker) {
+            if(showWorkerJobs){ // shows jobs to which worker has been assigned
+                return <h1 data-testid="jobs-my-worker-jobs-title">My Jobs</h1>
+
+            } else if(showAppliedJobs){ // shows jobs to which worker has applied and are pending
+                return <h1 data-testid="jobs-applied-worker-jobs-title">Applications</h1>
+
+            } else { // shows all pending jobs
+                return <h1 data-testid="jobs-available-worker-jobs-title">Available Jobs</h1>
+            }
+
+        } else { // user is not a worker
+
+            if(showUserJobs) { // show jobs user created
+                return <h1 data-testid="jobs-my-jobs-user-title">My Jobs</h1>
+            } else { // show completed jobs which the user created
+                return <h1 data-testid="jobs-completed-jobs-user-title">Pending Review</h1>
+            }
+        }
+    }
 
 
-    // create job button only rendered for users
-    const createJobButton = JSON.parse(user).isWorker === false 
-    ? 
-    <button data-testid="jobs-create-job-button" onClick={toggleCreateJob}>Create New Job</button>
-    :
-    "";
+    const renderButtons = (currUser) => {
+        if(currUser.isWorker) {
+            return (
+                <div>
+                    <button data-testid="jobs-worker-available-button" onClick={toggleAvailableJobs}>Available Jobs</button>
+                    <button data-testid="jobs-worker-applications-button" onClick={toggleAppliedJobs}>Applications</button>
+                    <button data-testid="jobs-worker-my-jobs-button" onClick={toggleWorkerJobs}>My Jobs</button>
+                </div>
+            )
+        } else {
+            return (
+                <div>
+                    <div>
+                        <button data-testid="jobs-user-my-jobs-button" onClick={toggleUserJobs}>My Jobs</button>
+                        <button data-testid="jobs-user-completed-button" onClick={togglePendingReviewJobs}>Pending Review</button>
+
+                    </div>
+                    <div>
+                        {showUserJobs && (<button data-testid="jobs-create-job-button" onClick={toggleCreateJob}>Create New Job</button>)}
+                    </div>
+                </div>
+            )
+        }
+    }
+
 
     if(isLoading){
         return (<div>loading...</div>)
     }
 
-
     return (
-        <div>
-            <div>
-                {userHeader}
+        <div className="jobs-container">
+
+            <div className="jobs-header-container">
+                {header}
             </div>
-            <div>
-                {createJobButton}
+
+            <div className="jobs-buttons-container">
+                {buttons}
             </div>
-            <div>
-                {showCreateJob && ( 
-                    <CreateJob toggleCreateJob={toggleCreateJob}/> 
-                )}
-            </div>
-            <div>
-                {toggleJobsButton}
-            </div>
-            <div>
-                {jobCards}
-            </div>
+
+            {showCreateJob && ( 
+                <CreateJob toggleCreateJob={toggleCreateJob}/> 
+            )}
+
+            {!showCreateJob && (
+                <div className="jobs-cards-container">
+                    {jobCards}
+                </div>
+            )}
         </div>
     )
 }
