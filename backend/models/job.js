@@ -2,7 +2,7 @@
 
 const db = require("../db.js");
 const { NotFoundError, ExpressError } = require("../expressError.js");
-const { filterQuery } = require("../helpers/filterSqlQuery.js");
+const { filterSqlQuery } = require("../helpers/filterSqlQuery.js");
 const { partialUpdate } = require("../helpers/partialSqlUpdate.js");
 
 class Job {
@@ -29,21 +29,40 @@ class Job {
         return result.rows;
     }
 
-    /** Find all jobs in the database */
+    /** Find all jobs in the database matching filter
+     * 
+     * Joins on applications table
+     */
 
     static async findAndFilterJobs(data){
 
         if(!data) {
+
             throw new ExpressError('No data provided')
         }
 
-        const {matchers, setVals} = filterQuery(data);
-    
-        const queryString =
-            `SELECT *
-            FROM jobs
+        const {matchers, setVals} = filterSqlQuery(data);
+
+        const queryString = 
+            `SELECT j.id,
+                j.title, 
+                j.body, 
+                j.status, 
+                j.address,
+                j.posted_by AS "postedBy", 
+                j.assigned_to AS "assignedTo", 
+                TO_CHAR(j.start_time, 'MM/DD/YYYY HH:MI AM') AS "startTime", 
+                TO_CHAR(j.end_time, 'MM/DD/YYYY HH:MI AM') AS "endTime", 
+                j.payment_due AS "paymentDue", 
+                j.before_image_url AS "beforeImageUrl", 
+                j.after_image_url AS "afterImageUrl",
+                ARRAY_AGG(a.applied_by) AS "applicants"
+            FROM jobs j
+            LEFT JOIN applications a ON j.id = a.applied_to
             WHERE ${matchers}
-            ORDER BY title`;
+            GROUP BY j.id, j.title, j.body, j.status, j.address, j.posted_by, j.assigned_to, 
+                     j.start_time, j.end_time, j.payment_due, j.before_image_url, j.after_image_url
+            ORDER BY j.title`;
 
         const result = await db.query(queryString, [...setVals]);
         
@@ -53,26 +72,35 @@ class Job {
             throw new NotFoundError(`No matching jobs found`)
         }
 
-        return result.rows;
+
+        return jobs;
     }
 
-    //find one
+    /** find one job by id
+     * 
+     * Joins on applications table 
+     */
     static async get(id){
         const result = await db.query(
-            `SELECT id,
-                    title, 
-                    body, 
-                    status, 
-                    address,
-                    posted_by AS "postedBy", 
-                    assigned_to AS "assignedTo", 
-                    TO_CHAR(start_time, 'MM/DD/YYYY HH:MI AM') AS "startTime", 
-                    TO_CHAR(end_time, 'MM/DD/YYYY HH:MI AM') AS "endTime", 
-                    payment_due AS "paymentDue", 
-                    before_image_url AS "beforeImageUrl", 
-                    after_image_url AS "afterImageUrl"
-            FROM jobs
-            WHERE id = $1`,
+            `SELECT j.id,
+                j.title, 
+                j.body, 
+                j.status, 
+                j.address,
+                j.posted_by AS "postedBy", 
+                j.assigned_to AS "assignedTo", 
+                TO_CHAR(j.start_time, 'MM/DD/YYYY HH:MI AM') AS "startTime", 
+                TO_CHAR(j.end_time, 'MM/DD/YYYY HH:MI AM') AS "endTime", 
+                j.payment_due AS "paymentDue", 
+                j.before_image_url AS "beforeImageUrl", 
+                j.after_image_url AS "afterImageUrl",
+                ARRAY_AGG(a.applied_by) AS "applicants"
+            FROM jobs j
+            LEFT JOIN applications a ON j.id = a.applied_to
+            WHERE j.id = $1
+            GROUP BY j.id, j.title, j.body, j.status, j.address, j.posted_by, j.assigned_to, 
+                     j.start_time, j.end_time, j.payment_due, j.before_image_url, j.after_image_url
+            ORDER BY j.title`,
             [id]
         )
 
@@ -85,7 +113,7 @@ class Job {
         return job;
     }
 
-    //create job
+    // create job
 
     static async create({title, body, address, posted_by, before_image_url}){
         const result = await db.query(
@@ -112,7 +140,7 @@ class Job {
         return job
     }
 
-    //update
+    // update job with full or partial data
     static async update(id, data){
         // check for job with id to exist first
         const jobRes = await db.query(
@@ -143,7 +171,7 @@ class Job {
         return updatedJob;
     }
     
-    //remove
+    // remove job by id
     static async remove(id){
         const result = await db.query(
             `DELETE from jobs
