@@ -70,7 +70,7 @@ const CreateJob = ({toggleCreateJob}) => {
                         name="address"
                         placeholder="Adress"
                         data-testid="createJob-form-address-input"
-                        value={FormData.lastName}
+                        value={FormData.address}
                         onChange={handleChange}
                     />
                     {/* <label htmlFor="beforeImage">Image: </label>
