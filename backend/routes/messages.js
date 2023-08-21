@@ -13,11 +13,13 @@ const { ensureLoggedIn } = require("../middleware/auth.js");
  * Returns {"Messages": [{id, body, sentBy, sentTo, createdAt}, ...]}
  * 
  */
-router.get("/conversation/:u1_id/:u2_id", ensureLoggedIn, async function(req, res, next) {
+router.get("/conversation/:u1_id/:u2_id/:j_id", ensureLoggedIn, async function(req, res, next) {
     const u1 = req.params.u1_id;
     const u2 = req.params.u2_id;
+    const j = req.params.j_id;
+
     try {
-        const convoRes = await Message.getConversation(u1, u2);
+        const convoRes = await Message.getConversation(u1, u2, j);
         return res.status(200).json({conversation: convoRes})
     } catch(err) {
         return next(err);
@@ -41,7 +43,7 @@ router.post("/create", ensureLoggedIn, async function(req, res, next) {
         
     try {
         const { message } = req.body;
-        const messageRes = await Message.create(message)
+        await Message.create(message)
 
         return res.status(201).json({ Message: 'Message sent' })
     } catch(err) {
