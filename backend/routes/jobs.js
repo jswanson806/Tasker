@@ -80,7 +80,7 @@ router.post("/create", ensureLoggedIn, async function(req, res, next) {
  * Returns { Message: `Updated job: ${updateRes}`}
 */
 
-router.patch("/update/:id", ensureIsAdmin, async function(req, res, next) {
+router.patch("/update/:id", ensureLoggedIn, async function(req, res, next) {
     try{
         const result = jsonschema.validate(req.body, jobUpdateSchema);
         if(!result.valid) {
@@ -89,7 +89,6 @@ router.patch("/update/:id", ensureIsAdmin, async function(req, res, next) {
             return next(error);
         }
         const { job } = req.body;
-
 
         const updateRes = await Job.update(job.id, job);
 
