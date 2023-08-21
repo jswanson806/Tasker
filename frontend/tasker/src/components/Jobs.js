@@ -7,10 +7,11 @@ import CreateJob from './CreateJob.js';
 const Jobs = () => {
 
     const jobCardsInitialState = [];
+    const jobsInitialState = '';
 
     const {user} = useContext(UserContext)
 
-    const [jobs, setJobs] = useState([]);
+    const [jobs, setJobs] = useState(jobsInitialState);
     const [jobCards, setJobCards] = useState(jobCardsInitialState);
     const [showUserJobs, setShowUserJobs] = useState(false);
     const [showAvailableJobs, setShowAvailableJobs] = useState(false);
@@ -52,7 +53,7 @@ const Jobs = () => {
     useEffect(() => {
 
         // only call once jobs and user have been populated
-        if(jobs.length && currUser) {
+        if(jobs !== jobsInitialState && currUser) {
             // create the job cards
             createJobCards();
             // set the page header
@@ -337,7 +338,7 @@ const Jobs = () => {
             </div>
 
             {showCreateJob && ( 
-                <CreateJob toggleCreateJob={toggleCreateJob}/> 
+                <CreateJob /> 
             )}
 
             {!showCreateJob && (
