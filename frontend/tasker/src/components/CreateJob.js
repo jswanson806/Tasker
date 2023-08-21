@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { UserContext } from "../helpers/UserContext";
 import TaskerApi from "../api";
 
-const CreateJob = ({toggleCreateJob}) => {
+const CreateJob = () => {
 
     const INITIAL_STATE = {
         title: '',
@@ -13,6 +13,7 @@ const CreateJob = ({toggleCreateJob}) => {
     }
 
     const [formData, setFormData] = useState(INITIAL_STATE);
+    const [visible, setVisible] = useState(true);
     const { user } = useContext(UserContext);
 
     const handleChange = (e) => {
@@ -36,12 +37,15 @@ const CreateJob = ({toggleCreateJob}) => {
 
         await TaskerApi.createJob(jobInfo);
 
-        toggleCreateJob();
+        setFormData(INITIAL_STATE);
+        setVisible(false);
     };
 
 
     return (
         <div className="createJob-container" data-testid="createJob-form-container">
+            {visible && (
+            <div>
                 {/* form for registering */}
                 <form onSubmit={handleSubmit}>
                     <label htmlFor="title">Job Title: </label>
@@ -85,6 +89,8 @@ const CreateJob = ({toggleCreateJob}) => {
                     /> */}
                     <button type="submit" data-testid="createJob-form-button">Post Job</button>
                 </form>
+            </div>
+            )}
         </div>
     )
 }
