@@ -175,7 +175,7 @@ class TaskerApi {
     /** PATCH single job by id*/
     static async updateSingleJob(job_info) {
         try{
-            const res = await this.request(`jobs/update/${job_info.id}`, job_info, "patch");
+            const res = await this.request(`jobs/update/${job_info.job.id}`, job_info, "patch");
             return res;
         } catch(err) {
             console.log("Error in updateSingleJob method of the TaskerApi:", err);
@@ -198,9 +198,9 @@ class TaskerApi {
     // ************** MESSAGES **************
 
     /** GET conversation between two users by id */
-    static async getConversationBetween(u1_id, u2_id) {
+    static async getConversationBetween(u1_id, u2_id, j_id) {
         try{
-            const res = await this.request(`messages/conversation/${u1_id}/${u2_id}`);
+            const res = await this.request(`messages/conversation/${u1_id}/${u2_id}/${j_id}`);
             return res;
         } catch(err) {
             console.log("Error in getConversationBetween method of the TaskerApi:", err);
