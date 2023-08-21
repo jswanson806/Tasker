@@ -129,8 +129,6 @@ const JobCard = ({user, applications, job, fetchCurrUser}) => {
             return (
                 <div className="jobDetails-card" data-testid="jobDetails-card">
                     <JobDetails job={job} key={job.id}/>
-                    
-                    
                     <button data-testid="jobDetails-close-button" onClick={toggleDetails}>Close</button>
                 </div>
             )
@@ -150,21 +148,23 @@ const JobCard = ({user, applications, job, fetchCurrUser}) => {
     }
 
     const getApplicantCount = (job) => {
-        if(job.applicants.length) {
-
-            return <button className="jobCard-applicants-button" onClick={() => getApplicantList(job)}>{job.applicants.length}</button>
-        }
-        return 0;
+        
+        return <button className="jobCard-applicants-button" onClick={() => getApplicantList(job)}>{job.applicants[0] !== null ? job.applicants.length : '0'}</button>
+       
     }
 
     const getApplicantList = async (job) => {
 
-        if(!user.isWorker && job.applicants.length) {
+        if(!user.isWorker && job.applicants[0] !== null) {
 
             const promises = job.applicants.map(async (id) => {
                 const res = await TaskerApi.getSingleUser(id);
                 const { user } = res;
-                return <li key={user.id}>{user.firstName} {user.lastName.slice(0, 1) + "."} {user.avgRating !== null ? user.avgRating : ''}</li>;
+                return (
+                    <div>
+                        <button key={user.id} onClick={() => assignToJob(job.id, user.id)}>{user.firstName} {user.lastName.slice(0, 1) + "."} {user.avgRating !== null ? user.avgRating : ''}</button>
+                    </div>
+                );
             })
 
             try {
@@ -180,6 +180,16 @@ const JobCard = ({user, applications, job, fetchCurrUser}) => {
             }
         }
     }
+
+    const assignToJob = async (job_id, user_id) => {
+        const data = { job: {
+            id: job_id,
+            assigned_to: user_id,
+            status: 'active'
+        }}
+        await TaskerApi.updateSingleJob(data)
+    }
+
 
     const showRenderDetails = renderDetails(applications);
     const showJobStatus = getJobStatus(applications);
@@ -201,9 +211,13 @@ const JobCard = ({user, applications, job, fetchCurrUser}) => {
             {showDetails && (
                 <div className="jobDetails-container">
                     {showRenderDetails}
-                    Applications: {showApplicantCount}
+                    {job.status !== 'active' && (
+                        <p>Applications: {showApplicantCount}</p>
+                    )}
                 </div>
             )}
+
+            
 
             {/* list of applicants */}
             {showApplicantList && (
