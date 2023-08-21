@@ -8,7 +8,8 @@ const {
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
-  testUserIds
+  testUserIds,
+  testJobIds
 } = require("./common.js");
 
 beforeAll(commonBeforeAll);
@@ -21,7 +22,7 @@ afterAll(commonAfterAll);
 describe('gets messages between two users', function() {
     test('works', async function() {
         // pass first test user and second test user id's to getConversation function
-        const result = await Message.getConversation(testUserIds[0], testUserIds[1]);
+        const result = await Message.getConversation(testUserIds[0], testUserIds[1], testJobIds[1]);
 
         // should have 3 test messages between these two users
         expect(result.length).toBe(3)
@@ -29,15 +30,15 @@ describe('gets messages between two users', function() {
         // first message should be latest message chronologically
         expect(result[0]).toEqual({
             body: 'm3body',
-            to_char: '06/02/2023 10:00 AM'
+            created_at: '06/02/2023 10:00 AM'
         })
         expect(result[1]).toEqual({
             body: 'm2body',
-            to_char: '06/01/2023 09:05 AM'
+            created_at: '06/01/2023 09:05 AM'
         })
         expect(result[2]).toEqual({
             body: 'm1body',
-            to_char: '06/01/2023 09:00 AM'
+            created_at: '06/01/2023 09:00 AM'
         })
     })
 
@@ -56,7 +57,8 @@ describe('create new message', function() {
         const newMsgData = {
             body: 'mb4',
             sent_by: testUserIds[2],
-            sent_to: testUserIds[1]
+            sent_to: testUserIds[1],
+            job_id: testJobIds[1]
         }
 
         const result = await Message.create(newMsgData);
@@ -64,7 +66,7 @@ describe('create new message', function() {
         // use expectedMessage to help omit current timestamp value from test
         const expectedMessage = {
             body: 'mb4',
-            conversation_id: `u${testUserIds[1]}u${testUserIds[2]}`,
+            conversation_id: `u${testUserIds[1]}u${testUserIds[2]}j${testJobIds[1]}`,
             sent_by: testUserIds[2],
             sent_to: testUserIds[1]
         }
@@ -76,7 +78,8 @@ describe('create new message', function() {
         const newMsgData = {
             body: 'mb4',
             sent_by: testUserIds[2],
-            sent_to: testUserIds[1]
+            sent_to: testUserIds[1],
+            job_id: testUserIds[1]
         }
 
         const convoResult = await db.query(`SELECT id FROM conversations`);
@@ -95,7 +98,8 @@ describe('create new message', function() {
         const newMsgData = {
             body: 'mb4',
             sent_by: testUserIds[0],
-            sent_to: testUserIds[1]
+            sent_to: testUserIds[1],
+            job_id: testJobIds[1]
         }
 
         const convoResult = await db.query(`SELECT id FROM conversations`);
@@ -114,9 +118,9 @@ describe('create new message', function() {
 
 
 describe('generates unique conversation ids', function() {
-    test('output should be format `u + <lesser value> + u + <greater value>', function() {
-        expect(Message.generateConvoId(3, 4)).toEqual('u3u4');
-        expect(Message.generateConvoId(8, 2)).toEqual('u2u8');
-        expect(Message.generateConvoId(88, 102)).toEqual('u88u102');
+    test('output should be format `u + <lesser value> + u + <greater value> + j + <job_id>', function() {
+        expect(Message.generateConvoId(3, 4, 1)).toEqual('u3u4j1');
+        expect(Message.generateConvoId(8, 2, 2)).toEqual('u2u8j2');
+        expect(Message.generateConvoId(88, 102, 3)).toEqual('u88u102j3');
     })
 })

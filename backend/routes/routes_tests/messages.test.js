@@ -10,7 +10,8 @@ const {
     commonAfterEach,
     commonAfterAll,
     testUserIds,
-    u3Token
+    u3Token,
+    testJobIds
 } = require("./common.js");
 
 beforeAll(commonBeforeAll);
@@ -25,7 +26,7 @@ describe('GET route for conversation between two users', () => {
         expect.assertions(2)
 
         const result = await request(app)
-            .get(`/messages/conversation/${testUserIds[0]}/${testUserIds[1]}`)
+            .get(`/messages/conversation/${testUserIds[0]}/${testUserIds[1]}/${testJobIds[1]}`)
             .set('authorization', `Bearer ${u3Token}`)
 
             const expectedConversation = [{
@@ -50,9 +51,9 @@ describe('GET route for conversation between two users', () => {
         expect.assertions(1)
 
         const result = await request(app)
-            .get(`/messages/conversation/${testUserIds[0]}/${testUserIds[1]}`)
+            .get(`/messages/conversation/${testUserIds[0]}/${testUserIds[1]}/${testJobIds[1]}`)
             
-        expect(result.status).toBe(500);
+        expect(result.status).toBe(401);
         
     })
 })
@@ -62,7 +63,7 @@ describe('POST create a new message', () => {
         expect.assertions(3)
         // query the existing conversation -> length should be 3
         const convoRes = await request(app)
-            .get(`/messages/conversation/${testUserIds[0]}/${testUserIds[1]}`)
+            .get(`/messages/conversation/${testUserIds[0]}/${testUserIds[1]}/${testJobIds[1]}`)
             .set('authorization', `Bearer ${u3Token}`)
 
         expect(convoRes.body.conversation.length).toBe(3);
@@ -70,7 +71,8 @@ describe('POST create a new message', () => {
         const message = {message: {
             body: 'jb7',
             sent_by: testUserIds[0],
-            sent_to: testUserIds[1]
+            sent_to: testUserIds[1],
+            job_id: testJobIds[1]
         }}
 
         const result = await request(app)
@@ -82,7 +84,7 @@ describe('POST create a new message', () => {
 
         // query the conversation again -> length should be 4
         const convoRes2 = await request(app)
-            .get(`/messages/conversation/${testUserIds[0]}/${testUserIds[1]}`)
+            .get(`/messages/conversation/${testUserIds[0]}/${testUserIds[1]}/${testJobIds[1]}`)
             .set('authorization', `Bearer ${u3Token}`)
         expect(convoRes2.body.conversation.length).toBe(4);
     })
@@ -104,7 +106,7 @@ describe('POST create a new message', () => {
         expect(result.body).toEqual({
             error: {
               message: [ 'instance.message requires property "body"' ],
-              status: 500
+              status: 404
             }
           })
 
@@ -116,14 +118,16 @@ describe('POST create a new message', () => {
         // missing body property
         const message = {message: {
             sent_by: testUserIds[0],
-            sent_to: testUserIds[1]
+            sent_to: testUserIds[1],
+            body: 'test',
+            job_id: testUserIds[1]
         }}  
         
         const result = await request(app)
             .post(`/messages/create`)
             .send(message)
 
-        expect(result.status).toBe(500);
+        expect(result.status).toBe(401);
 
     })
 })

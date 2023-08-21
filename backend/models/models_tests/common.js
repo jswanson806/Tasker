@@ -140,7 +140,7 @@ async function commonBeforeAll() {
         VALUES ($1, '2023-06-01 09:00:00'),
                ($2, '2023-06-03 10:00:00')
         RETURNING id`,
-        [`u${testUserIds[0]}u${testUserIds[1]}`, `u${testUserIds[0]}u${testUserIds[2]}`]
+        [`u${testUserIds[0]}u${testUserIds[1]}j${testJobIds[1]}`, `u${testUserIds[0]}u${testUserIds[2]}j${testJobIds[2]}`]
     )
 
     // insert conversation ids into testConvoIds array

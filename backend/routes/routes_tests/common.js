@@ -102,19 +102,22 @@ async function commonBeforeAll() {
     { 
         body: 'jb4',  
         sent_to: testUserIds[0],
-        sent_by: testUserIds[1]
+        sent_by: testUserIds[1],
+        job_id: testJobIds[1]
     })).id;
   testMessageIds[1] = (await Message.create(
     { 
         body: 'jb5',  
         sent_to: testUserIds[0],
-        sent_by: testUserIds[1]
+        sent_by: testUserIds[1],
+        job_id: testJobIds[1]
     })).id;
   testMessageIds[2] = (await Message.create(
     { 
         body: 'jb6',  
         sent_to: testUserIds[0],
-        sent_by: testUserIds[1] 
+        sent_by: testUserIds[1],
+        job_id: testJobIds[1] 
     })).id;
 
 
