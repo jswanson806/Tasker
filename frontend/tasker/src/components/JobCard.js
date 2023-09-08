@@ -1,25 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import JobDetails from './JobDetails.js';
 import JobCompletionForm from './JobCompletionForm.js';
 import TaskerApi from '../api.js';
 
-const JobCard = ({user, applications, job, fetchCurrUser}) => {
+const JobCard = ({user, applications, job, fetchCurrUser, triggerEffect}) => {
 
     const [showDetails, setShowDetails] = useState(false);
     const [showCompletionForm, setShowCompletionForm] = useState(false);
-    const [showApplicantList, setShowApplicantList] = useState(false);
     const [jobStarted, setJobStarted] = useState(false);
-    const [applicantList, setApplicantList] = useState('');
+    const [isAssigned, setIsAssigned] = useState(false);
+
+    
+    useEffect(() => {
+        if(job.assignedTo) {
+            setIsAssigned(true);
+        }
+    }, [])
 
     const toggleDetails = () => {
         setShowDetails(!showDetails);
-        setShowApplicantList(false)
     };
 
     const applyToJob = async (user_id, job_id) => {
         try {
             await TaskerApi.applyToJob(user_id, job_id);
             toggleDetails();
+            // get the latest user information from the database
             await fetchCurrUser(user_id);
             
         } catch(err) {
@@ -27,13 +33,14 @@ const JobCard = ({user, applications, job, fetchCurrUser}) => {
         }
     }
 
-    // ******************************NEED TO TEST LOGIC*********************************************
+
     const withdrawApplication = async (user_id, job_id) => {
         try {
             toggleDetails();
 
             await TaskerApi.withdrawApplication(user_id, job_id);
             toggleDetails();
+            // get the latest user information from the database
             await fetchCurrUser(user_id)
 
         } catch(err) {
@@ -55,9 +62,15 @@ const JobCard = ({user, applications, job, fetchCurrUser}) => {
                 second: 'numeric'
             }
 
-            job.startTime = currentTime.toLocaleString(undefined, options);
+            job.start_time = currentTime.toLocaleString(undefined, options);
+            job.status = 'in progress';
+            job.end_time = '';
+            job.payment_due = 0;
+            job.after_image_url = '';
 
-            await TaskerApi.updateSingleJob(job);
+            const jobInfo = {job: { ...job }};
+
+            await TaskerApi.updateSingleJob(jobInfo);
             setJobStarted(true);
 
         } catch(err) {
@@ -67,6 +80,7 @@ const JobCard = ({user, applications, job, fetchCurrUser}) => {
 
     const endWork = async (job) => {
         try {
+            const defaultPayRate = 20.00;
             const currentTime = new Date();
 
             const options = {
@@ -78,9 +92,18 @@ const JobCard = ({user, applications, job, fetchCurrUser}) => {
                 second: 'numeric'
             }
 
-            job.endTime = currentTime.toLocaleString(undefined, options);
+            job.end_time = currentTime.toLocaleString(undefined, options);
 
-            await TaskerApi.updateSingleJob(job);
+            const hoursWorked = calculateHoursWorked(job);
+            const paymentDue = calculatePaymentDue(hoursWorked, defaultPayRate);
+            console.log(paymentDue)
+
+            job.payment_due = +paymentDue;
+            job.status = 'pending review';
+
+            const jobInfo = { job: { ...job }};
+
+            await TaskerApi.updateSingleJob(jobInfo);
 
             setShowCompletionForm(true);
             setJobStarted(false);
@@ -90,111 +113,51 @@ const JobCard = ({user, applications, job, fetchCurrUser}) => {
         }
     }
 
-    /** Conditionally returns button elements depending on isWorker property of user object 
+    /** Calculate the time spent working on the job in hours
      * 
-     * Buttons change based on context of user's relationship with the job
+     * Returns hours worked
+     */
+    const calculateHoursWorked = (job) => {
+        const startDate = new Date(job.start_time);
+        const endDate = new Date(job.end_time);
+
+        // Calculate the time difference in milliseconds
+        const timeDifferenceMs = endDate - startDate;
+
+        // Calculate the time difference in hours
+        const hoursWorked = timeDifferenceMs / (1000 * 60 * 60);
+
+        return hoursWorked;
+    }
+
+    /** Calculate the payment due for the job
      * 
-     * @example applied and job is pending -> Withdraw and Close buttons present
-     * 
-    */
-    const renderDetails = (applications) => {
+     * Returns payment due rounded to 4 decimal places
+     */
 
-        if(user.isWorker) {
-            return (
-                <div className="jobDetails-card" data-testid="jobDetails-card">
-                    <JobDetails job={job} key={job.id}/>
-                
-                    {/* apply button shows on jobs that have not yet been applied to */}
-                    {!applications.has(job.id) && (
-                        <button data-testid="jobDetails-apply-button" onClick={() => applyToJob(user.id, job.id)}>Apply</button>
-                    )}
+    const calculatePaymentDue = (hours, rate) => {
+        // calculate payment due based on hours worked
+        const value = hours * rate;
 
-                    {/* if job has been applied to, apply button is unapply */}
-                    {applications.has(job.id) && job.status === 'pending' && (
-                        <button data-testid="jobDetails-withdraw-button" onClick={() => withdrawApplication(user.id, job.id)}>Withdraw</button>
-                    )}
+        // value to 4 decimal places
+        const paymentDue = value.toFixed(4);
 
-                    {/* show start and end work button on jobs that are assigned to user */}
-                    {job.assignedTo === user.id && (
-                        <div className="jobDetails-card-button-container">
-                            {!jobStarted && (<button data-testid="jobDetails-start-button" onClick={() => startWork(job)}>Start Work</button>)}
-                            {jobStarted && (<button data-testid="jobDetails-end-button" onClick={() => endWork(job)}>End Work</button>)}
-                        </div>
-                    )}
-                    
-                    <button data-testid="jobDetails-close-button" onClick={toggleDetails}>Close</button>
-                </div>
-            )
-        } else {
-            return (
-                <div className="jobDetails-card" data-testid="jobDetails-card">
-                    <JobDetails job={job} key={job.id}/>
-                    <button data-testid="jobDetails-close-button" onClick={toggleDetails}>Close</button>
-                </div>
-            )
-        }
+        return paymentDue;
     }
 
     /** Conditionally renders status of job based on user.isWorker property
      * 
      * Shows 'Applied' if the job is still pending and the user has already applied
      */
-    const getJobStatus = (applications) => {
+    const getJobStatus = (applications, job) => {
         if(user.isWorker){
-           return <h2>Status: {applications.has(job.id) ? 'Applied' : `${job.status}`}</h2>
+           return <h2>Status: {applications.has(job.id) && job.status !== 'active' ? 'Applied' : `${job.status}`}</h2>
         } else {
             return <h2>Status: {job.status}</h2>
         }
     }
 
-    const getApplicantCount = (job) => {
-        
-        return <button className="jobCard-applicants-button" onClick={() => getApplicantList(job)}>{job.applicants[0] !== null ? job.applicants.length : '0'}</button>
-       
-    }
-
-    const getApplicantList = async (job) => {
-
-        if(!user.isWorker && job.applicants[0] !== null) {
-
-            const promises = job.applicants.map(async (id) => {
-                const res = await TaskerApi.getSingleUser(id);
-                const { user } = res;
-                return (
-                    <div>
-                        <button key={user.id} onClick={() => assignToJob(job.id, user.id)}>{user.firstName} {user.lastName.slice(0, 1) + "."} {user.avgRating !== null ? user.avgRating : ''}</button>
-                    </div>
-                );
-            })
-
-            try {
-
-                const resultArray = await Promise.all(promises);
-
-                setApplicantList(resultArray);
-                setShowApplicantList(true);
-
-            } catch(err) {
-                console.error(err);
-                return [];
-            }
-        }
-    }
-
-    const assignToJob = async (job_id, user_id) => {
-        const data = { job: {
-            id: job_id,
-            assigned_to: user_id,
-            status: 'active'
-        }}
-        await TaskerApi.updateSingleJob(data)
-    }
-
-
-    const showRenderDetails = renderDetails(applications);
-    const showJobStatus = getJobStatus(applications);
-    const showApplicantCount = getApplicantCount(job);
-
+    const showJobStatus = getJobStatus(applications, job);
 
     return (
         
@@ -209,27 +172,26 @@ const JobCard = ({user, applications, job, fetchCurrUser}) => {
 
             {/* JobDetails component as a pop-up based on showDetails status */}
             {showDetails && (
-                <div className="jobDetails-container">
-                    {showRenderDetails}
-                    {job.status !== 'active' && (
-                        <p>Applications: {showApplicantCount}</p>
-                    )}
-                </div>
-            )}
-
-            
-
-            {/* list of applicants */}
-            {showApplicantList && (
-                <ol>
-                    {applicantList}
-                </ol>
+                <JobDetails 
+                    job={job} 
+                    applications={applications} 
+                    user={user} 
+                    withdrawApplication={withdrawApplication}
+                    startWork={startWork} 
+                    onEndWork={() => setShowCompletionForm(true)}
+                    applyToJob={applyToJob}
+                    toggleDetails={toggleDetails}
+                    jobStarted={jobStarted}
+                    triggerEffect={triggerEffect}
+                    setIsAssigned={() => {setIsAssigned(true)}}
+                    isAssigned={isAssigned}
+                />
             )}
 
             {/* Job completion form */}
             {showCompletionForm && (
                 <div data-testid="jobCompletion-form-container">
-                    <JobCompletionForm job={job}/>
+                    <JobCompletionForm job={job} onUpload={() => endWork(job)}/>
                 </div>
             )}
         </div>
