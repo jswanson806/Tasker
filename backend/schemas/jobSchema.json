@@ -70,7 +70,7 @@
                 },
                 "start_time": {
                     "type": "string",
-                    "default": "",
+                    "default": null,
                     "title": "The startTime Schema",
                     "examples": [
                         "2023-06-01 09:00:00"
@@ -78,7 +78,7 @@
                 },
                 "end_time": {
                     "type": "string",
-                    "default": "",
+                    "default": null,
                     "title": "The endTime Schema",
                     "examples": [
                         "2023-06-01 10:00:00"
@@ -94,7 +94,7 @@
                 },
                 "payment_due": {
                     "type": "number",
-                    "default": 0.0,
+                    "default": null,
                     "title": "The paymentDue Schema",
                     "examples": [
                         100.25
