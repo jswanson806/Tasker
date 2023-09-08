@@ -9,7 +9,7 @@ import CreateJob from '../components/CreateJob.js';
 import CreateReview from '../components/CreateReview.js';
 import Reviews from '../components/Reviews.js';
 import Jobs from '../components/Jobs.js';
-import Conversation from '../components/Conversation.js';
+import ConversationPreviews from '../components/ConversationPreviews.js';
 import NotFound from '../components/NotFound.js';
 import Account from '../components/Account.js';
 
@@ -30,7 +30,7 @@ const Router = () => {
                 <Route path="/create-review" element={!loggedIn ? <Navigate to="/"/> : <CreateReview />} />
                 <Route path="/reviews" element={!loggedIn ? <Navigate to="/"/> : <Reviews />} />
                 <Route path="/jobs" element={!loggedIn ? <Navigate to="/"/> : <Jobs />} />
-                <Route path="/messages" element={!loggedIn ? <Navigate to="/"/> : <Conversation />} />
+                <Route path="/messages" element={!loggedIn ? <Navigate to="/"/> : <ConversationPreviews />} />
                 <Route path="/account" element={!loggedIn ? <Navigate to="/"/> : <Account />} />
 
                 {/* default catch all redirect to 404 page */}
