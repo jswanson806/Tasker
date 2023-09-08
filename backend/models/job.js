@@ -16,13 +16,13 @@ class Job {
                     body, 
                     status, 
                     address,
-                    posted_by AS "postedBy", 
-                    assigned_to AS "assignedTo", 
-                    TO_CHAR(start_time, 'MM/DD/YYYY HH:MI') AS "startTime", 
-                    TO_CHAR(end_time, 'MM/DD/YYYY HH:MI') AS "endTime", 
-                    payment_due AS "paymentDue", 
-                    before_image_url AS "beforeImageUrl", 
-                    after_image_url AS "afterImageUrl"
+                    posted_by, 
+                    assigned_to, 
+                    TO_CHAR(start_time, 'MM/DD/YYYY HH:MI') AS "start_time", 
+                    TO_CHAR(end_time, 'MM/DD/YYYY HH:MI') AS "end_time", 
+                    payment_due, 
+                    before_image_url, 
+                    after_image_url
             FROM jobs
             ORDER BY title`
         );
@@ -49,13 +49,13 @@ class Job {
                 j.body, 
                 j.status, 
                 j.address,
-                j.posted_by AS "postedBy", 
-                j.assigned_to AS "assignedTo", 
-                TO_CHAR(j.start_time, 'MM/DD/YYYY HH:MI AM') AS "startTime", 
-                TO_CHAR(j.end_time, 'MM/DD/YYYY HH:MI AM') AS "endTime", 
-                j.payment_due AS "paymentDue", 
-                j.before_image_url AS "beforeImageUrl", 
-                j.after_image_url AS "afterImageUrl",
+                j.posted_by, 
+                j.assigned_to, 
+                TO_CHAR(j.start_time, 'MM/DD/YYYY HH:MI AM') AS "start_time", 
+                TO_CHAR(j.end_time, 'MM/DD/YYYY HH:MI AM') AS "end_time", 
+                j.payment_due, 
+                j.before_image_url, 
+                j.after_image_url,
                 ARRAY_AGG(a.applied_by) AS "applicants"
             FROM jobs j
             LEFT JOIN applications a ON j.id = a.applied_to
@@ -87,13 +87,13 @@ class Job {
                 j.body, 
                 j.status, 
                 j.address,
-                j.posted_by AS "postedBy", 
-                j.assigned_to AS "assignedTo", 
-                TO_CHAR(j.start_time, 'MM/DD/YYYY HH:MI AM') AS "startTime", 
-                TO_CHAR(j.end_time, 'MM/DD/YYYY HH:MI AM') AS "endTime", 
-                j.payment_due AS "paymentDue", 
-                j.before_image_url AS "beforeImageUrl", 
-                j.after_image_url AS "afterImageUrl",
+                j.posted_by, 
+                j.assigned_to, 
+                TO_CHAR(j.start_time, 'MM/DD/YYYY HH:MI AM') AS "start_time", 
+                TO_CHAR(j.end_time, 'MM/DD/YYYY HH:MI AM') AS "end_time", 
+                j.payment_due, 
+                j.before_image_url, 
+                j.after_image_url,
                 ARRAY_AGG(a.applied_by) AS "applicants"
             FROM jobs j
             LEFT JOIN applications a ON j.id = a.applied_to
@@ -130,8 +130,8 @@ class Job {
                       body, 
                       status, 
                       address, 
-                      posted_by AS "postedBy", 
-                      before_image_url AS "beforeImageUrl"`,
+                      posted_by, 
+                      before_image_url`,
             [title, body, address, posted_by, before_image_url]
         )
 
@@ -161,7 +161,14 @@ class Job {
         const queryString = 
             `UPDATE jobs SET ${setCols}
              WHERE id = ${id}
-             RETURNING title, body, status, address`
+             RETURNING id,
+                       title, 
+                       body, 
+                       status, 
+                       address, 
+                       posted_by, 
+                       before_image_url,
+                       after_image_url`
 
         // query the database with the query string and array of values to insert
         const result = await db.query(queryString, [...setVals]);
