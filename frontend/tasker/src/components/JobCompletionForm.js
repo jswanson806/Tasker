@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import TaskerApi from "../api";
 
-const JobCompletionForm = ({job}) => {
+const JobCompletionForm = ({job, onUpload}) => {
 
     const INITIAL_STATE = {
         after_image : ''
@@ -43,10 +43,12 @@ const JobCompletionForm = ({job}) => {
             try{
                 let jobInfo = {job: {
                     ...currJob,
-                    after_image: formData.afterImage
+                    after_image: formData.after_image
                 }}
                 await TaskerApi.updateSingleJob(jobInfo)
                 await uploadFile(selectedFile)
+
+                onUpload();
             } catch(err) {
                console.error("Error: ", err)
             }
@@ -76,7 +78,7 @@ const JobCompletionForm = ({job}) => {
                         type="file"
                         name="afterImage"
                         data-testid="jobCompletion-form-image-input"
-                        value={FormData.afterImage}
+                        value={FormData.after_image}
                         onChange={handleChange}
                     />
                     <button type="submit" data-testid="jobCompletion-form-button">Upload</button>
