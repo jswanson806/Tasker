@@ -28,28 +28,112 @@ describe('gets messages between two users', function() {
         expect(result.length).toBe(3)
         
         // first message should be latest message chronologically
-        expect(result[0]).toEqual({
+        expect(result[2]).toEqual({
             body: 'm3body',
-            created_at: '06/02/2023 10:00 AM'
+            created_at: '06/02/2023 10:00 AM',
+            id: expect.any(Number)
         })
         expect(result[1]).toEqual({
             body: 'm2body',
-            created_at: '06/01/2023 09:05 AM'
+            created_at: '06/01/2023 09:05 AM',
+            id: expect.any(Number)
         })
-        expect(result[2]).toEqual({
+        expect(result[0]).toEqual({
             body: 'm1body',
-            created_at: '06/01/2023 09:00 AM'
+            created_at: '06/01/2023 09:00 AM',
+            id: expect.any(Number)
         })
     })
-
-    test('error if no messages between these users', async function() {
+    test('no error if no messages found', async function() {
         try {
-            const result = await Message.getConversation(testUserIds[2], testUserIds[3]);
+            await Message.getConversation(testUserIds[2], testUserIds[3]);
         } catch(err) {
-            expect(err instanceof NotFoundError).toBeTruthy();
+            expect(err instanceof NotFoundError).toBeFalsy();
         }
     })
 })
+
+describe('gets all messages involving a single user', function() {
+    test('works', async function() {
+        // pass first test user and second test user id's to getConversation function
+        const result = await Message.getAllMessagesInvolving(testUserIds[0]);
+
+        // should have 4 test messages between these two users
+        expect(result.length).toBe(4)
+        
+        // first message should be latest message chronologically
+        expect(result[3]).toEqual({
+            body: 'm4body',
+            created_at: '06/03/2023 10:00 AM',
+            conversationid: expect.any(String),
+            id: expect.any(Number),
+            sentby: expect.any(Number),
+            sentto: expect.any(Number)
+        })
+        expect(result[2]).toEqual({
+            body: 'm3body',
+            created_at: '06/02/2023 10:00 AM',
+            conversationid: expect.any(String),
+            id: expect.any(Number),
+            sentby: expect.any(Number),
+            sentto: expect.any(Number)
+        })
+        expect(result[1]).toEqual({
+            body: 'm2body',
+            created_at: '06/01/2023 09:05 AM',
+            conversationid: expect.any(String),
+            id: expect.any(Number),
+            sentby: expect.any(Number),
+            sentto: expect.any(Number)
+        })
+        expect(result[0]).toEqual({
+            body: 'm1body',
+            created_at: '06/01/2023 09:00 AM',
+            conversationid: expect.any(String),
+            id: expect.any(Number),
+            sentby: expect.any(Number),
+            sentto: expect.any(Number)
+        })
+    })
+
+    test('no error if no messages found', async function() {
+        try {
+            await Message.getAllMessagesInvolving(99999999);
+        } catch(err) {
+            expect(err instanceof NotFoundError).toBeFalsy();
+        }
+    })
+
+})
+
+describe('gets all recent messages from conversations involving a single user', function() {
+    test('works', async function() {
+        // pass first test user and second test user id's to getConversation function
+        const result = await Message.getRecentConvoMessagesInvolving(testUserIds[0]);
+
+        // should have 2 test messages between these two users
+        expect(result.length).toBe(1)
+
+        expect(result[0]).toEqual({
+            id: expect.any(Number),
+            body: 'm4body',
+            convo_id: expect.any(String),
+            created_at: "06/03/2023 10:00 AM",
+            sent_by: testUserIds[0],
+            sent_to: testUserIds[2]
+        })
+
+    })
+
+    test('no error if no messages found', async function() {
+        try {
+            await Message.getRecentConvoMessagesInvolving(999999999999);
+        } catch(err) {
+            expect(err instanceof NotFoundError).toBeFalsy();
+        }
+    })
+})
+
 
 
 describe('create new message', function() {
