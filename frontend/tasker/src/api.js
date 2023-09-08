@@ -142,7 +142,6 @@ class TaskerApi {
         try {
             
             const res = await this.request(`jobs/filter`, filters);
-            console.log('res', res);
             return res;
         } catch(err) {
             console.log("Error in findAndFilterJobs method of the TaskerApi:", err);
@@ -175,6 +174,7 @@ class TaskerApi {
     /** PATCH single job by id*/
     static async updateSingleJob(job_info) {
         try{
+            console.log(job_info)
             const res = await this.request(`jobs/update/${job_info.job.id}`, job_info, "patch");
             return res;
         } catch(err) {
@@ -204,6 +204,28 @@ class TaskerApi {
             return res;
         } catch(err) {
             console.log("Error in getConversationBetween method of the TaskerApi:", err);
+            throw err;
+        }
+    }
+
+    /** GET messages involving particular user id */
+    static async getAllMessagesInvolving(id) {
+        try{
+            const res = await this.request(`messages/${id}`);
+            return res;
+        } catch(err) {
+            console.log("Error in getAllMessagesInvolving method of the TaskerApi:", err);
+            throw err;
+        }
+    }
+
+    /** GET recent messages involving particular user id */
+    static async getMostRecentConvoMessagesInvolving(id) {
+        try{
+            const res = await this.request(`messages/conversations/${id}`);
+            return res;
+        } catch(err) {
+            console.log("Error in getMostRecentConvoMessagesInvolving method of the TaskerApi:", err);
             throw err;
         }
     }
