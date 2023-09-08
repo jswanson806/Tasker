@@ -31,15 +31,15 @@ describe('GET route for conversation between two users', () => {
 
             const expectedConversation = [{
                 body: 'jb6',
-                created_at: expect.stringMatching(/.+/) //ignore dynamic timestamp
+                createdat: expect.stringMatching(/.+/) //ignore dynamic timestamp
             },
             {
                 body: 'jb5',
-                created_at: expect.stringMatching(/.+/)
+                createdat: expect.stringMatching(/.+/)
             },
             {
                 body: 'jb4',
-                created_at: expect.stringMatching(/.+/)
+                createdat: expect.stringMatching(/.+/)
             }]
 
         expect(result.body.conversation.length).toBe(3);
@@ -52,6 +52,90 @@ describe('GET route for conversation between two users', () => {
 
         const result = await request(app)
             .get(`/messages/conversation/${testUserIds[0]}/${testUserIds[1]}/${testJobIds[1]}`)
+            
+        expect(result.status).toBe(401);
+        
+    })
+})
+
+describe('GET route for messages involving a particular user', () => {
+    test('works', async () => {
+        expect.assertions(2)
+
+        const result = await request(app)
+            .get(`/messages/${testUserIds[0]}`)
+            .set('authorization', `Bearer ${u3Token}`)
+
+            const expectedMessages = [{
+                id: expect.any(Number),
+                body: 'jb4',
+                createdat: expect.stringMatching(/.+/), //ignore dynamic timestamp
+                conversationid: expect.any(String),
+                sentby: testUserIds[1],
+                sentto: testUserIds[0]
+            },
+            {
+                id: expect.any(Number),
+                body: 'jb5',
+                createdat: expect.stringMatching(/.+/),
+                conversationid: expect.any(String),
+                sentby: testUserIds[1],
+                sentto: testUserIds[0]
+            },
+            {
+                id: expect.any(Number),
+                body: 'jb6',
+                createdat: expect.stringMatching(/.+/),
+                conversationid: expect.any(String),
+                sentby: testUserIds[1],
+                sentto: testUserIds[0]
+            }]
+
+        expect(result.body.messages.length).toBe(3);
+        expect(result.body.messages).toEqual(expectedMessages)
+        
+    })
+
+    test('error if not logged in', async () => {
+        expect.assertions(1)
+
+        const result = await request(app)
+            .get(`/messages/${testUserIds[0]}`)
+            
+        expect(result.status).toBe(401);
+        
+    })
+})
+
+describe('GET route for recent messages involving a particular user', () => {
+    test('works', async () => {
+        expect.assertions(2)
+
+        const result = await request(app)
+            .get(`/messages/conversations/${testUserIds[0]}`)
+            .set('authorization', `Bearer ${u3Token}`)
+
+            const expectedMessages = [
+                {
+                    id: expect.any(Number),
+                    convo_id: expect.any(String),
+                    body: 'jb6',
+                    created_at: expect.stringMatching(/.+/),
+                    sent_by: testUserIds[1],
+                    sent_to: testUserIds[0]
+                }
+            ]
+
+        expect(result.body.recentMessages.length).toBe(1);
+        expect(result.body.recentMessages).toEqual(expectedMessages)
+        
+    })
+
+    test('error if not logged in', async () => {
+        expect.assertions(1)
+
+        const result = await request(app)
+            .get(`/messages/${testUserIds[0]}`)
             
         expect(result.status).toBe(401);
         
