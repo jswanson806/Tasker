@@ -92,7 +92,7 @@ router.patch("/update/:id", ensureLoggedIn, async function(req, res, next) {
 
         const updateRes = await Job.update(job.id, job);
 
-        return res.status(200).json({ Message: `Updated job: ${updateRes}`})
+        return res.status(200).json({ job : { updateRes }})
     } catch(err) {
         return next(err);
     }
