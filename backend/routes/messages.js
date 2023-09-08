@@ -8,9 +8,9 @@ const { ensureLoggedIn } = require("../middleware/auth.js");
 
 /** GET route for conversation between two users
  * 
- * Middleware validates correct user or admin
+ * Middleware validates logged in status
  * 
- * Returns {"Messages": [{id, body, sentBy, sentTo, createdAt}, ...]}
+ * Returns {"conversation": [{id, body, sentBy, sentTo, createdAt}, ...]}
  * 
  */
 router.get("/conversation/:u1_id/:u2_id/:j_id", ensureLoggedIn, async function(req, res, next) {
@@ -21,6 +21,40 @@ router.get("/conversation/:u1_id/:u2_id/:j_id", ensureLoggedIn, async function(r
     try {
         const convoRes = await Message.getConversation(u1, u2, j);
         return res.status(200).json({conversation: convoRes})
+    } catch(err) {
+        return next(err);
+    }
+})
+
+/** GET route for unique messages for each conversation between two unique users
+ * 
+ * Middleware validates logged in status
+ * 
+ * Returns {"recent_messages": [{convo_id, body, sentBy, sentTo, createdAt}, ...]}
+ * 
+ */
+router.get("/conversations/:id", ensureLoggedIn, async function(req, res, next) {
+
+    try {
+        const messagesRes = await Message.getRecentConvoMessagesInvolving(req.params.id);
+        return res.status(200).json({recentMessages: messagesRes})
+    } catch(err) {
+        return next(err);
+    }
+})
+
+/** GET route for conversations involving a particular user
+ * 
+ * Middleware validates logged in status
+ * 
+ * Returns {"messages": [{id, body, sentBy, sentTo, createdAt}, ...]}
+ * 
+ */
+router.get("/:id", ensureLoggedIn, async function(req, res, next) {
+ 
+    try {
+        const messagesRes = await Message.getAllMessagesInvolving(req.params.id);
+        return res.status(200).json({messages: messagesRes})
     } catch(err) {
         return next(err);
     }
