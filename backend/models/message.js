@@ -22,7 +22,8 @@ class Message {
                     m.body, 
                     TO_CHAR(m.created_at, 'MM/DD/YYYY HH:MI AM') AS created_at,
                     sent_by,
-                    sent_to
+                    sent_to,
+                    is_read
             FROM messages AS m
             JOIN conversations AS c ON m.conversation_id = c.id
             WHERE c.id = $1
@@ -39,6 +40,30 @@ class Message {
         return messages;
     }
 
+
+    static async getSingleMessage(id){
+        
+        const result = await db.query(
+            `SELECT id, 
+                    body, 
+                    TO_CHAR(created_at, 'MM/DD/YYYY HH:MI AM') AS created_at,
+                    sent_by,
+                    sent_to,
+                    is_read
+            FROM messages 
+            WHERE id = $1`,
+            [id]
+        )
+
+        const message = result.rows[0];
+
+        if(!message){ // does not throw error if no conversation exists between these users
+            return null;
+        }
+
+        return message;
+    }
+
     /** Find all messages between two users 
      * 
      * concatenates user ids to form unique id to match to conversations table in form
@@ -50,7 +75,7 @@ class Message {
     static async getAllConversationsInvolving(id){
 
         const result = await db.query(
-            `SELECT m.body, TO_CHAR(m.created_at, 'MM/DD/YYYY HH:MI AM') AS created_at
+            `SELECT m.body, m.is_read, TO_CHAR(m.created_at, 'MM/DD/YYYY HH:MI AM') AS created_at
             FROM messages AS m
             JOIN conversations AS c ON m.conversation_id = c.id
             WHERE c.id LIKE $1 OR c.id LIKE $2
@@ -64,7 +89,7 @@ class Message {
             return null;
         }
 
-        return messages;
+        return conversations;
     }
 
 
@@ -80,7 +105,8 @@ class Message {
                     body, 
                     sent_to AS sentTo,
                     sent_by AS sentBy,
-                    conversation_id AS conversationId, 
+                    conversation_id AS conversationId,
+                    is_read, 
                     TO_CHAR(created_at, 'MM/DD/YYYY HH:MI AM') AS created_at
             FROM messages
             WHERE conversation_id LIKE $1 OR conversation_id LIKE $2
@@ -106,6 +132,7 @@ class Message {
                     body,
                     sent_by,
                     sent_to,
+                    is_read,
                     TO_CHAR(created_at, 'MM/DD/YYYY HH:MI AM') AS created_at
             FROM messages AS m
             WHERE id = (
@@ -154,11 +181,32 @@ class Message {
         const result = await db.query(
             `INSERT INTO messages(body, conversation_id, sent_by, sent_to, created_at)
             VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP)
-            RETURNING body, conversation_id, sent_by, sent_to, created_at`,
+            RETURNING body, conversation_id, sent_by, sent_to, created_at, is_read`,
             [body, convoId, sent_by, sent_to]
         )
   
         const message = result.rows[0]
+
+        return message;
+    }
+
+    static async update(id, is_read) {
+
+        const result = await db.query(
+            `UPDATE messages
+            SET is_read = $1
+            WHERE id = $2
+            RETURNING id,
+                      body,
+                      conversation_id,
+                      sent_by,
+                      sent_to,
+                      created_at,
+                      is_read`,
+                      [is_read, id]
+        )
+
+        const message = result.rows[0];
 
         return message;
     }
