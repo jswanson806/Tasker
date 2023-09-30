@@ -22,21 +22,11 @@
     margin-right: 0;
   }
   
-  .Navbar .Navlink {
-    color: #0f5959;
-    text-decoration: none;
-  }
-
-  .Navbar .Navlink-dashboard {
-    color: #0f5959;
-    text-decoration: none;
-  }
-  
   .Navbar .Navlink.active {
     color: #f1bb7b;
   }
 
-  .Navbar .Navlink-button {
+  /* .Navbar .Navlink-button {
     background: none;
     border: none;
     font-family: 'Raleway', sans-serif;
@@ -45,4 +35,4 @@
     color: #0f5959;
     text-decoration: none;
     cursor: pointer;
-  }
+  } */
