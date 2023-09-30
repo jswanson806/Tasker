@@ -95,19 +95,10 @@ const withdrawApplication = jest.fn();
 const onJobComplete = jest.fn();
 const toggleDetails = jest.fn();
 
-// Mock the useState hook
-// const mockSetState = jest.fn();
-            
-// jest.mock('react', () => ({
-//   ...jest.requireActual('react'),
-//   useState: initial => [initial, mockSetState],
-// }));
 
 beforeEach(() => {
     getBeforeImage.mockResolvedValueOnce({preSignedUrl: 'presigned_before'});
     getAfterImage.mockResolvedValueOnce({preSignedUrl: 'presigned_after'});
-
-    
 })
 
 afterEach(() => {
