@@ -25,16 +25,16 @@ const Message = ({message, preview, user, currUser, onConvoClick}) => {
     const bodyClassName = message.sent_by === currUser.id ? "message-container-right" : "message-container-left";
 
     return (
-        <div className="message-container">
+        <div className="message-container" data-testid="message-container">
             {!currMessage.is_read && currMessage.sent_by !== currUser.id && (<Badge color="info" pill>New</Badge>)}
             {!preview && (
-            <div className={bodyClassName}>
+            <div className={bodyClassName} data-testid="message-body">
                 <p>{currMessage.body}</p>
                 <small className="message-timestamp">{currMessage.created_at}</small>
             </div>)}
                 
             {preview && (
-                <div className="message-preview" 
+                <div className="message-preview" data-testid={"message-preview"} 
                     onClick={() => handleClick(user, currUser.id, currMessage.convo_id)}
                 >
                     <h4>{user.firstName} {user.lastName}</h4>
