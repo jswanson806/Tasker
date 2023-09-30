@@ -875,29 +875,84 @@ describe('carousel images', () => {
 
 });
 
-// describe('renders confirmation modal', () => {
-//     test('works', async () => {
+describe('confirmation component integration', () => { 
 
-//         await act (async () => {
-//             render(
-//                 <JobDetails
-//                     user={userValue2.user} 
-//                     applications={applications} 
-//                     applyToJob={applyToJob}
-//                     job={job4} 
-//                     fetchCurrUser={fetchCurrUser} 
-//                     onEndWork={onEndWork} 
-//                     startWork={startWork} 
-//                     withdrawApplication={withdrawApplication} 
-//                     onJobComplete={onJobComplete} 
-//                     toggleDetails={toggleDetails}
-//                     triggerEffect={triggerEffect}
-//                 />
-//             );
-//         });
+    test('confirm button calls assignToJob', async () => {
 
-//         const confirmation = screen.getByTestId()
+        expect.assertions(5);
 
-//     })
-// })
+        getSingleUser.mockResolvedValueOnce({user: 
+            {
+                id: 1, 
+                firstName: "Joe", 
+                lastName: "Doe", 
+                email: "test@email.comm", 
+                isWorker: true, 
+                applications: [1]
+            }});
 
+        await act (async () => {
+            render(
+                <JobDetails
+                    user={userValue2.user} 
+                    applications={applications} 
+                    applyToJob={applyToJob}
+                    job={job} 
+                    fetchCurrUser={fetchCurrUser} 
+                    onEndWork={onEndWork} 
+                    startWork={startWork} 
+                    withdrawApplication={withdrawApplication} 
+                    onJobComplete={onJobComplete} 
+                    toggleDetails={toggleDetails}
+                    triggerEffect={triggerEffect}
+                />
+            );
+        });
+
+        const button = screen.getByTestId('jobCard-applicants-button');
+        expect(button).toBeInTheDocument();
+
+        fireEvent.click(button);
+
+        let applicantLi;
+
+        await waitFor(async () => {
+            applicantLi = screen.queryByTestId('jobDetails-applicant-li');
+            expect(applicantLi).toBeInTheDocument();
+        })
+
+        await act(async () => {
+            fireEvent.click(applicantLi);
+        })
+
+        let confirmBtn;
+
+         await waitFor(async () => {
+            confirmBtn = screen.queryByTestId("confirmation-confirm-button");
+            expect(confirmBtn).toBeInTheDocument();
+        })
+
+        await act(async () => {
+            getSingleUser.mockResolvedValueOnce({user: 
+                {
+                    id: 1, 
+                    firstName: "Joe", 
+                    lastName: "Doe", 
+                    email: "test@email.comm", 
+                    isWorker: true, 
+                    applications: [1]
+                }});
+            fireEvent.click(confirmBtn);
+        })
+
+        expect(updateSingleJob).toHaveBeenCalled();
+        expect(updateSingleJob).toHaveBeenCalledWith({ job: 
+            {
+                id: 1,
+                assigned_to: 1,
+                status: 'active'
+            }
+        });
+    })
+
+})
