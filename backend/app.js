@@ -8,9 +8,11 @@ const { authenticateJWT } = require("./middleware/auth.js");
 const usersRoutes = require("./routes/users.js");
 const jobsRoutes = require("./routes/jobs.js");
 const messagesRoutes = require("./routes/messages.js");
-const payoutsRoutes = require("./routes/payouts");
-const reviewsRoutes = require("./routes/reviews");
+const payoutsRoutes = require("./routes/payouts.js");
+const reviewsRoutes = require("./routes/reviews.js");
 const authRoutes = require("./routes/auth.js");
+const paymentRoutes = require("./routes/payments.js");
+const fileStorageRoutes = require("./routes/s3.js");
 
 const morgan = require("morgan");
 
@@ -27,6 +29,9 @@ app.use("/messages", messagesRoutes);
 app.use("/payouts", payoutsRoutes);
 app.use("/reviews", reviewsRoutes);
 app.use("/auth", authRoutes);
+app.use("/payments", paymentRoutes);
+app.use("/file-storage", fileStorageRoutes);
+
 
 /** handle 404 errors; matches everything */
 app.use(function (req, res, next) {
