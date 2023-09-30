@@ -3,6 +3,8 @@ import TaskerApi from '../api';
 import JobCard from './JobCard.js';
 import { UserContext } from '../helpers/UserContext';
 import CreateJob from './CreateJob.js';
+import {Row, Spinner, Button, ButtonGroup, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Col, Modal} from "reactstrap";
+import "./styles/Jobs.css";
 
 const Jobs = () => {
 
@@ -14,7 +16,7 @@ const Jobs = () => {
     const [jobs, setJobs] = useState(jobsInitialState);
     const [jobCards, setJobCards] = useState(jobCardsInitialState);
     const [currUser, setCurrUser] = useState(null);
-    const [header, setHeader] = useState('');
+    const [header, setHeader] = useState('Jobs');
     const [buttons, setButtons] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [triggerEffect, setTriggerEffect] = useState(false);
@@ -84,8 +86,8 @@ const Jobs = () => {
     */
     useEffect(() => {
 
-        // if user and jobs are populated
-        if(currUser){
+        // if currUser is populated & create job form is not shown, run switch statement
+        if(currUser && !showCreateJob){
 
             // variable holds object containing filter parameters
             let data;
@@ -99,7 +101,6 @@ const Jobs = () => {
                     break;
                 case showWorkerJobs:
                     data = {
-                        status: 'active',
                         assigned_to: currUser.id
                     };
                     break;
@@ -119,6 +120,7 @@ const Jobs = () => {
                     data = null;
                     break;
             }
+
             // fetches jobs from database with filter parameters
             fetchAndSetFilteredJobs(data);
         }
@@ -137,6 +139,7 @@ const Jobs = () => {
     
     // Function to determine the correct job value to return based on toggles and job status
     function getJobToShow(job, applications) {
+        
         if (showAvailableJobs) {
             return job;
         } else if (showAppliedJobs && applications.has(job.id)) {
@@ -178,16 +181,19 @@ const Jobs = () => {
                 // if shouldShow and currJob is truthy, return the job card passing returned job object as prop 'job'
                 if (shouldShow && currJob) {
                     return (
-                        <JobCard
-                            user={currUser}
-                            applications={applications}
-                            job={currJob}
-                            fetchCurrUser={fetchCurrUser}
-                            setJobs={setJobs}
-                            key={job.id}
-                            triggerEffect={() => setTriggerEffect(!triggerEffect)}
-                            data-testid="jobCard-component"
-                        />
+                        <Col key={job.id}>
+                            <JobCard
+                                user={currUser}
+                                applications={applications}
+                                job={currJob}
+                                fetchCurrUser={fetchCurrUser}
+                                setJobs={setJobs}
+                                key={job.id}
+                                triggerEffect={() => setTriggerEffect(!triggerEffect)}
+                                data-testid="jobCard-component"
+                            />
+                        </Col>
+
                 )};
             })
         );
@@ -274,21 +280,21 @@ const Jobs = () => {
         // check isWorker property of currUser and render different headers based on state values
         if(currUser.isWorker) {
             if(showWorkerJobs){ // shows jobs to which worker has been assigned
-                return <h1 data-testid="jobs-my-worker-jobs-title">My Jobs</h1>
+                return <h3 data-testid="jobs-my-worker-jobs-title">My Jobs</h3>
 
             } else if(showAppliedJobs){ // shows jobs to which worker has applied and are pending
-                return <h1 data-testid="jobs-applied-worker-jobs-title">Applications</h1>
+                return <h3 data-testid="jobs-applied-worker-jobs-title">Applications</h3>
 
             } else { // shows all pending jobs
-                return <h1 data-testid="jobs-available-worker-jobs-title">Available Jobs</h1>
+                return <h3 data-testid="jobs-available-worker-jobs-title">Available Jobs</h3>
             }
 
         } else { // user is not a worker
 
             if(showUserJobs) { // show jobs user created
-                return <h1 data-testid="jobs-my-jobs-user-title">My Jobs</h1>
-            } else { // show completed jobs which the user created
-                return <h1 data-testid="jobs-completed-jobs-user-title">Pending Review</h1>
+                return <h3 data-testid="jobs-my-jobs-user-title">My Jobs</h3>
+            } else { // show completed jobs which the user createdh3
+                return <h3 data-testid="jobs-completed-jobs-user-title">Pending Review</h3>
             }
         }
     }
@@ -298,21 +304,53 @@ const Jobs = () => {
         if(currUser.isWorker) { // buttons for workers
             return (
                 <div>
-                    <button data-testid="jobs-worker-available-button" onClick={toggleAvailableJobs}>Available Jobs</button>
-                    <button data-testid="jobs-worker-applications-button" onClick={toggleAppliedJobs}>Applications</button>
-                    <button data-testid="jobs-worker-my-jobs-button" onClick={toggleWorkerJobs}>My Jobs</button>
+                    <ButtonGroup>
+                        <UncontrolledDropdown>
+                            <DropdownToggle color="info" caret >
+                                Sort
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                <DropdownItem onClick={toggleAvailableJobs} data-testid="available-jobs-menu-item">
+                                    Available Jobs
+                                </DropdownItem>
+                                <DropdownItem onClick={toggleAppliedJobs} data-testid="applications-menu-item">
+                                    Applications
+                                </DropdownItem>
+                                <DropdownItem onClick={toggleWorkerJobs} data-testid="my-jobs-menu-item">
+                                    My Jobs
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+                    </ButtonGroup>
                 </div>
             )
         } else { // buttons for users
             return (
                 <div>
-                    <div>
-                        <button data-testid="jobs-user-my-jobs-button" onClick={toggleUserJobs}>My Jobs</button>
-                        <button data-testid="jobs-user-completed-button" onClick={togglePendingReviewJobs}>Pending Review</button>
-                        {/* this button only renders when viewing 'My Jobs' */}
-                        {showUserJobs && (<button data-testid="jobs-create-job-button" onClick={toggleCreateJob}>Create New Job</button>)}
-                    </div>
-
+                    <ButtonGroup>
+                        <UncontrolledDropdown>
+                            <DropdownToggle color="info" caret >
+                                Sort
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                <DropdownItem onClick={toggleUserJobs} data-testid="my-jobs-menu-item">
+                                    My Jobs
+                                </DropdownItem>
+                                <DropdownItem onClick={togglePendingReviewJobs} data-testid="pending-review-menu-item">
+                                    Pending Review
+                                </DropdownItem>
+                                
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+                    </ButtonGroup>
+                    <Button 
+                        className="jobs-button" 
+                        color="info" 
+                        data-testid="jobs-create-job-button" 
+                        onClick={toggleCreateJob}
+                    >
+                        Create New Job
+                    </Button>
                 </div>
             )
         }
@@ -320,7 +358,13 @@ const Jobs = () => {
 
 
     if(isLoading){
-        return (<div>loading...</div>)
+        return (
+        <div>
+            <Spinner>
+                Loading...
+            </Spinner>
+        </div>
+          )
     }
 
     return (
@@ -330,17 +374,35 @@ const Jobs = () => {
                 {header}
             </div>
 
-            <div className="jobs-buttons-container">
-                {buttons}
-            </div>
-
-            {showCreateJob && ( 
-                <CreateJob /> 
-            )}
-
             {!showCreateJob && (
-                <div className="jobs-cards-container">
-                    {jobCards}
+                <div className="jobs-buttons-container">
+                    {buttons}
+                </div>
+            )}
+                
+            <Modal 
+                isOpen={showCreateJob} 
+                toggle={() => setShowCreateJob(true)} 
+                style={{position: "relative", marginTop: "20%"}}
+            >
+                <CreateJob onCreate={() => 
+                    {
+                        toggleUserJobs(); 
+                        setTriggerEffect(!triggerEffect);
+                    }}
+                    onClose={() => 
+                    {
+                        toggleUserJobs();
+                    }}
+                /> 
+            
+            </Modal>
+            
+            {!showCreateJob && (
+                <div className="jobs-jobCard-container">
+                    <Row md="4" sm="1" >
+                        {jobCards}
+                    </Row>
                 </div>
             )}
         </div>
