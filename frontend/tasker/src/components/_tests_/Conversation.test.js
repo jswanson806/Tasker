@@ -1,0 +1,66 @@
+import React from "react";
+import { render, screen } from '@testing-library/react';
+import Conversation from "../Conversation.js";
+import "reactstrap";
+
+const onClose = jest.fn();
+const onMessageSent = jest.fn();
+
+const currUser = {id: 1, firstName: "Joe", lastName: "Doe", email: "test@email.com", isWorker: true, applications: [1]};
+const targetUser = {id: 2, firstName: "Jane", lastName: "Doe", email: "test@email.com", isWorker: false, applications: [1]};
+const jobId = 1;
+
+describe('smoke and snapshot tests', () => {
+
+    test('Conversation component renders correctly', async () => {
+
+        render(
+            <Conversation 
+                targetUser={targetUser}
+                currUser={currUser}
+                jobId={jobId}
+                onMessageSent={onMessageSent}
+                convoId={'u1u2j1'}
+                onClose={onClose}
+            />
+        );
+    });
+
+    test('Conversation component matches snapshot', async () => {
+
+        const {asFragment} = render(
+            <Conversation 
+                targetUser={targetUser}
+                currUser={currUser}
+                jobId={jobId}
+                onMessageSent={onMessageSent}
+                convoId={'u1u2j1'}
+                onClose={onClose}
+            />
+        );
+        expect(asFragment()).toMatchSnapshot();
+    });
+
+});
+
+describe('useEffect hook - works', () => {
+
+    test('sets conversation title correctly', async () => {
+
+        const {container} = render(
+            <Conversation 
+                targetUser={targetUser}
+                currUser={currUser}
+                jobId={jobId}
+                onMessageSent={onMessageSent}
+                convoId={'u1u2j1'}
+                onClose={onClose}
+            />
+        );
+
+        expect(container).not.toHaveTextContent("Jane Doe");
+        expect(container).toHaveTextContent("Jane D.");
+    });
+
+
+});
