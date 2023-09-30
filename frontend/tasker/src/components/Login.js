@@ -3,6 +3,8 @@ import { TokenContext } from '../helpers/TokenContext.js';
 import { useNavigate } from "react-router-dom";
 import TaskerApi from "../api.js";
 import { UserContext } from "../helpers/UserContext.js";
+import {Button, CardBody, Form, FormText, Card, CardTitle} from "reactstrap";
+import "./styles/Login.css";
 
 
 /**
@@ -67,32 +69,37 @@ const Login = () => {
 
     return (
         <div className="login-container">
-            <div className="login-card">
-                <h1>Login</h1>
-                <form onSubmit={handleSubmit}>
-                    <label htmlFor="email">Email</label>
-                    <input
-                        id="email"
-                        type="text"
-                        name="email"
-                        placeholder="Email Address"
-                        data-testid="login-form-email-input"
-                        value={FormData.email}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="password">Password</label>
-                    <input
-                        id="password"
-                        type="password"
-                        name="password"
-                        placeholder=""
-                        data-testid="login-form-password-input"
-                        value={FormData.password}
-                        onChange={handleChange}
-                    />
-                    <button type="submit" data-testid="login-form-button">Login</button>
-                </form>
-            </div>
+            
+                <div className="login-centered-card">
+                    
+                    <h5>Login</h5>
+
+                    <Form onSubmit={handleSubmit}>
+                        <FormText htmlFor="email">Email</FormText>
+                        <input
+                            id="email"
+                            type="text"
+                            name="email"
+                            placeholder="Email Address"
+                            data-testid="login-form-email-input"
+                            value={FormData.email}
+                            onChange={handleChange}
+                        />
+                        <FormText htmlFor="password">Password</FormText>
+                        <input
+                            id="password"
+                            type="password"
+                            name="password"
+                            placeholder="********"
+                            data-testid="login-form-password-input"
+                            value={FormData.password}
+                            onChange={handleChange}
+                        />
+                        <Button className="login-button" type="submit" color="info" data-testid="login-form-button">Login</Button>
+                    </Form>
+                    
+                </div>
+
         </div>
     );
 }

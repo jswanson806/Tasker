@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { TokenContext } from "../helpers/TokenContext";
 import { UserContext } from "../helpers/UserContext";
 import TaskerApi from "../api";
-
+import {Form, Input, Label, FormGroup, Button, ButtonGroup, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem} from "reactstrap";
+import "./styles/SignUp.css";
 
 /**
  * SignUp component for user registration.
@@ -116,31 +117,35 @@ const SignUp = () => {
         
     }
 
-    // toggles state of isWorker boolean
-    const toggleIsWorker = () => {
-        setIsWorker(!isWorker);
-    }
-
     return (
         <div className="signup-container">
-            <div className="signup-card">
+            <div className="signup-centered-card">
 
                 {/* render title depending on state of isWorker */}
-                <h1>{!isWorker ? 'Sign Up to Post Jobs' : 'Sign Up to Find Jobs'}</h1>
+                <h5>{!isWorker ? 'Sign Up to Post Jobs' : 'Sign Up to Find Jobs'}</h5>
 
                 {/* render button to toggle between user and worker signup */}
-                {isWorker && (
-                    <button data-testid="signup-form-toggle" onClick={toggleIsWorker}>Worker</button>
-                )}
-
-                {!isWorker && (
-                    <button data-testid="signup-form-toggle" onClick={toggleIsWorker}>User</button>
-                )}
+                <ButtonGroup className="my-2">
+                  <UncontrolledDropdown>
+                    <DropdownToggle caret>
+                      {isWorker ? <>Worker</> : <>User</>}
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem onClick={() => setIsWorker(true)}>
+                        Worker
+                      </DropdownItem>
+                      <DropdownItem onClick={() => setIsWorker(false)}>
+                        User
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                </ButtonGroup>
                 
                 {/* form for registering */}
-                <form onSubmit={handleSubmit}>
-                    <label htmlFor="email">Email</label>
-                    <input 
+                <Form onSubmit={handleSubmit}>
+                    <FormGroup>
+                    <Label htmlFor="email">Email</Label>
+                    <Input 
                         id="email"
                         type="text"
                         name="email"
@@ -149,8 +154,10 @@ const SignUp = () => {
                         value={FormData.email}
                         onChange={handleChange}
                     />
-                    <label htmlFor="firstName">First Name</label>
-                    <input
+                    </FormGroup>
+                    <FormGroup>
+                    <Label htmlFor="firstName">First Name</Label>
+                    <Input
                         id="firstName"
                         type="text"
                         name="firstName"
@@ -159,8 +166,10 @@ const SignUp = () => {
                         value={FormData.firstName}
                         onChange={handleChange}
                     />
-                    <label htmlFor="lastName">Last Name</label>
-                    <input
+                    </FormGroup>
+                    <FormGroup>
+                    <Label htmlFor="lastName">Last Name</Label>
+                    <Input
                         id="lastName"
                         type="text"
                         name="lastName"
@@ -169,8 +178,10 @@ const SignUp = () => {
                         value={FormData.lastName}
                         onChange={handleChange}
                     />
-                    <label htmlFor="phone">Phone</label>
-                    <input
+                    </FormGroup>
+                    <FormGroup>
+                    <Label htmlFor="phone">Phone</Label>
+                    <Input
                         id="phone"
                         type="tel"
                         name="phone"
@@ -179,8 +190,10 @@ const SignUp = () => {
                         value={FormData.phone}
                         onChange={handleChange}
                     />
-                    <label htmlFor="password">Password</label>
-                    <input
+                    </FormGroup>
+                    <FormGroup> 
+                    <Label htmlFor="password">Password</Label>
+                    <Input
                         id="password"
                         type="password"
                         name="password"
@@ -189,8 +202,9 @@ const SignUp = () => {
                         value={FormData.password}
                         onChange={handleChange}
                     />
-                    <button type="submit" data-testid="signup-form-button">Signup</button>
-                </form>
+                    </FormGroup>
+                    <Button className="signup-button" color="info" type="submit" data-testid="signup-form-button">Signup</Button>
+                </Form>
                 
             </div>
         </div>

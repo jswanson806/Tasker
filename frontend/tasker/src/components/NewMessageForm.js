@@ -1,7 +1,9 @@
 import React, {useState} from "react";
 import TaskerApi from "../api";
+import {Button, Col, Form, FormGroup, Input, Label, ModalBody, ModalHeader} from "reactstrap";
+import "./styles/NewMessageForm.css";
 
-const NewMessageForm = ({convoId, assignedUser, currUser, jobId, onAction, onMessageSent}) => {
+const NewMessageForm = ({convoId, assignedUser, currUser, jobId, onAction, onMessageSent, onClose}) => {
     
     const INITIAL_STATE = {
         body: '', 
@@ -29,6 +31,8 @@ const NewMessageForm = ({convoId, assignedUser, currUser, jobId, onAction, onMes
             handleClose(); 
         } else {
             onMessageSent(assignedUser, currUser.id, convoId);
+            const textarea = document.querySelector('#body');
+            adjustTextareaHeight(textarea);
         }
 
         setFormData(INITIAL_STATE);
@@ -41,7 +45,25 @@ const NewMessageForm = ({convoId, assignedUser, currUser, jobId, onAction, onMes
             ...formData,
             [name]: value
         }))
+        adjustTextareaHeight(e.target);
+        adjustModalHeight();
     }
+
+    const adjustTextareaHeight = (textarea) => {
+        textarea.style.height = 'auto'; // Reset the height to auto
+        textarea.style.height = textarea.scrollHeight + 'px'; // Set the height to the scrollHeight
+      };
+
+    const adjustModalHeight = () => {
+        const modalContent = document.querySelector('.centered-card');
+        const modalContainer = document.querySelector('.new-message-container');
+        const textarea = document.querySelector('#body');  
+
+        if (modalContent && modalContainer && textarea) {
+            modalContent.style.maxHeight = `${textarea.scrollHeight + 400}px`; // Adjust as needed
+            modalContainer.style.maxHeight = `${textarea.scrollHeight + 400}px`; // Adjust as needed
+      }
+    };
 
     const handleClose = () => {
         onAction();
@@ -49,22 +71,65 @@ const NewMessageForm = ({convoId, assignedUser, currUser, jobId, onAction, onMes
     
 
     return (
-        <div className="convo-new-message-form">
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="message">Message: </label>
-                <input 
-                    id="body"
-                    type="text"
-                    name="body"
-                    placeholder="What's on your mind?"
-                    data-testid="convo-message-input"
-                    value={formData.body}
-                    onChange={handleChange}
-                />
-                <button type="submit" data-testid="convo-form-button">Send</button>
-            </form>
-            {onAction && (<button onClick={handleClose}>Close</button>)}
+        <div className="new-message-container">
+            {!onMessageSent && ( 
+                <div className="centered-card">
+                    <ModalHeader>New Message</ModalHeader>
+                    <ModalBody>
+                        <Form onSubmit={handleSubmit}>
+                            <FormGroup row>
+                            <Label htmlFor="message">Message: </Label>
+
+                                <Input 
+                                    id="body"
+                                    className="text-input"
+                                    type="textarea"
+                                    name="body"
+                                    placeholder="What's on your mind?"
+                                    data-testid="convo-message-input"
+                                    value={formData.body}
+                                    onChange={handleChange}
+                                    rows={1}
+                                    style={{resize: 'none', overflowY: 'hidden'}}
+                                />
+
+                            </FormGroup>
+                            <Button className="button" color="info" type="submit" data-testid="convo-form-button">Send</Button>
+                            <Button className="button" color="danger" onClick={() => onClose()}>Close</Button>
+                        </Form>
+                    </ModalBody>
+                </div>
+            )}
+
+            {onMessageSent && (
+                <div className="new-message-centered-card">
+                    <Form onSubmit={handleSubmit}>
+                        <FormGroup row>
+                        <Label htmlFor="message">New Message: </Label>
+
+                            <Input 
+                                id="body"
+                                className="text-input"
+                                type="textarea"
+                                name="body"
+                                placeholder="What's on your mind?"
+                                data-testid="convo-message-input"
+                                value={formData.body}
+                                onChange={handleChange}
+                                rows={1}
+                                style={{resize: 'none', overflowY: 'hidden'}}
+                            />
+
+                        </FormGroup>
+                        <Button className="button" color="info" type="submit" data-testid="convo-form-button">Send</Button>
+                        <Button className="button" color="danger" onClick={() => onClose()}>Close</Button>
+                    </Form>
+                </div>
+            )}
+    
         </div>
+
+        
     )
 }
 

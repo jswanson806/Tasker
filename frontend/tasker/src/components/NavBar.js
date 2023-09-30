@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Navbar, Nav, NavItem } from 'reactstrap';
+import { Navbar, Nav, NavItem, NavbarBrand, NavbarToggler, Collapse, Button } from 'reactstrap';
 import { TokenContext } from "../helpers/TokenContext";
 import { UserContext } from "../helpers/UserContext";
-import './styles/NavBar.css';
+import "./styles/NavBar.css";
 
 
 const NavBar = () => {
@@ -11,9 +11,12 @@ const NavBar = () => {
     const navigate = useNavigate();
 
     const { token, updateToken } = useContext(TokenContext);
-    const { user, updateUser } = useContext(UserContext);
+    const { updateUser } = useContext(UserContext);
+    const [collapsed, setCollapsed] = useState(true);
 
     let loggedIn = (token && token !== '') ? true : false;
+
+    const toggleNavbar = () => setCollapsed(!collapsed);
 
     /** Removes token and user from localStorage 
      * 
@@ -27,65 +30,64 @@ const NavBar = () => {
 
 
     return(
-        <Navbar expand="md" className="Navbar" data-testid="Navbar">
-
+        <div>
+        <Navbar container="xl" expand="md" color="dark" dark data-testid="Navbar" >
             {!loggedIn ? (
-                <NavLink to="/" className="Navlink" data-testid="Navbar-dashboard">
-                    Tasker
+                <NavLink to="/" className="me-auto" data-testid="Navbar-dashboard">
+                    <Button color="info" outline>Tasker</Button>
                 </NavLink>
             ) : (
-                <NavLink to="/dashboard" className="Navlink" data-testid="Navbar-dashboard">
-                    Dashboard
+                <NavLink to="/dashboard" data-testid="Navbar-dashboard">
+                    <Button color="info" outline>Dashboard</Button>
                 </NavLink>
             )}
 
-            <Nav className="Navbar-nav">
-                
-                {/* Conditionally render user navigation links based on loggedIn status */}
-                {!loggedIn ? (
-                    <>
-                        <NavItem>
-                            <NavLink to="/login" className="Navlink"        data-testid="Navbar-login">
-                                Login
-                            </NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink to="/signup" className="Navlink"      data-testid="Navbar-signup">
-                                Sign Up
-                            </NavLink>
-                        </NavItem>
-                    </>
-                ) : (
-                    <>
-                    <NavItem>
-                        <NavLink to="/jobs" className="Navlink" data-testid="Navbar-jobs">
-                            Jobs
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink to="/messages" className="Navlink" data-testid="Navbar-messages">
-                            Messages
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink to="/reviews" className="Navlink" data-testid="Navbar-reviews"> 
-                            Reviews
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink to="/account" className="Navlink" data-testid="Navbar-account">
-                            Account
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <button onClick={logOut} className="Navlink-button"   data-testid="Navbar-logout-button">Logout</button>
-                    </NavItem>
-                    </>
-                )}
+            <NavbarToggler onClick={toggleNavbar} className="me-2"/>
+            <Collapse isOpen={!collapsed} navbar>
+                <Nav navbar className="ml-auto">
 
-            </Nav>
+                    {/* Conditionally render user navigation links based on loggedIn status */}
+                    {!loggedIn ? (
+                        <>
+                            <NavItem className="mr-2">
+                                <NavLink to="/login" data-testid="Navbar-login">
+                                    <Button color="warning" outline>Login</Button>
+                                </NavLink>
+                            </NavItem>
+                            <NavItem className="mr-2">
+                                <NavLink to="/signup" data-testid="Navbar-signup">
+                                    <Button color="info" outline>Sign Up</Button>
+                                </NavLink>
+                            </NavItem>
+                        </>
+                    ) : (
+                        <>
+                            <NavItem className="mr-2">
+                                <NavLink to="/jobs" data-testid="Navbar-jobs">
+                                    <Button color="info" outline>Jobs</Button>
+                                </NavLink>
+                            </NavItem>
+                            <NavItem className="mr-2">
+                                <NavLink to="/messages" data-testid="Navbar-messages">
+                                    <Button color="info" outline>Messages</Button>
+                                </NavLink>
+                            </NavItem>
+                            <NavItem className="mr-2">
+                                <NavLink to="/account" data-testid="Navbar-account">
+                                    <Button color="info" outline>Account</Button>
+                                </NavLink>
+                            </NavItem>
+                            <NavItem className="mr-2">
+                                <Button onClick={logOut} data-testid="Navbar-logout-button" color="danger" outline>Logout</Button>
+                            </NavItem>
+                        </>
+                    )}
+
+                </Nav>
+            </Collapse>
 
         </Navbar>
+        </div>
     )
 };
 

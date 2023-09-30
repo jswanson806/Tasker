@@ -1,8 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 import { UserContext } from "../helpers/UserContext";
 import TaskerApi from "../api";
+import { Button, Input, Form, FormGroup, Label, FormText, FormFeedback, ModalBody, ModalHeader } from "reactstrap";
+import "./styles/CreateJob.css";
 
-const CreateJob = () => {
+const CreateJob = ({onCreate, onClose}) => {
 
     const INITIAL_STATE = {
         title: '',
@@ -14,7 +16,12 @@ const CreateJob = () => {
 
     const [formData, setFormData] = useState(INITIAL_STATE);
     const [visible, setVisible] = useState(true);
+    const [isValid, setIsValid] = useState(true);
+    const [imageFile, setImageFile] = useState('');
+
     const { user } = useContext(UserContext);
+
+    const validFileTypes = ['image/jpg', 'image/jpeg', 'image/png'];
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -22,77 +29,145 @@ const CreateJob = () => {
             ...formData,
             [name]: value
         }))
+
+        if(name === "body") {
+            adjustTextareaHeight(e.target);
+            adjustAreaHeight();
+        }
+    };
+
+    const adjustTextareaHeight = (textarea) => {
+        textarea.style.height = 'auto'; // Reset the height to auto
+        textarea.style.height = textarea.scrollHeight + 'px'; // Set the height to the scrollHeight
+      };
+
+    const adjustAreaHeight = () => {
+
+        const cardContent = document.querySelector('.createJob-centered-card');
+        const textarea = document.querySelector('#body');  
+
+        if (cardContent && textarea) {
+            cardContent.style.maxHeight = `${textarea.scrollHeight + 600}px`; // Adjust as needed
+      }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        let jobInfo = {job: {
-            title: formData.title,
-            body: formData.body,
-            address: formData.address,
-            posted_by: JSON.parse(user).id,
-            before_image_url: 'formData.beforeImage'
-        }};
+        try {
+            const jobInfo = {
+                job: {
+                    title: formData.title,
+                    body: formData.body,
+                    address: formData.address,
+                    posted_by: JSON.parse(user).id,
+                    before_image_url: imageFile.name,
+                }
+            };
+            
+            const form = new FormData();
+            form.append('image', imageFile);
 
-        await TaskerApi.createJob(jobInfo);
+            await TaskerApi.createJob(jobInfo);
+            await TaskerApi.uploadBeforeImage(form, JSON.parse(user).id,);
 
-        setFormData(INITIAL_STATE);
-        setVisible(false);
+            setFormData(INITIAL_STATE);
+            setVisible(false);
+            onCreate();
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
+    
+    const handleUpload = async (e) => {
+    
+        const file = e.target.files[0];
 
+        if(!validFileTypes.find(type => type === file.type)){
+            setIsValid(false);
+            return;
+        };
+
+        setIsValid(true);
+
+        setImageFile(file);
+
+    };
 
     return (
         <div className="createJob-container" data-testid="createJob-form-container">
-            {visible && (
-            <div>
-                {/* form for registering */}
-                <form onSubmit={handleSubmit}>
-                    <label htmlFor="title">Job Title: </label>
-                    <input 
-                        id="title"
-                        type="text"
-                        name="title"
-                        placeholder="Job Title"
-                        data-testid="createJob-form-title-input"
-                        value={FormData.title}
-                        onChange={handleChange}
+          {visible && (
+            <div className="createJob-centered-card">
+              <Form onSubmit={handleSubmit}>
+                <FormGroup>
+                    <h5>Create Job</h5>
+                    <Label for="title">Job Title:</Label>
+                    <Input
+                      id="title"
+                      type="text"
+                      name="title"
+                      placeholder="Job Title"
+                      data-testid="createJob-form-title-input"
+                      value={FormData.title}
+                      onChange={handleChange}
                     />
-                    <label htmlFor="body">Job Description: </label>
-                    <textarea rows="6" cols="40"
-                        id="body"
-                        name="body"
-                        placeholder="Briefly describe the job..."
-                        data-testid="createJob-form-body-input"
-                        value={FormData.body}
-                        onChange={handleChange}
+                </FormGroup>
+                <FormGroup>
+                    <Label for="body">Job Description:</Label>
+                    <Input
+                      type="textarea"
+                      id="body"
+                      name="body"
+                      placeholder="Briefly describe the job..."
+                      data-testid="createJob-form-body-input"
+                      value={FormData.body}
+                      onChange={handleChange}
+                      rows={1}
+                      style={{resize: 'none', overflowY: 'hidden'}}
                     />
-                    <label htmlFor="address">Address: </label>
-                    <input
-                        id="address"
-                        type="text"
-                        name="address"
-                        placeholder="Adress"
-                        data-testid="createJob-form-address-input"
-                        value={FormData.address}
-                        onChange={handleChange}
+                </FormGroup>
+                <FormGroup>
+                    <Label for="address">Address:</Label>
+                    <Input
+                      id="address"
+                      type="text"
+                      name="address"
+                      placeholder="Address"
+                      data-testid="createJob-form-address-input"
+                      value={FormData.address}
+                      onChange={handleChange}
                     />
-                    {/* <label htmlFor="beforeImage">Image: </label>
-                    <input
-                        id="beforeImage"
-                        type="password"
-                        name="password"
-                        placeholder=""
-                        data-testid="signup-form-password-input"
-                        value={FormData.password}
-                        onChange={handleChange}
-                    /> */}
-                    <button type="submit" data-testid="createJob-form-button">Post Job</button>
-                </form>
+                  <FormFeedback>Please enter an address.</FormFeedback>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="imageInput">
+                        Upload "Before" Image
+                    </Label>
+                    <Input
+                        id="imageInput"
+                        type="file"
+                        name="image"
+                        onChange={handleUpload}
+                        valid={isValid}
+                        invalid={!isValid}
+                    />
+
+                    {!isValid 
+                        ? 
+                        <FormFeedback >Invalid file type</FormFeedback> 
+                        : 
+                        <FormFeedback valid>Valid file type</FormFeedback>
+                    }
+                    <FormText>Supported File Types: jpg, png</FormText>
+                </FormGroup>
+
+                <Button className="button" color="info" type="submit" data-testid="createJob-form-button">Post Job</Button>
+                <Button className="button" color="danger" type="submit" data-testid="createJob-form-button" onClick={onClose}>Close</Button>
+              </Form>
             </div>
-            )}
+          )}
         </div>
-    )
-}
+      );
+    }
 
 export default CreateJob;
