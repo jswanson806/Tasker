@@ -16,6 +16,7 @@ class TaskerApi {
             return (await axios({ url, method, data, params, headers })).data;
         } catch(err) {
             console.error("API Error:", err.response);
+            console.log(err.response)
             let message = err.response.data.error.message;
             throw Array.isArray(message) ? message : [message];
         }
@@ -194,7 +195,6 @@ class TaskerApi {
         }
     }
 
-
     // ************** MESSAGES **************
 
     /** GET conversation between two users by id */
@@ -208,10 +208,21 @@ class TaskerApi {
         }
     }
 
+    /** GET single message by id */
+    static async getSingleMessage(id) {
+        try{
+            const res = await this.request(`messages/${id}`);
+            return res;
+        } catch(err) {
+            console.log("Erro is getSingleMessage method of the TaskerApi:", err);
+            throw err;
+        }
+    }
+
     /** GET messages involving particular user id */
     static async getAllMessagesInvolving(id) {
         try{
-            const res = await this.request(`messages/${id}`);
+            const res = await this.request(`messages/convo/${id}`);
             return res;
         } catch(err) {
             console.log("Error in getAllMessagesInvolving method of the TaskerApi:", err);
@@ -234,6 +245,17 @@ class TaskerApi {
     static async createMessage(message) {
         try{
             const res = await this.request(`messages/create`, message, "post");
+            return res;
+        } catch(err) {
+            console.log("Error in createMessage method of the TaskerApi:", err);
+            throw err;
+        }
+    }
+
+    /** PUT a message */
+    static async updateMessage(id, updateInfo) {
+        try{
+            const res = await this.request(`messages/update/${id}`, updateInfo, "put");
             return res;
         } catch(err) {
             console.log("Error in createMessage method of the TaskerApi:", err);
@@ -313,6 +335,79 @@ class TaskerApi {
             throw err;
         }
     }
+
+    // ************** PAYMENTS **************
+
+    /** POST a new checkout session for a job */
+    static async createCheckoutSession(job) {
+        try{
+            console.log("api - job: ", job)
+            const res = await this.request(`payments/create-checkout-session`, job, "post");
+            return res;
+        } catch(err) {
+            console.log("Error in createCheckoutSession method of the TaskerApi:", err);
+            throw err;
+        }
+    }
+
+    // ************** S3 - IMAGES **************
+
+    /** GET a before-image for a job 
+     * 
+     * Accepts params in format {data: {key: <aws_img_key>, jobId: <jobId>}}
+    */
+    static async getBeforeImage(params) {
+        try{
+            const res = await this.request(`file-storage/download-before-image`, {params});
+            return res;
+        } catch(err) {
+            console.log("Error in getBeforeImage method of the TaskerApi:", err);
+            throw err;
+        }
+    }
+
+    /** GET a after-image for a job 
+     * 
+     * Accepts params in format {data: {key: <aws_img_key>, jobId: <jobId>}}
+    */
+    static async getAfterImage(params) {
+        try{
+            const res = await this.request(`file-storage/download-after-image`, {params});
+            return res;
+        } catch(err) {
+            console.log("Error in getAfterImage method of the TaskerApi:", err);
+            throw err;
+        }
+    }
+
+    /** POST a new before-image for a job
+     * 
+     * Accepts arguments <form>, <userId>
+    */
+    static async uploadBeforeImage(form, jobId) {
+        try{
+            const res = await this.request(`file-storage/upload-before-image/${jobId}`, form, "post");
+            return res;
+        } catch(err) {
+            console.log("Error in uploadBeforeImage method of the TaskerApi:", err);
+            throw err;
+        }
+    }
+
+    /** POST a new after-image for a job
+     * 
+     * Accepts params in format {data: {body: <body>, key: <aws_img_key>, jobId: <jobId>}, path: <file_path>}
+    */
+    static async uploadAfterImage(form, jobId) {
+        try{
+            const res = await this.request(`file-storage/upload-after-image/${jobId}`, form, "post");
+            return res;
+        } catch(err) {
+            console.log("Error in uploadAfterImage method of the TaskerApi:", err);
+            throw err;
+        }
+    }
+
 
 }
 
