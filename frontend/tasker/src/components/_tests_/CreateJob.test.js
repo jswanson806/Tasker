@@ -10,6 +10,7 @@ const userValue = { user: '{"id": 1, "email": "test@email.com", "isWorker": fals
 const createJob = jest.spyOn(TaskerApi, 'createJob')
 
 const toggleCreateJob = jest.fn();
+const onCreate = jest.fn();
 
 describe("createJob form smoke and snapshot tests", () => {
 
@@ -17,7 +18,7 @@ describe("createJob form smoke and snapshot tests", () => {
 
         await act(async () => {render(
             <UserContext.Provider value={userValue}>
-                <CreateJob toggleCreateJob={toggleCreateJob}/>
+                <CreateJob onCreate={onCreate}/>
             </UserContext.Provider>
         )
         });
@@ -43,7 +44,7 @@ describe("Handles form input correctly", () => {
     it('updates form input correctly', async () => {
         await act(async () => {render(
             <UserContext.Provider value={userValue}>
-                <CreateJob toggleCreateJob={toggleCreateJob}/>
+                <CreateJob onCreate={onCreate}/>
             </UserContext.Provider>
         )
         });
@@ -64,6 +65,8 @@ describe("Handles form input correctly", () => {
 
     it('should handle form submission with correct data', async () => {
 
+        
+
         let jobInfo = {job: {
             title: 'test title',
             body: 'test body',
@@ -74,7 +77,7 @@ describe("Handles form input correctly", () => {
 
         await act(async () => {render(
             <UserContext.Provider value={userValue}>
-                <CreateJob toggleCreateJob={toggleCreateJob}/>
+                <CreateJob onCreate={onCreate}/>
             </UserContext.Provider>
         )
         });
@@ -93,17 +96,18 @@ describe("Handles form input correctly", () => {
             fireEvent.click(btn);
         })
         // should have called the function with correct data
+        expect(onCreate).toHaveBeenCalledTimes(1);
         expect(createJob).toHaveBeenCalledTimes(1);
         expect(createJob).toHaveBeenCalledWith(jobInfo);
 
 
     })
 
-    it('should call toggleCreateJob to hide the form after submitting', async () => {
+    it('should call onCreate to hide the form after submitting', async () => {
 
         await act(async () => {render(
             <UserContext.Provider value={userValue}>
-                <CreateJob toggleCreateJob={toggleCreateJob}/>
+                <CreateJob onCreate={onCreate}/>
             </UserContext.Provider>
         )
         });
@@ -115,6 +119,10 @@ describe("Handles form input correctly", () => {
         fireEvent.change(bodyInput, {target: {value: "test body"}});
         fireEvent.change(addressInput, {target: {value: "test address"}});
 
+        expect(titleInput).toBeInTheDocument();
+        expect(bodyInput).toBeInTheDocument();
+        expect(addressInput).toBeInTheDocument();
+
         const btn = screen.getByTestId("createJob-form-button");
 
         // submit the form
@@ -122,7 +130,11 @@ describe("Handles form input correctly", () => {
             fireEvent.click(btn);
         })
 
-        expect(toggleCreateJob).toHaveBeenCalledTimes(1);
+        expect(onCreate).toHaveBeenCalledTimes(1);
+
+        expect(titleInput).not.toBeInTheDocument();
+        expect(bodyInput).not.toBeInTheDocument();
+        expect(addressInput).not.toBeInTheDocument();
 
     })
 

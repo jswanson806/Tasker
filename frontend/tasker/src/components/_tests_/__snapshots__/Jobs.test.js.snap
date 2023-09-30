@@ -1,0 +1,122 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`smoke and snapshot tests should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="jobs-container"
+  >
+    <div
+      class="jobs-header-container"
+    >
+      <h3
+        data-testid="jobs-available-worker-jobs-title"
+      >
+        Available Jobs
+      </h3>
+    </div>
+    <div
+      class="jobs-buttons-container"
+    >
+      <div>
+        <div
+          class="btn-group"
+          role="group"
+        >
+          <div
+            class="dropdown"
+          >
+            <button
+              aria-expanded="false"
+              aria-haspopup="true"
+              class="dropdown-toggle btn btn-info"
+              type="button"
+            >
+              Sort
+            </button>
+            <div
+              aria-hidden="true"
+              class="dropdown-menu"
+              role="menu"
+              tabindex="-1"
+            >
+              <button
+                class="dropdown-item"
+                data-testid="available-jobs-menu-item"
+                role="menuitem"
+                tabindex="0"
+                type="button"
+              >
+                Available Jobs
+              </button>
+              <button
+                class="dropdown-item"
+                data-testid="applications-menu-item"
+                role="menuitem"
+                tabindex="0"
+                type="button"
+              >
+                Applications
+              </button>
+              <button
+                class="dropdown-item"
+                data-testid="my-jobs-menu-item"
+                role="menuitem"
+                tabindex="0"
+                type="button"
+              >
+                My Jobs
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="jobs-jobCard-container"
+    >
+      <div
+        class="row row-cols-sm-1 row-cols-md-4"
+      >
+        <div
+          class="col"
+        >
+          <div
+            class="col-sm-5"
+          >
+            <div
+              class="text-center card card-body"
+              style="width: 15rem;"
+            >
+              <div />
+              <div
+                class="jobCard-card"
+              >
+                <h5
+                  class="card-title"
+                >
+                  testing jobs 2
+                </h5>
+                <div
+                  class="jobCard-badge"
+                >
+                  <span
+                    class="badge badge-success"
+                    style="padding: 5px;"
+                  >
+                    Applied
+                  </span>
+                </div>
+                <p
+                  class="card-text"
+                >
+                  job 2 body...
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

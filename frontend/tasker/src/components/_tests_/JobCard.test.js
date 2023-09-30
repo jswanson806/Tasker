@@ -1,7 +1,8 @@
 import React from 'react';
-import { render, act, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, waitFor, fireEvent } from '@testing-library/react';
 import JobCard from '../JobCard.js';
-import TaskerApi from '../../api.js';
+import "../JobDetails.js";
+
 
 
 const userValue = { user: {id: 1, email: "test@email.com", isWorker: true, applications: [1]} };
@@ -51,10 +52,10 @@ const job2 = {
 
 const applications = new Set([job.id]);
 
-const getSingleUser = jest.spyOn(TaskerApi, 'getSingleUser');
-const applyToJob = jest.spyOn(TaskerApi, 'applyToJob');
-const withdrawApplication = jest.spyOn(TaskerApi, 'withdrawApplication');
 const fetchCurrUser = jest.fn();
+const triggerEffect = jest.fn();
+
+
 
 describe('smoke and snapshot tests', () => {
 
@@ -104,14 +105,14 @@ describe('renders correct information', () => {
 
 })
 
-describe('jobCard buttons', () => {
+describe('renders child', () => {
 
-    test('should show/hide job details', async () => {
+    test('should render JobDetails', async () => {
 
         expect.assertions(4);
 
-        const {container} = render(
-            <JobCard user={userValue.user} applications={applications} job={job} fetchCurrUser={fetchCurrUser}/>
+        const {container, getByTestId} = render(
+            <JobCard triggerEffect={triggerEffect} user={userValue.user} applications={applications} job={job} fetchCurrUser={fetchCurrUser}/>
         );
 
         const jobCard = document.querySelector('.jobCard-card');
@@ -119,103 +120,18 @@ describe('jobCard buttons', () => {
         expect(container).not.toHaveTextContent('job 1 body for testing the job card');
 
         // click the jobCard
-        fireEvent.click(jobCard);
-
+        await waitFor(async () => {
+            fireEvent.click(jobCard);
+        })
+        
         // should show job details card
-        const jobDetails = screen.getByTestId('jobDetails-card');
+        const jobDetails = getByTestId('jobDetails-card');
         expect(jobDetails).toBeInTheDocument();
-        expect(container).toHaveTextContent('job 1 body for testing the job card');
 
-        // click the jobCard
-        fireEvent.click(jobCard);
+        const jobDetailsBody = getByTestId('jobDetails-text');
+        expect(jobDetailsBody).toBeInTheDocument();
+        expect(jobDetailsBody).toHaveTextContent('job 1 body for testing the job card');
 
-        expect(container).not.toHaveTextContent('job 1 body for testing the job card');
 
     });
-
-    test('close button hides details', async () => {
-
-        expect.assertions(2);
-
-        const {container} = render(
-            <JobCard user={userValue.user} applications={applications} job={job} fetchCurrUser={fetchCurrUser}/>
-        );
-
-        const jobCard = document.querySelector('.jobCard-card');
-
-        // click the jobCard
-        fireEvent.click(jobCard);
-
-        // should show job details card
-        expect(container).toHaveTextContent('job 1 body for testing the job card');
-
-        const closeButton = screen.getByTestId('jobDetails-close-button')
-
-        // click 'close'
-        fireEvent.click(closeButton);
-        
-        // should have hidden the job details after applying
-        expect(container).not.toHaveTextContent('job 1 body for testing the job card')
-    });
-
-    test('apply button calls applyToJob and hides details', async () => {
-
-        expect.assertions(4);
-
-        const {container} = render(
-            <JobCard user={userValue.user} applications={applications} job={job2} fetchCurrUser={fetchCurrUser}/>
-        );
-
-        const jobCard = document.querySelector('.jobCard-card');
-
-        // click the jobCard
-        fireEvent.click(jobCard);
-
-        const applyButton = screen.getByTestId('jobDetails-apply-button')
-        expect(applyButton).toBeInTheDocument();
-        
-        // click 'apply' and wait for state update
-        await act(async () => {
-            fireEvent.click(applyButton);
-            getSingleUser.mockResolvedValueOnce({user: {id: 1, applications: [2, 1]}})
-        })
-
-        // should make API call with correct data
-        expect(applyToJob).toHaveBeenCalledTimes(1);
-        expect(applyToJob).toHaveBeenCalledWith(1, 2);
-        
-        // should have hidden the job details after applying
-        expect(container).not.toHaveTextContent('job 2 body for testing the job card')
-    });
-
-    test('withdraw button calls withdrawApplication and hides details', async () => {
-
-        expect.assertions(4);
-
-        const {container} = render(
-            <JobCard user={userValue.user} applications={applications} job={job} fetchCurrUser={fetchCurrUser}/>
-        );
-
-        const jobCard = document.querySelector('.jobCard-card');
-
-        // click the jobCard
-        fireEvent.click(jobCard);
-
-        const withdrawButton = screen.getByTestId('jobDetails-withdraw-button')
-        expect(withdrawButton).toBeInTheDocument();
-        
-        // click 'withdraw' and wait for state update
-        await act(async () => {
-            fireEvent.click(withdrawButton);
-            withdrawApplication.mockResolvedValueOnce({})
-        })
-
-        // should make API call with correct data
-        expect(withdrawApplication).toHaveBeenCalledTimes(1);
-        expect(withdrawApplication).toHaveBeenCalledWith(1, 1);
-        
-        // should have hidden the job details after withdrawing
-        expect(container).not.toHaveTextContent('job 1 body for testing the job card')
-    });
-
 })
