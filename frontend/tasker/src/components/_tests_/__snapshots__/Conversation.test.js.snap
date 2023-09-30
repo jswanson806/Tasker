@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`smoke and snapshot tests Conversation component matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="convo-container"
+  >
+    <div
+      class="convo-centered-card"
+    >
+      <div
+        class="modal-header"
+      >
+        <h5
+          class="modal-title"
+        >
+          Jane D.
+        </h5>
+      </div>
+      <div
+        class="modal-body"
+        style="max-height: 700px; display: flex; flex-direction: column-reverse; overflow-y: auto;"
+      >
+        <div
+          class="convo-new-message-form"
+        >
+          <div
+            class="new-message-container"
+          >
+            <div
+              class="new-message-centered-card"
+            >
+              <form
+                class=""
+              >
+                <div
+                  class="row form-group"
+                >
+                  <label
+                    class=""
+                    for="message"
+                  >
+                    New Message: 
+                  </label>
+                  <textarea
+                    class="text-input form-control"
+                    data-testid="convo-message-input"
+                    id="body"
+                    name="body"
+                    placeholder="What's on your mind?"
+                    rows="1"
+                    style="resize: none; overflow-y: hidden;"
+                  />
+                </div>
+                <button
+                  class="button btn btn-info"
+                  data-testid="convo-form-button"
+                  type="submit"
+                >
+                  Send
+                </button>
+                <button
+                  class="button btn btn-danger"
+                  type="button"
+                >
+                  Close
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div
+          class="convo-messages-container"
+          data-testid="convo-messages-container"
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
