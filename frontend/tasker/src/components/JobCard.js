@@ -2,30 +2,27 @@ import React, { useEffect, useState } from 'react';
 import JobDetails from './JobDetails.js';
 import JobCompletionForm from './JobCompletionForm.js';
 import TaskerApi from '../api.js';
+import { Modal, Card, CardTitle, Badge, CardText, Form, Col } from 'reactstrap';
 
 const JobCard = ({user, applications, job, fetchCurrUser, triggerEffect}) => {
 
-    const [showDetails, setShowDetails] = useState(false);
     const [showCompletionForm, setShowCompletionForm] = useState(false);
-    const [jobStarted, setJobStarted] = useState(false);
-    const [isAssigned, setIsAssigned] = useState(false);
+    const [currJob, setCurrJob] = useState('');
+    const [modal, setModal] = useState(false);
 
-    
     useEffect(() => {
-        if(job.assignedTo) {
-            setIsAssigned(true);
-        }
+        setCurrJob(job);
     }, [])
 
     const toggleDetails = () => {
-        setShowDetails(!showDetails);
+        setModal(!modal);
     };
 
     const applyToJob = async (user_id, job_id) => {
         try {
             await TaskerApi.applyToJob(user_id, job_id);
             toggleDetails();
-            // get the latest user information from the database
+            // refresh user info to get latest applications list
             await fetchCurrUser(user_id);
             
         } catch(err) {
@@ -39,8 +36,7 @@ const JobCard = ({user, applications, job, fetchCurrUser, triggerEffect}) => {
             toggleDetails();
 
             await TaskerApi.withdrawApplication(user_id, job_id);
-            toggleDetails();
-            // get the latest user information from the database
+            // refresh user info to get latest applications list
             await fetchCurrUser(user_id)
 
         } catch(err) {
@@ -70,131 +66,166 @@ const JobCard = ({user, applications, job, fetchCurrUser, triggerEffect}) => {
 
             const jobInfo = {job: { ...job }};
 
-            await TaskerApi.updateSingleJob(jobInfo);
-            setJobStarted(true);
+            const updatedJob = await TaskerApi.updateSingleJob(jobInfo);
+
+            setCurrJob(updatedJob);
+
+            triggerEffect();
 
         } catch(err) {
             console.error('Error: ', err)
         }
     }
 
-    const endWork = async (job) => {
-        try {
-            const defaultPayRate = 20.00;
-            const currentTime = new Date();
+    const endWork = () => {
+        // hide the completion form
+        setShowCompletionForm(false);
+        // hide the details component
+        toggleDetails();
+        // refresh the jobs list by triggering useEffect in parent component 'Jobs'
+        triggerEffect();
+    }
+    
 
-            const options = {
-                year: 'numeric',
-                month: 'numeric',
-                day: 'numeric',
-                hour: 'numeric', 
-                minute: 'numeric', 
-                second: 'numeric'
-            }
+    const completeAndPay = async (job) => {
+        job.status = 'complete';
 
-            job.end_time = currentTime.toLocaleString(undefined, options);
+        const jobInfo = { job: { ...job }};
 
-            const hoursWorked = calculateHoursWorked(job);
-            const paymentDue = calculatePaymentDue(hoursWorked, defaultPayRate);
-            console.log(paymentDue)
+        const jobUpdateRes = await TaskerApi.updateSingleJob(jobInfo);
+        setCurrJob({job: {...jobUpdateRes}})
+        
+        // start the stripe payment process here
+        const res = await TaskerApi.createCheckoutSession({job: {...currJob}});
+        window.location.href = res.url;
 
-            job.payment_due = +paymentDue;
-            job.status = 'pending review';
+    }
 
-            const jobInfo = { job: { ...job }};
-
-            await TaskerApi.updateSingleJob(jobInfo);
-
-            setShowCompletionForm(true);
-            setJobStarted(false);
-
-        } catch(err) {
-            console.error('Error: ', err)
+    const renderApplicantBadge = (job, user) => {
+        if(!user.isWorker && job.applicants[0] && !job.assigned_to) {
+            return (
+                <Badge 
+                    color="warning" 
+                    pill
+                >
+                    Applicants: {job.applicants.length}
+                </Badge>
+            )
         }
+        return;
     }
 
-    /** Calculate the time spent working on the job in hours
-     * 
-     * Returns hours worked
-     */
-    const calculateHoursWorked = (job) => {
-        const startDate = new Date(job.start_time);
-        const endDate = new Date(job.end_time);
-
-        // Calculate the time difference in milliseconds
-        const timeDifferenceMs = endDate - startDate;
-
-        // Calculate the time difference in hours
-        const hoursWorked = timeDifferenceMs / (1000 * 60 * 60);
-
-        return hoursWorked;
-    }
-
-    /** Calculate the payment due for the job
-     * 
-     * Returns payment due rounded to 4 decimal places
-     */
-
-    const calculatePaymentDue = (hours, rate) => {
-        // calculate payment due based on hours worked
-        const value = hours * rate;
-
-        // value to 4 decimal places
-        const paymentDue = value.toFixed(4);
-
-        return paymentDue;
-    }
-
-    /** Conditionally renders status of job based on user.isWorker property
-     * 
-     * Shows 'Applied' if the job is still pending and the user has already applied
-     */
-    const getJobStatus = (applications, job) => {
-        if(user.isWorker){
-           return <h2>Status: {applications.has(job.id) && job.status !== 'active' ? 'Applied' : `${job.status}`}</h2>
-        } else {
-            return <h2>Status: {job.status}</h2>
+    const renderAppliedBadge = (job, applications) => {
+        if(applications.has(job.id) && job.status === 'pending'){
+            return(
+                <div className="jobCard-badge">
+                    <Badge 
+                        color="success" 
+                        style={{padding: '5px'}}
+                    >
+                        Applied
+                    </Badge>
+                </div>
+            )
         }
+
+        return;
     }
 
-    const showJobStatus = getJobStatus(applications, job);
+    const renderJobStatusBadge = (job) => {
+        if(!applications.has(job.id) && job.status === 'pending') {
+            return (
+                <Badge 
+                    color="info" 
+                    style={{padding: '5px'}}
+                >
+                    {job.status}
+                </Badge>
+            )
+        } else if (!applications.has(job.id) && job.status === 'active') {
+            return (
+                <Badge 
+                    color="success" 
+                    style={{padding: '5px'}}
+                >
+                    {job.status}
+                </Badge>                
+            )
+        } else if(job.status === 'pending review') {
+            return (
+                <Badge 
+                    color="warning" 
+                    style={{padding: '5px'}}
+                >
+                    {job.status}
+                </Badge> 
+            )
+        }
+        
+    }
+
+    const applicantBadge = renderApplicantBadge(job, user);
+    const appliedBadge = renderAppliedBadge(job, applications);
+    const statusBadge = renderJobStatusBadge(job);
 
     return (
         
-        <div className="jobCard-container">
-            <button onClick={toggleDetails}>
+        <Col sm="5" >
+            <Card 
+                body
+                className="text-center"
+                style={{
+                    width: '15rem'
+                }}
+                onClick={toggleDetails}
+              >
+                <div>
+                    {applicantBadge}
+                </div>
+                    
                 <div className="jobCard-card">
-                    <h3>{job.title}</h3>
-                    {showJobStatus}
-                    <p>{job.body.slice(0,30) + "..."}</p>
+                    <CardTitle tag="h5">{job.title}</CardTitle>
+                    {appliedBadge}
+                    {statusBadge}
+                    <CardText>{job.body.slice(0,30) + "..."}</CardText>
                 </div>
-            </button>
-
-            {/* JobDetails component as a pop-up based on showDetails status */}
-            {showDetails && (
-                <JobDetails 
-                    job={job} 
-                    applications={applications} 
-                    user={user} 
-                    withdrawApplication={withdrawApplication}
-                    startWork={startWork} 
-                    onEndWork={() => setShowCompletionForm(true)}
-                    applyToJob={applyToJob}
-                    toggleDetails={toggleDetails}
-                    jobStarted={jobStarted}
-                    triggerEffect={triggerEffect}
-                    setIsAssigned={() => {setIsAssigned(true)}}
-                    isAssigned={isAssigned}
-                />
-            )}
-
-            {/* Job completion form */}
-            {showCompletionForm && (
-                <div data-testid="jobCompletion-form-container">
-                    <JobCompletionForm job={job} onUpload={() => endWork(job)}/>
-                </div>
-            )}
-        </div>
+          
+                {/* JobDetails component as a pop-up based on showDetails status */}
+                <Modal 
+                    isOpen={modal} 
+                    toggle={() => setModal(!modal)} 
+                    style={{position: "relative", marginTop: "20%"}}
+                >
+                    <JobDetails 
+                        job={job} 
+                        applications={applications} 
+                        user={user} 
+                        withdrawApplication={withdrawApplication}
+                        startWork={startWork} 
+                        onEndWork={() => setShowCompletionForm(true)}
+                        applyToJob={applyToJob}
+                        toggleDetails={toggleDetails}
+                        triggerEffect={triggerEffect}
+                        onJobComplete={() => completeAndPay(currJob)}
+                    />                
+                </Modal>
+                {/* Job completion form */}
+                <Modal 
+                    isOpen={showCompletionForm}
+                    toggle={() => setShowCompletionForm(!showCompletionForm)}
+                    style={{position: "relative", marginTop: "20%"}}    
+                >
+                    <div data-testid="jobCompletion-form-container">
+                        <JobCompletionForm 
+                            job={currJob} 
+                            onUpload={() => endWork()}
+                        />
+                    </div>
+                </Modal>
+            </Card>
+        </Col>
+        
+        
     )
 }
 
