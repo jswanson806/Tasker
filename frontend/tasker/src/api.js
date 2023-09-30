@@ -258,7 +258,7 @@ class TaskerApi {
             const res = await this.request(`messages/update/${id}`, updateInfo, "put");
             return res;
         } catch(err) {
-            console.log("Error in createMessage method of the TaskerApi:", err);
+            console.log("Error in updateMessage method of the TaskerApi:", err);
             throw err;
         }
     }
