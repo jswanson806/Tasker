@@ -4,7 +4,7 @@ import { ModalBody, ModalHeader } from 'reactstrap';
 import "./styles/Conversation.css";
 
 
-const Conversation = ({user, currUser, messages, jobId, onMessageSent, convoId, onClose}) => {
+const Conversation = ({targetUser, currUser, messages, jobId, onMessageSent, convoId, onClose}) => {
 
     const [convoTitle, setConvoTitle] = useState('');
 
@@ -16,13 +16,12 @@ const Conversation = ({user, currUser, messages, jobId, onMessageSent, convoId, 
     }, [messages]);
 
     useEffect(() => {
-        setConvoTitle(generateConvoTitle(user));
+        setConvoTitle(generateConvoTitle(targetUser));
         
     }, [])
 
-
     const generateConvoTitle = (user) => {
-        return `${user.firstName} ${user.lastName.slice(0, 1) + "."}`
+        return `${targetUser.firstName} ${targetUser.lastName.slice(0, 1) + "."}`
     }
     
 
@@ -32,25 +31,26 @@ const Conversation = ({user, currUser, messages, jobId, onMessageSent, convoId, 
             {/* renders the name of the user that is being messaged as <firstName + lastName initial + '.'> */}
             <ModalHeader>{convoTitle}</ModalHeader>
             <ModalBody style={{ maxHeight: "700px", display: "flex", flexDirection: "column-reverse", overflowY: "auto"}}>
-            <div className="convo-new-message-form">
+                <div className="convo-new-message-form">
                     <NewMessageForm 
                         convoId={convoId} 
-                        assignedUser={user} 
+                        assignedUser={targetUser} 
                         currUser={currUser} 
                         jobId={jobId} 
                         onMessageSent={onMessageSent}
                         onClose={onClose}
                     />
                 </div>
-                {/* displays the messages when messages[0] is truthy */}
+
                 <div 
                     className="convo-messages-container"
+                    data-testid="convo-messages-container"
                     ref={messagesContainerRef}
                 >
                     {messages}
                 </div>
-                
-                </ModalBody>
+            
+            </ModalBody>
             </div>
         </div>
     )
