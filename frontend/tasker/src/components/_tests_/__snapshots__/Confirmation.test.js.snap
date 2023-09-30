@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createJob form smoke and snapshot tests should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="confirmation-container"
+  >
+    <div
+      class="confirmation-centered-card"
+    >
+      <div
+        class="modal-header"
+      >
+        <h5
+          class="modal-title"
+        >
+          Are you sure you want to assign this applicant to your job?
+        </h5>
+      </div>
+      <div
+        class="modal-body"
+      >
+        <button
+          class="button btn btn-success"
+          data-testid="confirmation-confirm-button"
+          type="button"
+        >
+          Confirm
+        </button>
+        <button
+          class="button btn btn-danger"
+          data-testid="confirmation-cancel-button"
+          type="button"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
