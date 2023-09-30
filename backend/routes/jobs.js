@@ -66,7 +66,7 @@ router.post("/create", ensureLoggedIn, async function(req, res, next) {
 
         const newJob = await Job.create(job);
 
-        return res.status(201).json({ Message: `Created new job with id: ${newJob.id}` })
+        return res.status(201).json(newJob);
 
     } catch(err) {
         return next(err);
@@ -92,7 +92,7 @@ router.patch("/update/:id", ensureLoggedIn, async function(req, res, next) {
 
         const updateRes = await Job.update(job.id, job);
 
-        return res.status(200).json({ job : { updateRes }})
+        return res.status(200).json({ job : { ...updateRes }})
     } catch(err) {
         return next(err);
     }
