@@ -1,0 +1,18 @@
+.convo-previews-container {
+    width: 50vw;
+    margin: 10% auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+/* Apply styles to individual messages */
+.convo-previews-messages-container .message-container {
+    margin-bottom: 10px; /* Add spacing between messages */
+    padding: 10px; /* Add padding to each message */
+    background-color: #f5f5f5; /* Set a background color */
+    border-radius: 5px; /* Add rounded corners to messages */
+     /* Align message text to the left */
+}

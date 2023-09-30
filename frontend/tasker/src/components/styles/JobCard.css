@@ -1,0 +1,4 @@
+.modal-dialog {
+    width: auto !important;
+    max-width: 90%; /* Optional: Limit the maximum width of the modal */
+  }

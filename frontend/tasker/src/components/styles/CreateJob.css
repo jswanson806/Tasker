@@ -1,0 +1,44 @@
+.createJob-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2em 0 2em;
+  }
+  
+  .createJob-centered-card {
+    max-height: 700px;
+    width: 100%;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    transition: max-height 0.2s ease-in-out;
+  }
+  
+  .createJob-centered-card h5 {
+    text-align: center;
+    margin-bottom: 20px; /* Add spacing below the title */
+  }
+  
+  .createJob-centered-card input {
+    width: 100%;
+    padding: 2%;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  
+  .createJob-centered-card .button {
+    margin: 2px;
+    width: 100%;
+    padding: 10px;
+    color: #fff; /* Button text color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  
+  }
+  
+  .modal-content {
+    background-color: transparent !important;
+    border: none !important;
+  }

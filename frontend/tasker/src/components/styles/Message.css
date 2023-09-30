@@ -1,0 +1,43 @@
+.message-container {
+    position: relative; /* Create a positioning context */
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+  
+  /* Style for the "New" badge */
+  .message-container .badge {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+  
+  .message-container .message-preview {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .message-container .message-preview h4 {
+    margin: 0;
+  }
+  
+  .message-container .message-preview-text {
+    margin-top: 10px;
+    text-align: left; /* Align message text to the left */
+  }
+  
+  .message-container .message-preview .message-preview-timestamp {
+    margin-top: auto; /* Push the timestamp to the bottom */
+    text-align: right; /* Align timestamp to the right */
+  }
+
+  .message-container-left {
+    text-align: left;
+  }
+
+  .message-container-right {
+    text-align: right;
+  }
+
+  

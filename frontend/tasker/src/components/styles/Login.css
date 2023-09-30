@@ -1,0 +1,39 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f2f2f2;
+}
+
+.login-centered-card {
+  width: 300px; 
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add a drop shadow */
+  background-color: #fff; /* Card background color */
+}
+
+.login-centered-card h5 {
+  text-align: center;
+  margin-bottom: 20px; /* Add spacing below the title */
+}
+
+.login-centered-card input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+
+}
+
+.login-centered-card button.login-button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+}
+

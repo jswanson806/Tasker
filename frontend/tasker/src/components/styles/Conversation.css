@@ -1,0 +1,27 @@
+.convo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2em 0 2em;
+}
+
+.convo-centered-card {
+    text-align: center;
+    max-height: 800px;
+    width: 100%;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 20px;
+    
+    padding: 20px;
+    transition: max-height 0.2s ease-in-out;
+}
+
+.convo-messages-container{
+    overflow-y: auto;
+}
+
+.convo-new-message-form .new-message-container{
+    margin-top: -20px;
+    margin-bottom: -20px;
+}

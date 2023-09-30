@@ -1,0 +1,42 @@
+.signup-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f2f2f2;
+  }
+  
+  .signup-centered-card {
+    width: 300px; 
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add a drop shadow */
+    background-color: #fff; /* Card background color */
+  }
+  
+  .signup-centered-card h5 {
+    text-align: center;
+    margin-bottom: 20px; /* Add spacing below the title */
+  }
+  
+  .signup-centered-card input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  
+  }
+  
+  .signup-centered-card button.signup-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff; /* Button background color */
+    color: #fff; /* Button text color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  
+  }
+  
+  

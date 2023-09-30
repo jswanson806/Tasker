@@ -1,0 +1,21 @@
+.jobs-header-container {
+    text-align: center;
+    margin: 2% 2%;
+}
+
+.jobs-buttons-container {
+    padding: 2px;
+    text-align: center;
+}
+
+.jobs-button {
+    margin: 2px 5px;
+    padding: 5px;
+}
+
+.jobs-jobCard-container {
+    /* display: flex; */
+    padding: 20px;
+    margin: 2% 2%;
+    align-content: center;
+}
