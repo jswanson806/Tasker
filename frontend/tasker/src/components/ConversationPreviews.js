@@ -3,6 +3,8 @@ import TaskerApi from '../api.js';
 import Message from './Message.js';
 import { UserContext } from '../helpers/UserContext.js';
 import Conversation from './Conversation.js';
+import { Modal, Spinner } from 'reactstrap';
+import "./styles/ConversationPreviews.css";
 
 
 const ConversationPreviews = () => {
@@ -16,6 +18,7 @@ const ConversationPreviews = () => {
     const [jobId, setJobId] = useState(null);
     const [targetUser, setTargetUser] = useState({});
     const [conversationId, setConversationId] = useState(null);
+    const [triggerEffect, setTriggerEffect] = useState(false);
 
     const currUser = JSON.parse(user);
      
@@ -24,7 +27,7 @@ const ConversationPreviews = () => {
         // call function to get recent messages from unique conversations involving currUser
         fetchRecentMessagesInvolving(currUser.id);
 
-    }, []);
+    }, [triggerEffect]);
 
     useEffect(() => {
         if(convo[0]){
@@ -84,11 +87,12 @@ const ConversationPreviews = () => {
 
     async function fetchAndSetConversation(user, currUserId, conversationId) {
         try {
-            console.log(conversationId, currUserId)
+
             const targetUser = user;
             const convoId = conversationId;
             let jobId;
             let res;
+
             if(typeof convoId === 'string'){
                 jobId = await getTargetJobFromConvoId(conversationId);
                 res = await TaskerApi.getConversationBetween(user.id, currUserId, jobId);
@@ -136,7 +140,15 @@ const ConversationPreviews = () => {
 
     if(isLoading) {
         // default state of the page before asynchronous api calls are complete
-        return (<div>Loading...</div>)
+        return (<Spinner>Loading...</Spinner>)
+    }
+
+
+    const handleClose = () => {
+        // hides the conversation Modal
+        setShowConvo(false);
+        // triggers the useEffect
+        setTriggerEffect(!triggerEffect);
     }
 
 
@@ -152,16 +164,23 @@ const ConversationPreviews = () => {
                     </p>
                 )}
             </div>
-            <div>{showConvo && (
-                <Conversation 
-                        messages={convo} 
-                        currUser={currUser} 
-                        jobId={jobId} 
-                        user={targetUser} 
-                        onMessageSent={fetchAndSetConversation}
-                        convoId={conversationId}
-                />
-            )}</div>
+            <div onClick={() => setShowConvo(true)}>
+                <Modal 
+                    isOpen={showConvo} 
+                    toggle={() => setShowConvo(!showConvo)} 
+                    style={{position: "relative", marginTop: "20%"}}
+                >
+                    <Conversation 
+                            messages={convo} 
+                            currUser={currUser} 
+                            jobId={jobId} 
+                            user={targetUser} 
+                            onMessageSent={fetchAndSetConversation}
+                            convoId={conversationId}
+                            onClose={handleClose}
+                    />
+                </Modal>
+            </div>
         </div>
         
     )
