@@ -4,7 +4,8 @@ require("dotenv").config();
 require("colors");
 
 const SECRET_KEY = process.env.SECRET_KEY || "secret-key";
-
+const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID;
+const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
 const PORT = +process.env.PORT || 3001;
 
 // sets database to development, production, or test based on env var
@@ -30,4 +31,6 @@ module.exports = {
     PORT,
     BCRYPT_WORK_FACTOR,
     getDatabaseUri,
+    ACCESS_KEY_ID,
+    SECRET_ACCESS_KEY
 };
