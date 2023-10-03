@@ -61,6 +61,7 @@ exports[`smoke and snapshot tests Conversation component matches snapshot 1`] = 
                 </button>
                 <button
                   class="button btn btn-danger"
+                  data-testid="convo-close-button"
                   type="button"
                 >
                   Close

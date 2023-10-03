@@ -6,52 +6,117 @@ exports[`createJob form smoke and snapshot tests should match snapshot 1`] = `
     class="createJob-container"
     data-testid="createJob-form-container"
   >
-    <div>
-      <form>
-        <label
-          for="title"
+    <div
+      class="createJob-centered-card"
+    >
+      <form
+        class=""
+      >
+        <div
+          class="form-group"
         >
-          Job Title: 
-        </label>
-        <input
-          data-testid="createJob-form-title-input"
-          id="title"
-          name="title"
-          placeholder="Job Title"
-          type="text"
-          value=""
-        />
-        <label
-          for="body"
+          <h5>
+            Create Job
+          </h5>
+          <label
+            class=""
+            for="title"
+          >
+            Job Title:
+          </label>
+          <input
+            class="form-control"
+            data-testid="createJob-form-title-input"
+            id="title"
+            name="title"
+            placeholder="Job Title"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="form-group"
         >
-          Job Description: 
-        </label>
-        <textarea
-          cols="40"
-          data-testid="createJob-form-body-input"
-          id="body"
-          name="body"
-          placeholder="Briefly describe the job..."
-          rows="6"
-        />
-        <label
-          for="address"
+          <label
+            class=""
+            for="body"
+          >
+            Job Description:
+          </label>
+          <textarea
+            class="form-control"
+            data-testid="createJob-form-body-input"
+            id="body"
+            name="body"
+            placeholder="Briefly describe the job..."
+            rows="1"
+            style="resize: none; overflow-y: hidden;"
+          />
+        </div>
+        <div
+          class="form-group"
         >
-          Address: 
-        </label>
-        <input
-          data-testid="createJob-form-address-input"
-          id="address"
-          name="address"
-          placeholder="Adress"
-          type="text"
-          value=""
-        />
+          <label
+            class=""
+            for="address"
+          >
+            Address:
+          </label>
+          <input
+            class="form-control"
+            data-testid="createJob-form-address-input"
+            id="address"
+            name="address"
+            placeholder="Address"
+            type="text"
+            value=""
+          />
+          <div
+            class="invalid-feedback"
+          >
+            Please enter an address.
+          </div>
+        </div>
+        <div
+          class="form-group"
+        >
+          <label
+            class=""
+            for="imageInput"
+          >
+            Upload "Before" Image
+          </label>
+          <input
+            aria-invalid="false"
+            class="is-valid form-control-file"
+            id="imageInput"
+            name="image"
+            type="file"
+          />
+          <div
+            class="valid-feedback"
+          >
+            Valid file type
+          </div>
+          <small
+            class="form-text text-muted"
+          >
+            Supported File Types: jpg, png
+          </small>
+        </div>
         <button
-          data-testid="createJob-form-button"
+          class="button btn btn-info"
+          data-testid="createJob-submit-button"
           type="submit"
         >
           Post Job
+        </button>
+        <button
+          class="button btn btn-danger"
+          data-testid="createJob-close-button"
+          type="submit"
+        >
+          Close
         </button>
       </form>
     </div>

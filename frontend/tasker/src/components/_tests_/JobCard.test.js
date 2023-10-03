@@ -1,12 +1,12 @@
 import React from 'react';
-import { render, waitFor, fireEvent } from '@testing-library/react';
+import { render, act, fireEvent } from '@testing-library/react';
 import JobCard from '../JobCard.js';
 import "../JobDetails.js";
+import TaskerApi from '../../api.js';
 
 
 
 const userValue = { user: {id: 1, email: "test@email.com", isWorker: true, applications: [1]} };
-const userValue2 = { user: {id: 2, email: "test@email.com", isWorker: false} };
 const userValue3 = { user: {id: 3, email: "test@email.com", isWorker: true, applications: []} };
 
 const job = {
@@ -36,25 +36,12 @@ const job3 = {
     applicants: []
 };
 
-const job2 = {
-    id: 2,
-    title: "test job 2",
-    body: "job 2 body for testing the job card",
-    postedBy: 2,
-    status: 'active',
-    assignedTo: 2,
-    paymentDue: null,
-    address: '123 Test Street',
-    beforeImgUrl: 'http://beforeImgUrl2.com',
-    afterImgUrl: null,
-    applicants: [2]
-};
-
 const applications = new Set([job.id]);
 
 const fetchCurrUser = jest.fn();
 const triggerEffect = jest.fn();
-
+const getBeforeImage = jest.spyOn(TaskerApi, 'getBeforeImage');
+const getAfterImage = jest.spyOn(TaskerApi, 'getAfterImage');
 
 
 describe('smoke and snapshot tests', () => {
@@ -111,6 +98,9 @@ describe('renders child', () => {
 
         expect.assertions(4);
 
+        getBeforeImage.mockResolvedValueOnce({preSignedUrl: ''})
+        getAfterImage.mockResolvedValueOnce({preSignedUrl: ''})
+
         const {container, getByTestId} = render(
             <JobCard triggerEffect={triggerEffect} user={userValue.user} applications={applications} job={job} fetchCurrUser={fetchCurrUser}/>
         );
@@ -120,7 +110,7 @@ describe('renders child', () => {
         expect(container).not.toHaveTextContent('job 1 body for testing the job card');
 
         // click the jobCard
-        await waitFor(async () => {
+        await act(async () => {
             fireEvent.click(jobCard);
         })
         

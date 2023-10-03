@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`smoke and snapshot tests renders without crashing 1`] = `
+<DocumentFragment>
+  <div>
+    <h1>
+      Welcome to Tasker!
+    </h1>
+    <p>
+      Tasker is your personal marketplace for finding help to get things done. Sign up to post your open jobs or register as a Worker to get hired today!
+    </p>
+    <p>
+      New here?
+    </p>
+    <a
+      href="/signup"
+    >
+      Sign Up
+    </a>
+    <br />
+    <p>
+      Already registered?
+    </p>
+    <a
+      href="/login"
+    >
+      Login
+    </a>
+  </div>
+</DocumentFragment>
+`;
