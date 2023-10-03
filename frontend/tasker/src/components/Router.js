@@ -6,8 +6,6 @@ import Dashboard from '../components/Dashboard.js';
 import Login from '../components/Login.js';
 import SignUp from '../components/SignUp.js';
 import CreateJob from '../components/CreateJob.js';
-import CreateReview from '../components/CreateReview.js';
-import Reviews from '../components/Reviews.js';
 import Jobs from '../components/Jobs.js';
 import ConversationPreviews from '../components/ConversationPreviews.js';
 import NotFound from '../components/NotFound.js';
@@ -27,8 +25,6 @@ const Router = () => {
                 <Route path="/login" element={loggedIn ? <Navigate to="/dashboard"/> : <Login />} />
                 <Route path="/signup" element={loggedIn ? <Navigate to="/dashboard"/> : <SignUp />} />
                 <Route path="/create-job" element={!loggedIn ? <Navigate to="/"/> : <CreateJob />} />
-                <Route path="/create-review" element={!loggedIn ? <Navigate to="/"/> : <CreateReview />} />
-                <Route path="/reviews" element={!loggedIn ? <Navigate to="/"/> : <Reviews />} />
                 <Route path="/jobs" element={!loggedIn ? <Navigate to="/"/> : <Jobs />} />
                 <Route path="/messages" element={!loggedIn ? <Navigate to="/"/> : <ConversationPreviews />} />
                 <Route path="/account" element={!loggedIn ? <Navigate to="/"/> : <Account />} />
