@@ -28,17 +28,16 @@ const NavBar = () => {
         navigate("/login");
     }
 
-
     return(
         <div>
         <Navbar container="xl" expand="md" color="dark" dark data-testid="Navbar" >
             {!loggedIn ? (
-                <NavLink to="/" className="me-auto" data-testid="Navbar-dashboard">
-                    <Button color="info" outline>Tasker</Button>
+                <NavLink to="/" className="me-auto" >
+                    <Button color="info" outline data-testid="Navbar-tasker">Tasker</Button>
                 </NavLink>
             ) : (
-                <NavLink to="/dashboard" data-testid="Navbar-dashboard">
-                    <Button color="info" outline>Dashboard</Button>
+                <NavLink to="/jobs" >
+                    <Button color="info" outline data-testid="Navbar-dashboard">Tasker</Button>
                 </NavLink>
             )}
 
@@ -50,31 +49,26 @@ const NavBar = () => {
                     {!loggedIn ? (
                         <>
                             <NavItem className="mr-2">
-                                <NavLink to="/login" data-testid="Navbar-login">
-                                    <Button color="warning" outline>Login</Button>
+                                <NavLink to="/login" >
+                                    <Button color="warning" outline data-testid="Navbar-login">Login</Button>
                                 </NavLink>
                             </NavItem>
                             <NavItem className="mr-2">
-                                <NavLink to="/signup" data-testid="Navbar-signup">
-                                    <Button color="info" outline>Sign Up</Button>
+                                <NavLink to="/signup" >
+                                    <Button color="info" outline data-testid="Navbar-signup">Sign Up</Button>
                                 </NavLink>
                             </NavItem>
                         </>
                     ) : (
                         <>
                             <NavItem className="mr-2">
-                                <NavLink to="/jobs" data-testid="Navbar-jobs">
-                                    <Button color="info" outline>Jobs</Button>
+                                <NavLink to="/jobs" >
+                                    <Button color="info" outline data-testid="Navbar-jobs">Jobs</Button>
                                 </NavLink>
                             </NavItem>
                             <NavItem className="mr-2">
-                                <NavLink to="/messages" data-testid="Navbar-messages">
-                                    <Button color="info" outline>Messages</Button>
-                                </NavLink>
-                            </NavItem>
-                            <NavItem className="mr-2">
-                                <NavLink to="/account" data-testid="Navbar-account">
-                                    <Button color="info" outline>Account</Button>
+                                <NavLink to="/messages">
+                                    <Button color="info" outline data-testid="Navbar-messages">Messages</Button>
                                 </NavLink>
                             </NavItem>
                             <NavItem className="mr-2">
