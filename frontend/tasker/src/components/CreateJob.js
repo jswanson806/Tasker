@@ -161,8 +161,8 @@ const CreateJob = ({onCreate, onClose}) => {
                     <FormText>Supported File Types: jpg, png</FormText>
                 </FormGroup>
 
-                <Button className="button" color="info" type="submit" data-testid="createJob-form-button">Post Job</Button>
-                <Button className="button" color="danger" type="submit" data-testid="createJob-form-button" onClick={onClose}>Close</Button>
+                <Button className="button" color="info" type="submit" data-testid="createJob-submit-button">Post Job</Button>
+                <Button className="button" color="danger" type="submit" data-testid="createJob-close-button" onClick={onClose}>Close</Button>
               </Form>
             </div>
           )}
