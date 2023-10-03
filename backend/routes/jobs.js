@@ -58,7 +58,7 @@ router.post("/create", ensureLoggedIn, async function(req, res, next) {
         const result = jsonschema.validate(req.body, jobSchema);
         if(!result.valid){
             const errorList = result.errors.map(err => err.stack);
-            const error = new ExpressError(errorList, 404);
+            const error = new ExpressError(errorList, 400);
             return next(error);
         }
 
@@ -85,7 +85,7 @@ router.patch("/update/:id", ensureLoggedIn, async function(req, res, next) {
         const result = jsonschema.validate(req.body, jobUpdateSchema);
         if(!result.valid) {
             const errorList = result.errors.map(err => err.stack);
-            const error = new ExpressError(errorList, 404);
+            const error = new ExpressError(errorList, 400);
             return next(error);
         }
         const { job } = req.body;
