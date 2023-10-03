@@ -27,9 +27,9 @@ const NewMessageForm = ({convoId, assignedUser, currUser, jobId, onAction, onMes
         
         await TaskerApi.createMessage(message);
 
-        if(onAction){
+        if(onAction){ // onAction is passed from the JobDetails component
             handleClose(); 
-        } else {
+        } else { // onAction was not passed, which means onMessageSent was passed from Conversation component
             onMessageSent(assignedUser, currUser.id, convoId);
             const textarea = document.querySelector('#body');
             adjustTextareaHeight(textarea);
@@ -95,7 +95,7 @@ const NewMessageForm = ({convoId, assignedUser, currUser, jobId, onAction, onMes
 
                             </FormGroup>
                             <Button className="button" color="info" type="submit" data-testid="convo-form-button">Send</Button>
-                            <Button className="button" color="danger" onClick={() => onClose()}>Close</Button>
+                            <Button className="button" color="danger" onClick={() => onClose()} data-testid="convo-close-button">Close</Button>
                         </Form>
                     </ModalBody>
                 </div>
@@ -122,7 +122,7 @@ const NewMessageForm = ({convoId, assignedUser, currUser, jobId, onAction, onMes
 
                         </FormGroup>
                         <Button className="button" color="info" type="submit" data-testid="convo-form-button">Send</Button>
-                        <Button className="button" color="danger" onClick={() => onClose()}>Close</Button>
+                        <Button className="button" color="danger" onClick={() => onClose()} data-testid="convo-close-button">Close</Button>
                     </Form>
                 </div>
             )}
