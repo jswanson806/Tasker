@@ -83,7 +83,8 @@ function ensureIsAdmin(req, res, next) {
  */
 
 function ensureCorrectUserOrAdmin(req, res, next){
-    if(!(res.locals.user && (res.locals.user.isAdmin || req.params.id === res.locals.user.id))){
+
+    if(!(res.locals.user && (res.locals.user.isAdmin || res.locals.user.id === req.params.id))){
         const e = new UnauthorizedError();
     
         return next(e);
