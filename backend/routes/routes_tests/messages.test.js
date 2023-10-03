@@ -11,7 +11,7 @@ const {
     commonAfterAll,
     testUserIds,
     u3Token,
-    testJobIds
+    testJobIds,
 } = require("./common.js");
 
 beforeAll(commonBeforeAll);
@@ -30,16 +30,30 @@ describe('GET route for conversation between two users', () => {
             .set('authorization', `Bearer ${u3Token}`)
 
             const expectedConversation = [{
-                body: 'jb6',
-                createdat: expect.stringMatching(/.+/) //ignore dynamic timestamp
+                "body": "jb6",
+                "body": "jb4",
+                "created_at": expect.stringMatching(/.+/),
+                "id": expect.any(Number),
+                "is_read": false,
+                "sent_by": testUserIds[1],
+                "sent_to": testUserIds[0],
             },
             {
-                body: 'jb5',
-                createdat: expect.stringMatching(/.+/)
+                "body": "jb5",
+                "created_at": expect.stringMatching(/.+/),
+                "id": expect.any(Number),
+                "is_read": false,
+                "sent_by": testUserIds[1],
+                "sent_to": testUserIds[0],
             },
             {
-                body: 'jb4',
-                createdat: expect.stringMatching(/.+/)
+                "body": "jb4",
+                "created_at": expect.stringMatching(/.+/),
+                "body": "jb6",
+                "id": expect.any(Number),
+                "is_read": false,
+                "sent_by": testUserIds[1],
+                "sent_to": testUserIds[0],
             }]
 
         expect(result.body.conversation.length).toBe(3);
@@ -63,32 +77,35 @@ describe('GET route for messages involving a particular user', () => {
         expect.assertions(2)
 
         const result = await request(app)
-            .get(`/messages/${testUserIds[0]}`)
+            .get(`/messages/convo/${testUserIds[0]}`)
             .set('authorization', `Bearer ${u3Token}`)
 
             const expectedMessages = [{
                 id: expect.any(Number),
                 body: 'jb4',
-                createdat: expect.stringMatching(/.+/), //ignore dynamic timestamp
+                created_at: expect.stringMatching(/.+/), //ignore dynamic timestamp
                 conversationid: expect.any(String),
                 sentby: testUserIds[1],
-                sentto: testUserIds[0]
+                sentto: testUserIds[0],
+                is_read: false
             },
             {
                 id: expect.any(Number),
                 body: 'jb5',
-                createdat: expect.stringMatching(/.+/),
+                created_at: expect.stringMatching(/.+/),
                 conversationid: expect.any(String),
                 sentby: testUserIds[1],
-                sentto: testUserIds[0]
+                sentto: testUserIds[0],
+                is_read: false
             },
             {
                 id: expect.any(Number),
                 body: 'jb6',
-                createdat: expect.stringMatching(/.+/),
+                created_at: expect.stringMatching(/.+/),
                 conversationid: expect.any(String),
                 sentby: testUserIds[1],
-                sentto: testUserIds[0]
+                sentto: testUserIds[0],
+                is_read: false
             }]
 
         expect(result.body.messages.length).toBe(3);
@@ -122,7 +139,8 @@ describe('GET route for recent messages involving a particular user', () => {
                     body: 'jb6',
                     created_at: expect.stringMatching(/.+/),
                     sent_by: testUserIds[1],
-                    sent_to: testUserIds[0]
+                    sent_to: testUserIds[0],
+                    is_read: false
                 }
             ]
 

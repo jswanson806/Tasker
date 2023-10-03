@@ -30,16 +30,25 @@ describe('gets messages between two users', function() {
         // first message should be latest message chronologically
         expect(result[2]).toEqual({
             body: 'm3body',
+            is_read: false,
+            sent_by: testUserIds[0],
+            sent_to: testUserIds[1],
             created_at: '06/02/2023 10:00 AM',
             id: expect.any(Number)
         })
         expect(result[1]).toEqual({
             body: 'm2body',
+            is_read: false,
+            sent_by: testUserIds[1],
+            sent_to: testUserIds[0],
             created_at: '06/01/2023 09:05 AM',
             id: expect.any(Number)
         })
         expect(result[0]).toEqual({
             body: 'm1body',
+            is_read: false,
+            sent_by: testUserIds[0],
+            sent_to: testUserIds[1],
             created_at: '06/01/2023 09:00 AM',
             id: expect.any(Number)
         })
@@ -66,6 +75,7 @@ describe('gets all messages involving a single user', function() {
             body: 'm4body',
             created_at: '06/03/2023 10:00 AM',
             conversationid: expect.any(String),
+            is_read: false,
             id: expect.any(Number),
             sentby: expect.any(Number),
             sentto: expect.any(Number)
@@ -74,6 +84,7 @@ describe('gets all messages involving a single user', function() {
             body: 'm3body',
             created_at: '06/02/2023 10:00 AM',
             conversationid: expect.any(String),
+            is_read: false,
             id: expect.any(Number),
             sentby: expect.any(Number),
             sentto: expect.any(Number)
@@ -82,12 +93,14 @@ describe('gets all messages involving a single user', function() {
             body: 'm2body',
             created_at: '06/01/2023 09:05 AM',
             conversationid: expect.any(String),
+            is_read: false,
             id: expect.any(Number),
             sentby: expect.any(Number),
             sentto: expect.any(Number)
         })
         expect(result[0]).toEqual({
             body: 'm1body',
+            is_read: false,
             created_at: '06/01/2023 09:00 AM',
             conversationid: expect.any(String),
             id: expect.any(Number),
@@ -118,6 +131,7 @@ describe('gets all recent messages from conversations involving a single user', 
             id: expect.any(Number),
             body: 'm4body',
             convo_id: expect.any(String),
+            is_read: false,
             created_at: "06/03/2023 10:00 AM",
             sent_by: testUserIds[0],
             sent_to: testUserIds[2]

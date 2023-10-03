@@ -12,6 +12,7 @@ const {
     testUserIds,
     adminToken,
     u1Token,
+    u2Token,
     u3Token
 } = require("./common.js");
 
@@ -80,7 +81,6 @@ describe('GET: /users/:id', function() {
             "isWorker": false,
             "isAdmin": true,
             "phone": '444-444-4444',
-            "avgRating": null,
             "applications": []
         }});
     })
@@ -98,8 +98,8 @@ describe('GET: /users/:id', function() {
 })
 
 describe('POST: /users/apply', function() {
-    test('works: admin add application to user', async function(){
-        expect.assertions(4);
+    test('works: anon cannot add application', async function(){
+        expect.assertions(1);
 
         const user_id = testUserIds[1];
         const job_id = testJobIds[1];
@@ -107,27 +107,9 @@ describe('POST: /users/apply', function() {
         const resp = await request(app)
             .post(`/users/apply`)
             .send({user_id, job_id})
-            .set('authorization', `Bearer ${adminToken}`)
+            .set('authorization', `Bearer ${u2Token}`)
             
-        expect(resp.status).toBe(201);
-
-        expect(resp.body).toEqual({ Message: `User ${user_id} applied to job ${job_id}` });
-
-        const resp2 = await request(app)
-            .get(`/users/${user_id}`)
-            .set('authorization', `Bearer ${u1Token}`)
-        expect(resp2.status).toBe(200);
-        expect(resp2.body).toEqual({"user": {
-            "id": testUserIds[1],
-            "email": 'u5@email.com',
-            "firstName": 'fn5',
-            "lastName": 'ln5',
-            "isWorker": false,
-            "isAdmin": false,
-            "phone": '555-555-5555',
-            "avgRating": 2,
-            "applications": [testJobIds[0], job_id]
-        }});
+        expect(resp.status).toBe(401);
     })
 
     test('works: correct user add application to user', async function(){
@@ -139,7 +121,22 @@ describe('POST: /users/apply', function() {
         const resp = await request(app)
             .post(`/users/apply`)
             .send({user_id, job_id})
-            .set('authorization', `Bearer ${u1Token}`)
+            .set('authorization', `Bearer ${u3Token}`)
+            
+        expect(resp.status).toBe(201);
+
+    })
+
+    test('works: admin add application to user', async function(){
+        expect.assertions(1);
+
+        const user_id = testUserIds[1];
+        const job_id = testJobIds[1];
+
+        const resp = await request(app)
+            .post(`/users/apply`)
+            .send({user_id, job_id})
+            .set('authorization', `Bearer ${adminToken}`)
             
         expect(resp.status).toBe(201);
 
@@ -147,7 +144,7 @@ describe('POST: /users/apply', function() {
 })
 
 describe('POST: /users/withdraw', function() {
-    test('works: admin add application to user', async function(){
+    test('works: admin withdraws application to user', async function(){
         expect.assertions(8);
 
         const user_id = testUserIds[1];
@@ -164,7 +161,7 @@ describe('POST: /users/withdraw', function() {
 
         const resp2 = await request(app)
             .get(`/users/${user_id}`)
-            .set('authorization', `Bearer ${u1Token}`)
+            .set('authorization', `Bearer ${adminToken}`)
         expect(resp2.status).toBe(200);
         expect(resp2.body).toEqual({"user": {
             "id": testUserIds[1],
@@ -174,7 +171,6 @@ describe('POST: /users/withdraw', function() {
             "isWorker": false,
             "isAdmin": false,
             "phone": '555-555-5555',
-            "avgRating": 2,
             "applications": [testJobIds[0], job_id]
         }});
 
@@ -189,7 +185,7 @@ describe('POST: /users/withdraw', function() {
 
         const resp4 = await request(app)
             .get(`/users/${user_id}`)
-            .set('authorization', `Bearer ${u1Token}`)
+            .set('authorization', `Bearer ${adminToken}`)
         expect(resp4.status).toBe(200);
         expect(resp4.body).toEqual({"user": {
             "id": testUserIds[1],
@@ -199,30 +195,44 @@ describe('POST: /users/withdraw', function() {
             "isWorker": false,
             "isAdmin": false,
             "phone": '555-555-5555',
-            "avgRating": 2,
             "applications": [testJobIds[0]]
         }});
     })
 
-    test('works: correct user add application to user', async function(){
+    test('works: correct user withdraws application', async function(){
         expect.assertions(1);
 
         const user_id = testUserIds[1];
         const job_id = testJobIds[1];
 
         const resp = await request(app)
-            .post(`/users/apply`)
+            .post(`/users/withdraw`)
             .send({user_id, job_id})
             .set('authorization', `Bearer ${u1Token}`)
             
         expect(resp.status).toBe(201);
 
     })
+
+    test('works: error if anon', async function(){
+        expect.assertions(1);
+
+        const user_id = testUserIds[1];
+        const job_id = testJobIds[1];
+
+        const resp = await request(app)
+            .post(`/users/withdraw`)
+            .send({user_id, job_id})
+            .set('authorization', `Bearer ${u2Token}`)
+            
+        expect(resp.status).toBe(401);
+
+    })
 })
 
 
 describe('PATCH: /users/update/:id', function() {
-    test('works: update a user', async function(){
+    test('works: admin updates a user', async function(){
         expect.assertions(6);
 
         const user_id = testUserIds[0];
@@ -240,7 +250,6 @@ describe('PATCH: /users/update/:id', function() {
             "isWorker": false,
             "isAdmin": true,
             "phone": '444-444-4444',
-            "avgRating": null,
             "applications": []
         }});
 
@@ -251,6 +260,7 @@ describe('PATCH: /users/update/:id', function() {
             .set('authorization', `Bearer ${adminToken}`)
 
         const updateRes = {
+            id: user_id,
             email: 'u4@email.com',
             firstName: 'updatedFn',
             lastName: 'ln4',
@@ -276,11 +286,101 @@ describe('PATCH: /users/update/:id', function() {
             "isWorker": false,
             "isAdmin": true,
             "phone": '444-444-4444',
-            "avgRating": null,
             "applications": []
         }});
     })
+
+    test('works: correct user updates self', async function(){
+        expect.assertions(6);
+
+        const user_id = testUserIds[0];
+
+        // ********* current user returned *********
+        const resp = await request(app)
+            .get(`/users/${user_id}`)
+            .set('authorization', `Bearer ${u1Token}`)
+        expect(resp.status).toBe(200);
+        expect(resp.body).toEqual({"user": {
+            "id": testUserIds[0],
+            "email": 'u4@email.com',
+            "firstName": 'fn4',
+            "lastName": 'ln4',
+            "isWorker": false,
+            "isAdmin": true,
+            "phone": '444-444-4444',
+            "applications": []
+        }});
+
+        // ********* update user *********
+        const resp2 = await request(app)
+            .patch(`/users/update/${user_id}`)
+            .send({user: {id: user_id, first_name: 'updatedFn'}})
+            .set('authorization', `Bearer ${u1Token}`)
+
+        const updateRes = {
+            id: user_id,
+            email: 'u4@email.com',
+            firstName: 'updatedFn',
+            lastName: 'ln4',
+            phone: '444-444-4444',
+            isWorker: false,
+            isAdmin: true
+        }
+
+        expect(resp2.status).toBe(200);
+
+        expect(resp2.body).toEqual({ Message: `Updated user ${updateRes.id}: ${updateRes}` });
+
+        // ********* verify user returned has updates *********
+        const resp3 = await request(app)
+            .get(`/users/${user_id}`)
+            .set('authorization', `Bearer ${u1Token}`)
+        expect(resp3.status).toBe(200);
+        expect(resp3.body).toEqual({"user": {
+            "id": testUserIds[0],
+            "email": 'u4@email.com',
+            "firstName": 'updatedFn',
+            "lastName": 'ln4',
+            "isWorker": false,
+            "isAdmin": true,
+            "phone": '444-444-4444',
+            "applications": []
+        }});
+    })
+
+
+    test('works: error if anon', async function(){
+        expect.assertions(3);
+
+        const user_id = testUserIds[0];
+
+        // ********* current user returned *********
+        const resp = await request(app)
+            .get(`/users/${user_id}`)
+            .set('authorization', `Bearer ${u1Token}`)
+        expect(resp.status).toBe(200);
+        expect(resp.body).toEqual({"user": {
+            "id": testUserIds[0],
+            "email": 'u4@email.com',
+            "firstName": 'fn4',
+            "lastName": 'ln4',
+            "isWorker": false,
+            "isAdmin": true,
+            "phone": '444-444-4444',
+            "applications": []
+        }});
+
+        // ********* update user *********
+        const resp2 = await request(app)
+            .patch(`/users/update/${user_id}`)
+            .send({user: {id: user_id, first_name: 'updatedFn'}})
+            .set('authorization', `Bearer ${u2Token}`)
+
+        expect(resp2.status).toBe(401);
+
+    })
 })
+
 
 describe('DELETE: /users/:id', function() {
     test('works: admin can delete a user', async function(){

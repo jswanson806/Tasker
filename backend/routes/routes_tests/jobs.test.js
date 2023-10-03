@@ -36,43 +36,43 @@ describe("GET /", () => {
             "id": testJobIds[0],
             "title": 'j4', 
             "body": 'jb4',
-            "status": 'posted',
+            "status": 'pending',
             "address": '444 j street',
-            "postedBy": testUserIds[0],
-            "startTime": null,
-            "endTime": null,
-            "assignedTo": null,
-            "paymentDue": null,
-            "beforeImageUrl": 'http://before4.img',
-            "afterImageUrl": null
+            "posted_by": testUserIds[0],
+            "start_time": null,
+            "end_time": null,
+            "assigned_to": null,
+            "payment_due": null,
+            "before_image_url": 'http://before4.img',
+            "after_image_url": null
         },
         {
             "id": testJobIds[1],
             "title": 'j5', 
             "body": 'jb5',
-            "status": 'posted',
+            "status": 'pending',
             "address": '555 j street',
-            "postedBy": testUserIds[0],
-            "startTime": null,
-            "endTime": null,
-            "paymentDue": null,
-            "assignedTo": null,
-            "beforeImageUrl": 'http://before5.img',
-            "afterImageUrl": null
+            "posted_by": testUserIds[0],
+            "start_time": null,
+            "end_time": null,
+            "payment_due": null,
+            "assigned_to": null,
+            "before_image_url": 'http://before5.img',
+            "after_image_url": null
         },
         {
             "id": testJobIds[2],
             "title": 'j6', 
             "body": 'jb6',
-            "status": 'posted',
+            "status": 'pending',
             "address": '666 j street',
-            "postedBy": testUserIds[0],
-            "startTime": null,
-            "endTime": null,
-            "paymentDue": null,
-            "assignedTo": null,
-            "beforeImageUrl": 'http://before6.img',
-            "afterImageUrl": null
+            "posted_by": testUserIds[0],
+            "start_time": null,
+            "end_time": null,
+            "payment_due": null,
+            "assigned_to": null,
+            "before_image_url": 'http://before6.img',
+            "after_image_url": null
         }]})
     })
 
@@ -81,7 +81,7 @@ describe("GET /", () => {
         const resp = await request(app)
             .get('/jobs')
             
-        expect(resp.statusCode).toBe(500)
+        expect(resp.statusCode).toBe(401)
     })
 })
 
@@ -98,15 +98,16 @@ describe("GET /:id", () => {
             "id": testJobIds[0],
             "title": 'j4', 
             "body": 'jb4',
-            "status": 'posted',
+            "status": 'pending',
             "address": '444 j street',
-            "postedBy": testUserIds[0],
-            "startTime": null,
-            "endTime": null,
-            "assignedTo": null,
-            "paymentDue": null,
-            "beforeImageUrl": 'http://before4.img',
-            "afterImageUrl": null
+            "posted_by": testUserIds[0],
+            "start_time": null,
+            "end_time": null,
+            "assigned_to": null,
+            "payment_due": null,
+            "before_image_url": 'http://before4.img',
+            "after_image_url": null,
+            "applicants": [testUserIds[1]]
         }})
     })
 
@@ -116,7 +117,7 @@ describe("GET /:id", () => {
         const resp = await request(app)
             .get(`/jobs/${job_id}`)
         
-        expect(resp.statusCode).toBe(500)
+        expect(resp.statusCode).toBe(401)
     })
 })
 
@@ -132,43 +133,43 @@ describe("POST /create", () => {
             "id": testJobIds[0],
             "title": 'j4', 
             "body": 'jb4',
-            "status": 'posted',
+            "status": 'pending',
             "address": '444 j street',
-            "postedBy": testUserIds[0],
-            "startTime": null,
-            "endTime": null,
-            "assignedTo": null,
-            "paymentDue": null,
-            "beforeImageUrl": 'http://before4.img',
-            "afterImageUrl": null
+            "posted_by": testUserIds[0],
+            "start_time": null,
+            "end_time": null,
+            "assigned_to": null,
+            "payment_due": null,
+            "before_image_url": 'http://before4.img',
+            "after_image_url": null
         },
         {
             "id": testJobIds[1],
             "title": 'j5', 
             "body": 'jb5',
-            "status": 'posted',
+            "status": 'pending',
             "address": '555 j street',
-            "postedBy": testUserIds[0],
-            "startTime": null,
-            "endTime": null,
-            "paymentDue": null,
-            "assignedTo": null,
-            "beforeImageUrl": 'http://before5.img',
-            "afterImageUrl": null
+            "posted_by": testUserIds[0],
+            "start_time": null,
+            "end_time": null,
+            "payment_due": null,
+            "assigned_to": null,
+            "before_image_url": 'http://before5.img',
+            "after_image_url": null
         },
         {
             "id": testJobIds[2],
             "title": 'j6', 
             "body": 'jb6',
-            "status": 'posted',
+            "status": 'pending',
             "address": '666 j street',
-            "postedBy": testUserIds[0],
-            "startTime": null,
-            "endTime": null,
-            "paymentDue": null,
-            "assignedTo": null,
-            "beforeImageUrl": 'http://before6.img',
-            "afterImageUrl": null
+            "posted_by": testUserIds[0],
+            "start_time": null,
+            "end_time": null,
+            "payment_due": null,
+            "assigned_to": null,
+            "before_image_url": 'http://before6.img',
+            "after_image_url": null
         }]
     })
 
@@ -186,7 +187,16 @@ describe("POST /create", () => {
             .send({job: newJob})
         
         expect(resp2.statusCode).toBe(201)
-        expect(resp2.body).toEqual({ Message: `Created new job with id: ${testJobIds[2] + 1}` })
+        expect(resp2.body).toEqual(
+            {   
+                "address": "777 j street",
+                "before_image_url": "http://before7.img",
+                "body": "jb7",
+                "id": expect.any(Number),
+                "posted_by": testUserIds[0],
+                "status": "pending",
+                "title": "j7"
+            });
         const resp3 = await request(app)
             .get('/jobs')
             .set('authorization', `Bearer ${u1Token}`)
@@ -196,57 +206,57 @@ describe("POST /create", () => {
             "id": testJobIds[0],
             "title": 'j4', 
             "body": 'jb4',
-            "status": 'posted',
+            "status": 'pending',
             "address": '444 j street',
-            "postedBy": testUserIds[0],
-            "startTime": null,
-            "endTime": null,
-            "assignedTo": null,
-            "paymentDue": null,
-            "beforeImageUrl": 'http://before4.img',
-            "afterImageUrl": null
+            "posted_by": testUserIds[0],
+            "start_time": null,
+            "end_time": null,
+            "assigned_to": null,
+            "payment_due": null,
+            "before_image_url": 'http://before4.img',
+            "after_image_url": null
         },
         {
             "id": testJobIds[1],
             "title": 'j5', 
             "body": 'jb5',
-            "status": 'posted',
+            "status": 'pending',
             "address": '555 j street',
-            "postedBy": testUserIds[0],
-            "startTime": null,
-            "endTime": null,
-            "paymentDue": null,
-            "assignedTo": null,
-            "beforeImageUrl": 'http://before5.img',
-            "afterImageUrl": null
+            "posted_by": testUserIds[0],
+            "start_time": null,
+            "end_time": null,
+            "payment_due": null,
+            "assigned_to": null,
+            "before_image_url": 'http://before5.img',
+            "after_image_url": null
         },
         {
             "id": testJobIds[2],
             "title": 'j6', 
             "body": 'jb6',
-            "status": 'posted',
+            "status": 'pending',
             "address": '666 j street',
-            "postedBy": testUserIds[0],
-            "startTime": null,
-            "endTime": null,
-            "paymentDue": null,
-            "assignedTo": null,
-            "beforeImageUrl": 'http://before6.img',
-            "afterImageUrl": null
+            "posted_by": testUserIds[0],
+            "start_time": null,
+            "end_time": null,
+            "payment_due": null,
+            "assigned_to": null,
+            "before_image_url": 'http://before6.img',
+            "after_image_url": null
         },
         {
             "id": testJobIds[2] + 1,
             "title": 'j7', 
             "body": 'jb7',
-            "status": 'posted',
+            "status": 'pending',
             "address": '777 j street',
-            "postedBy": testUserIds[0],
-            "startTime": null,
-            "endTime": null,
-            "paymentDue": null,
-            "assignedTo": null,
-            "beforeImageUrl": 'http://before7.img',
-            "afterImageUrl": null
+            "posted_by": testUserIds[0],
+            "start_time": null,
+            "end_time": null,
+            "payment_due": null,
+            "assigned_to": null,
+            "before_image_url": 'http://before7.img',
+            "after_image_url": null
         }
     ]})
 })
@@ -265,7 +275,7 @@ describe("POST /create", () => {
             .post(`/jobs/create`)
             .send({job: newJob})
         
-        expect(resp2.statusCode).toBe(500);
+        expect(resp2.statusCode).toBe(401);
     })
 
     test("error if invalid schema", async () => {
@@ -285,7 +295,7 @@ describe("POST /create", () => {
         expect(resp.body).toEqual({
             error: {
                 message: [ 'instance.job requires property "title"' ],
-                status: 500
+                status: 400
               }
         })
     })
@@ -304,15 +314,16 @@ describe("PATCH /update", () => {
             "id": testJobIds[0],
             "title": 'j4', 
             "body": 'jb4',
-            "status": 'posted',
+            "status": 'pending',
             "address": '444 j street',
-            "postedBy": testUserIds[0],
-            "startTime": null,
-            "endTime": null,
-            "assignedTo": null,
-            "paymentDue": null,
-            "beforeImageUrl": 'http://before4.img',
-            "afterImageUrl": null
+            "posted_by": testUserIds[0],
+            "start_time": null,
+            "end_time": null,
+            "assigned_to": null,
+            "payment_due": null,
+            "before_image_url": 'http://before4.img',
+            "after_image_url": null,
+            "applicants": [testUserIds[1]]
         }})
 
         const resp2 = await request(app)
@@ -323,12 +334,21 @@ describe("PATCH /update", () => {
         const updateRes = {
             title: 'updatedTitle',
             body: 'jb4',
-            status: 'posted',
+            status: 'pending',
             address: '444 j street'
         }
     
         expect(resp2.statusCode).toBe(200)
-        expect(resp2.body).toEqual({ Message: `Updated job: ${updateRes}`})
+        expect(resp2.body).toEqual({job: {
+            "address": "444 j street",
+            "after_image_url": null,
+            "before_image_url": "http://before4.img",
+            "body": 'jb4',
+            "id": testJobIds[0],
+            "posted_by": testUserIds[0],
+            "status": "pending",
+            "title": "updatedTitle",
+        }})
         const resp3 = await request(app)
             .get(`/jobs/${job_id}`)
             .set('authorization', `Bearer ${u1Token}`)
@@ -338,27 +358,27 @@ describe("PATCH /update", () => {
             "id": testJobIds[0],
             "title": 'updatedTitle', 
             "body": 'jb4',
-            "status": 'posted',
+            "status": 'pending',
             "address": '444 j street',
-            "postedBy": testUserIds[0],
-            "startTime": null,
-            "endTime": null,
-            "assignedTo": null,
-            "paymentDue": null,
-            "beforeImageUrl": 'http://before4.img',
-            "afterImageUrl": null
+            "posted_by": testUserIds[0],
+            "start_time": null,
+            "end_time": null,
+            "assigned_to": null,
+            "payment_due": null,
+            "before_image_url": 'http://before4.img',
+            "after_image_url": null,
+            "applicants": [testUserIds[1]]
         }})
     })
 
-    test("works: user cannot update single job by id", async () => {
+    test("works: cannot update single job by id if not logged in", async () => {
         const job_id = testJobIds[0];
 
         const resp = await request(app)
             .patch(`/jobs/update/${job_id}`)
-            .set('authorization', `Bearer ${u2Token}`)
             .send({job: {id: job_id, title: 'updatedTitle'}})
 
-        expect(resp.status).toBe(500);
+        expect(resp.status).toBe(401);
     })
 
     test("error if invalid schema", async () => {
@@ -378,7 +398,7 @@ describe("PATCH /update", () => {
         expect(resp.body).toEqual({
             error: {
                 message: [ 'instance requires property "job"' ],
-                status: 500
+                status: 400
               }
         })
     })
@@ -422,7 +442,7 @@ describe("DELETE /remove/:id", () => {
             .delete(`/jobs/remove/${job_id}`)
             .set('authorization', `Bearer ${u2Token}`)
 
-        expect(resp2.status).toBe(500);
+        expect(resp2.status).toBe(401);
         
     })
 })

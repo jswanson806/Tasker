@@ -221,7 +221,7 @@ describe('POST route for creating a new payout', () => {
         expect(result.body).toEqual({
             error: {
               message: [ 'instance.payout requires property "trans_to"' ],
-              status: 500
+              status: 400
             }
           });
         

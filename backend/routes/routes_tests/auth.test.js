@@ -29,6 +29,15 @@ describe("POST /auth/token", function () {
         });
     expect(resp.body).toEqual({
       "token": expect.any(String),
+      user: {
+        email: "u4@email.com",
+        firstName: "fn4",
+        id: expect.any(Number),
+        isAdmin: true,
+        isWorker: false,
+        lastName: "ln4",
+        phone: "444-444-4444"
+      }
     });
   });
 
@@ -86,9 +95,11 @@ describe("POST /auth/register", function () {
           email: "new@email.com",
           firstName: "first",
           lastName: "last",
-          phone: '(444)444-4444',
+          phone: '444-444-4444',
           password: "Password1",
+          isWorker: false
         }});
+        
     expect(resp.statusCode).toEqual(201);
     expect(resp.body).toEqual({
       "token": expect.any(String),

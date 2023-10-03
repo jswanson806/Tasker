@@ -128,16 +128,16 @@ describe('find jobs by filter ', function() {
         // returned result should contain applicants
         expect(result[0]).toEqual({
             "address": "444 j street", 
-            "afterImageUrl": null, 
+            "after_image_url": null, 
             "applicants": [testUserIds[0], testUserIds[1]], 
-            "assignedTo": null, 
-            "beforeImageUrl": "http://before3.img", 
+            "assigned_to": null, 
+            "before_image_url": "http://before3.img", 
             "body": "jb4", 
-            "endTime": null, 
+            "end_time": null, 
             "id": expect.any(Number), 
-            "paymentDue": null, 
-            "postedBy": testUserIds[1], 
-            "startTime": null, 
+            "payment_due": null, 
+            "posted_by": testUserIds[1], 
+            "start_time": null, 
             "status": "pending", 
             "title": "j4"})
         
@@ -150,8 +150,6 @@ describe('find a single job', function() {
         // query a single job
         const result = await Job.get(testJobIds[0]);
 
-        console.log(result);
-
         // expect test job 1 to be returned
         expect(result).toEqual({
             'id': testJobIds[0],
@@ -159,14 +157,14 @@ describe('find a single job', function() {
             'body': 'jb1', 
             'status': 'complete', 
             'address': '111 j street',
-            'postedBy': testUserIds[0], 
-            'assignedTo': testUserIds[1], 
+            'posted_by': testUserIds[0], 
+            'assigned_to': testUserIds[1], 
             'applicants': [testUserIds[0]], 
-            'startTime': `06/01/2023 09:00 AM`, 
-            'endTime': `06/01/2023 10:00 AM`, 
-            'paymentDue': 111.11, 
-            'beforeImageUrl': 'http://before1.img', 
-            'afterImageUrl': 'http://after1.img'
+            'start_time': `06/01/2023 09:00 AM`, 
+            'end_time': `06/01/2023 10:00 AM`, 
+            'payment_due': 111.11, 
+            'before_image_url': 'http://before1.img', 
+            'after_image_url': 'http://after1.img'
         })
     })
 
@@ -199,8 +197,8 @@ describe('create a new job', function() {
             'id': expect.any(Number),
             'status': 'pending', 
             'address': '555 j street',
-            'postedBy': testUserIds[0],
-            'beforeImageUrl': 'http://before5.img',
+            'posted_by': testUserIds[0],
+            'before_image_url': 'http://before5.img',
         })
         // query all jobs
         const result2 = await Job.findAll();
@@ -222,10 +220,14 @@ describe('updates a job', function() {
         const result = await Job.update(testJobIds[0], updateData);
         // expect to return only updated columns and values
         expect(result).toEqual({
+            'id': testJobIds[0],
+            'posted_by': testUserIds[0],
             'title': 'updatedj1', 
             'body': 'updatedjb1',  
             'address': '444 update street',
-            'status': 'active'
+            'status': 'active',
+            "after_image_url": "http://after1.img",
+            "before_image_url": "http://before1.img"
         })
         // query the job that was just updated
         const result2 = await Job.get(testJobIds[0]);
@@ -236,14 +238,14 @@ describe('updates a job', function() {
             'body': 'updatedjb1', 
             'status': 'active', 
             'address': '444 update street',
-            'postedBy': testUserIds[0], 
-            'assignedTo': testUserIds[1], 
+            'posted_by': testUserIds[0], 
+            'assigned_to': testUserIds[1], 
             'applicants': [testUserIds[0]], 
-            'startTime': `06/01/2023 09:00 AM`, 
-            'endTime': `06/01/2023 10:00 AM`, 
-            'paymentDue': 111.11, 
-            'beforeImageUrl': 'http://before1.img', 
-            'afterImageUrl': 'http://after1.img'
+            'start_time': `06/01/2023 09:00 AM`, 
+            'end_time': `06/01/2023 10:00 AM`, 
+            'payment_due': 111.11, 
+            'before_image_url': 'http://before1.img', 
+            'after_image_url': 'http://after1.img'
         })
     })
 

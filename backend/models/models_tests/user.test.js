@@ -120,8 +120,7 @@ describe('retrieves a single user, with applications and avg review star rating'
             email: 'u1@email.com',
             isWorker: false,
             isAdmin: false,
-            applications: [testJobIds[0]],
-            avgRating: 3
+            applications: [testJobIds[0], testJobIds[3]],
         })
     })
 
@@ -187,8 +186,7 @@ describe('removes a user', function() {
             email: 'u1@email.com',
             isWorker: false,
             isAdmin: false,
-            applications: [testJobIds[0]],
-            avgRating: 3
+            applications: [testJobIds[0], testJobIds[3]],
         })
 
         // remove the same user that was just queried
@@ -216,7 +214,7 @@ describe('applies to a job', function () {
         // query an existing user
         const result = await User.get(testUserIds[0]);
         // length of applications array should be 1
-        expect(result.applications.length).toBe(1)
+        expect(result.applications.length).toBe(2)
         // first test job's id should be in applications array
         expect(result.applications[0]).toBe(testJobIds[0])
 
@@ -226,9 +224,9 @@ describe('applies to a job', function () {
         // query an existing user
         const result3 = await User.get(testUserIds[0]);
         // length of applications array should be 2
-        expect(result3.applications.length).toBe(2)
+        expect(result3.applications.length).toBe(3)
         // first test job's id should be in applications array
-        expect(result3.applications[1]).toBe(testJobIds[1])
+        expect(result3.applications[1]).toBe(testJobIds[3])
     })
 
     test('error if not a valid user', async function() {
@@ -251,8 +249,8 @@ describe('withdraws job application', function () {
     test('works', async function() {
         // query an existing user
         const result = await User.get(testUserIds[0]);
-        // length of applications array should be 1
-        expect(result.applications.length).toBe(1)
+        // length of applications array should be 2
+        expect(result.applications.length).toBe(2)
         // first test job's id should be in applications array
         expect(result.applications[0]).toBe(testJobIds[0])
 
@@ -261,20 +259,20 @@ describe('withdraws job application', function () {
 
         // query same user
         const result3 = await User.get(testUserIds[0]);
-        // length of applications array should be 2
-        expect(result3.applications.length).toBe(2)
+        // length of applications array should be 3
+        expect(result3.applications.length).toBe(3)
         // first test job's id should be in applications array
-        expect(result3.applications[1]).toBe(testJobIds[1])
+        expect(result3.applications[1]).toBe(testJobIds[3])
 
-        // withdraw application for tesst job 2
+        // withdraw application for test job 2
         await User.withdrawApplication(testUserIds[0], testJobIds[1]);
 
         // query same user
         const result4 = await User.get(testUserIds[0]);
-        // length of applications array should be 1
-        expect(result4.applications.length).toBe(1)
+        // length of applications array should be 2
+        expect(result4.applications.length).toBe(2)
         // first test job's id should not be in applications array
-        expect(result4.applications[1]).toBe(undefined)
+        expect(result4.applications[2]).toBe(undefined)
     })
 
     test('error if not a valid user', async function() {
