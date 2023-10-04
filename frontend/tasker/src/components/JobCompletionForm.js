@@ -18,7 +18,6 @@ const JobCompletionForm = ({job, onUpload}) => {
             const updateInfo = createJobUpdate();
             // create job update object and spread job
             const jobInfo = { job: {...updateInfo}};
-            console.log(jobInfo)
            
             const form = new FormData();
             form.append('image', imageFile);
@@ -105,23 +104,18 @@ const JobCompletionForm = ({job, onUpload}) => {
         return hoursWorked;
     }
 
-    /** Calculate the payment due for the job
+    /** Calculate the payment due for the job in cents (smalles currency unit for Stripe API)
      * 
-     * Returns payment due rounded to 4 decimal places
+     * Returns payment due as integer
      */
 
     const calculatePaymentDue = (hours, rate) => {
 
-        // calculate payment due based on hours worked
-        const value = hours * rate;
-        console.log(value);
-        const paymentDue = Number(value);
+        // calculate payment due in cents based on hours worked
+        const paymentInCents = Math.round(hours * rate * 100);
 
-        return paymentDue;
+        return paymentInCents;
     }
-
-
-    /**********************************NEEDS TO BE INTEGRATED ************************************* */
 
 
     return (
@@ -146,6 +140,7 @@ const JobCompletionForm = ({job, onUpload}) => {
                             id="imageInput"
                             type="file"
                             name="image"
+                            data-testid="image-input"
                             onChange={handleUpload}
                             valid={isValid}
                             invalid={!isValid}
@@ -159,7 +154,7 @@ const JobCompletionForm = ({job, onUpload}) => {
                         }
                         <FormText>Supported File Types: jpg, png</FormText>
                     </FormGroup>
-                    <Button type="submit" data-testid="jobCompletion-form-button">Upload</Button>
+                    <Button type="submit" data-testid="jobCompletion-submit-button">Upload</Button>
                 </Form>
             </div>
         </div>
