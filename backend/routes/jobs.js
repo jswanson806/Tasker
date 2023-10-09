@@ -9,7 +9,7 @@ const { ensureLoggedIn, ensureIsAdmin } = require('../middleware/auth.js');
 
 /** GET route for all jobs
  * 
- * Returns { allJobs: [{id, title, body, status, address, postedBy, assignedTo, startTime, endTime, paymentDue, beforeImage, afterImage}, ...]}
+ * Returns { allJobs: [{id, title, body, status, address, posted_by, assigned_to, start_time, end_time, payment_due, before_image, after_image}, ...]}
  */
 router.get("/", ensureLoggedIn, async function(req, res, next) {
     try {
@@ -22,7 +22,7 @@ router.get("/", ensureLoggedIn, async function(req, res, next) {
 
 /** GET route for filtering jobs
  * 
- * Returns { jobs: [{id, title, body, status, address, postedBy, assignedTo, startTime, endTime, paymentDue, beforeImage, afterImage}, ...]}
+ * Returns { jobs: [{id, title, body, status, address, posted_by, assigned_to, start_time, end_time, payment_due, before_image, after_image}, ...]}
  */
 router.get("/filter", ensureLoggedIn, async function(req, res, next) {
     try {
@@ -35,7 +35,7 @@ router.get("/filter", ensureLoggedIn, async function(req, res, next) {
 
 /** GET route for single job by id
  * 
- * Returns { job: {id, title, body, status, address, postedBy, assignedTo, startTime, endTime, paymentDue, beforeImage, afterImage}}
+ * Returns { job: {id, title, body, status, address, posted_by, assigned_to, start_time, end_time, payment_due, before_image, after_image}}
  */
 
 router.get("/:id", ensureLoggedIn, async function(req, res, next) {
@@ -77,7 +77,7 @@ router.post("/create", ensureLoggedIn, async function(req, res, next) {
  * 
  * Updates job information with complete or partial information
  * 
- * Returns { Message: `Updated job: ${updateRes}`}
+ * Returns {job: {id, title, body, status, address, posted_by, assigned_to, start_time, end_time, payment_due, before_image, after_image}`}
 */
 
 router.patch("/update/:id", ensureLoggedIn, async function(req, res, next) {
