@@ -9,7 +9,7 @@ const { ensureCorrectUserOrAdmin, ensureIsAdmin, ensureLoggedIn, ensureIsWorker 
 /** Get route for all users.
  * 
  * Returns object with array of user objects
- *  { allUsers: [{ id, email, firstName, lastName, phone, isWorker, isAdmin }, ...] }
+ *  { allUsers: [{ id, email, first_name, last_name, phone, is_iorker, is_admin }, ...] }
  */
 router.get("/", ensureIsAdmin, async function(req, res, next) {
     try {
@@ -36,7 +36,11 @@ router.get("/:id", ensureLoggedIn, async function(req, res, next) {
 
 })
 
-router.post("/apply", ensureCorrectUserOrAdmin, async function(req, res, next) {
+/** Post route for applying to a job
+ * 
+ * Returns { Message: `User ${user_id} withdrew application to job ${job_id}` }
+ */
+router.post("/apply", ensureLoggedIn, async function(req, res, next) {
     const { user_id, job_id } = req.body;
     try {
         await User.applyToJob(user_id, job_id);
@@ -46,7 +50,11 @@ router.post("/apply", ensureCorrectUserOrAdmin, async function(req, res, next) {
     }
 })
 
-router.post("/withdraw", ensureCorrectUserOrAdmin, async function(req, res, next) {
+/** Post route for withdrawing application for job
+ * 
+ * Returns { Message: `User ${user_id} withdrew application to job ${job_id}` }
+ */
+router.post("/withdraw", ensureLoggedIn, async function(req, res, next) {
     const { user_id, job_id } = req.body;
     try {
         await User.withdrawApplication(user_id, job_id);
