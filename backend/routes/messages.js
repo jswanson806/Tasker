@@ -11,7 +11,7 @@ const { ensureLoggedIn } = require("../middleware/auth.js");
  * 
  * Middleware validates logged in status
  * 
- * Returns {"conversation": [{id, body, sentBy, sentTo, createdAt}, ...]}
+ * Returns {"conversation": [{convo_id, body, sent_by, sent_to, created_at, is_read}, ...]}
  * 
  */
 router.get("/conversation/:u1_id/:u2_id/:j_id", ensureLoggedIn, async function(req, res, next) {
@@ -31,7 +31,7 @@ router.get("/conversation/:u1_id/:u2_id/:j_id", ensureLoggedIn, async function(r
  * 
  * Middleware validates logged in status
  * 
- * Returns {convo_id, body, sentBy, sentTo, createdAt, is_read}
+ * Returns {convo_id, body, sent_by, sent_to, created_at, is_read}
  * 
  */
 router.get("/:id", ensureLoggedIn, async function(req, res, next) {
@@ -48,7 +48,7 @@ router.get("/:id", ensureLoggedIn, async function(req, res, next) {
  * 
  * Middleware validates logged in status
  * 
- * Returns {"recent_messages": [{convo_id, body, sentBy, sentTo, createdAt}, ...]}
+ * Returns {"recent_messages": [{convo_id, body, sent_by, sent_to, created_at, is_read}, ...]}
  * 
  */
 router.get("/conversations/:id", ensureLoggedIn, async function(req, res, next) {
@@ -65,7 +65,7 @@ router.get("/conversations/:id", ensureLoggedIn, async function(req, res, next) 
  * 
  * Middleware validates logged in status
  * 
- * Returns {"messages": [{id, body, sentBy, sentTo, createdAt}, ...]}
+ * Returns {"messages": [{convo_id, body, sent_by, sent_to, created_at, is_read}, ...]}
  * 
  */
 router.get("/convo/:id", ensureLoggedIn, async function(req, res, next) {
@@ -85,7 +85,7 @@ router.get("/convo/:id", ensureLoggedIn, async function(req, res, next) {
  * Returns {Message: 'Message Sent'}
  */
 router.post("/create", ensureLoggedIn, async function(req, res, next) {
-    
+    try {
         const result = jsonschema.validate(req.body, messageSchema);
         if(!result.valid){
             const errorList = result.errors.map(err => err.stack);
@@ -93,7 +93,7 @@ router.post("/create", ensureLoggedIn, async function(req, res, next) {
             return next(error);
         }
         
-    try {
+    
         const { message } = req.body;
         await Message.create(message)
 
@@ -110,7 +110,7 @@ router.post("/create", ensureLoggedIn, async function(req, res, next) {
  * Returns {convo_id, body, sent_by, sent_to, created_at, is_read}
  */
 router.put("/update/:id", ensureLoggedIn, async function(req, res, next) {
-    
+    try {
         const result = jsonschema.validate(req.body, messageUpdateSchema);
         if(!result.valid){
             const errorList = result.errors.map(err => err.stack);
@@ -118,7 +118,7 @@ router.put("/update/:id", ensureLoggedIn, async function(req, res, next) {
             return next(error);
         }
         
-    try {
+    
         const { message } = req.body;
         const updateRes = await Message.update(req.params.id, message.is_read);
 
