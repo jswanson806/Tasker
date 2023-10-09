@@ -1,7 +1,6 @@
 "use strict";
 
 const db = require("../db.js");
-const { NotFoundError } = require("../expressError.js");
 
 class Message {
 
@@ -124,23 +123,23 @@ class Message {
 
     }
 
-
     static async getRecentConvoMessagesInvolving(id) {
         const result = await db.query(
             `SELECT conversation_id AS convo_id,
-                    id,
-                    body,
-                    sent_by,
-                    sent_to,
-                    is_read,
-                    TO_CHAR(created_at, 'MM/DD/YYYY HH:MI AM') AS created_at
+                id,
+                body,
+                sent_by,
+                sent_to,
+                is_read,
+                TO_CHAR(created_at, 'MM/DD/YYYY HH:MI AM') AS created_at
             FROM messages AS m
             WHERE id = (
                 SELECT MAX(id)
-                FROM messages
-                WHERE conversation_id LIKE $1 OR conversation_id LIKE $2
-            )
-            GROUP BY convo_id, id, body, sent_by, sent_to, created_at`,
+                FROM messages AS sub
+                WHERE (sub.conversation_id LIKE $1 OR sub.conversation_id LIKE $2)
+                      AND m.conversation_id = sub.conversation_id)
+            GROUP BY convo_id, id, body, sent_by, sent_to, created_at
+            ORDER BY created_at DESC`,
             [`u${id}%`, `%u${id}%`]
         )
 
@@ -152,7 +151,6 @@ class Message {
 
         return messages;
     }
-
 
     /** Create new message 
      * 
