@@ -4,10 +4,11 @@ import { ModalBody, ModalHeader } from 'reactstrap';
 import "./styles/Conversation.css";
 
 
-const Conversation = ({targetUser, currUser, messages, jobId, onMessageSent, convoId, onClose}) => {
+const Conversation = ({user, currUser, messages, jobId, onMessageSent, convoId, onClose}) => {
 
     const [convoTitle, setConvoTitle] = useState('');
-
+    
+    // ref for the message container
     const messagesContainerRef = useRef(null);
 
     useEffect(() => {
@@ -16,25 +17,26 @@ const Conversation = ({targetUser, currUser, messages, jobId, onMessageSent, con
     }, [messages]);
 
     useEffect(() => {
-        setConvoTitle(generateConvoTitle(targetUser));
+        // sets the title of the conversation based on the user being conversed with
+        setConvoTitle(generateConvoTitle(user));
         
     }, [])
 
+    /** Returns user's name in format '<first_namm> <last_initial>.' */
     const generateConvoTitle = (user) => {
-        return `${targetUser.firstName} ${targetUser.lastName.slice(0, 1) + "."}`
+        return `${user.firstName} ${user.lastName.slice(0, 1) + "."}`
     }
-    
 
     return (
         <div className="convo-container">
             <div className="convo-centered-card">
-            {/* renders the name of the user that is being messaged as <firstName + lastName initial + '.'> */}
+            {/* renders the name of the user that is being messaged as <first_name + last_name initial + '.'> */}
             <ModalHeader>{convoTitle}</ModalHeader>
             <ModalBody style={{ maxHeight: "700px", display: "flex", flexDirection: "column-reverse", overflowY: "auto"}}>
                 <div className="convo-new-message-form">
                     <NewMessageForm 
                         convoId={convoId} 
-                        assignedUser={targetUser} 
+                        assignedUser={user} 
                         currUser={currUser} 
                         jobId={jobId} 
                         onMessageSent={onMessageSent}
