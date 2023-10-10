@@ -4,10 +4,10 @@ import { ModalBody, ModalHeader } from 'reactstrap';
 import "./styles/Conversation.css";
 
 
-const Conversation = ({user, currUser, messages, jobId, onMessageSent, convoId, onClose}) => {
+const Conversation = ({user, currUser, messages, jobId, onMessageSent, onClose}) => {
 
     const [convoTitle, setConvoTitle] = useState('');
-    
+
     // ref for the message container
     const messagesContainerRef = useRef(null);
 
@@ -35,7 +35,6 @@ const Conversation = ({user, currUser, messages, jobId, onMessageSent, convoId, 
             <ModalBody style={{ maxHeight: "700px", display: "flex", flexDirection: "column-reverse", overflowY: "auto"}}>
                 <div className="convo-new-message-form">
                     <NewMessageForm 
-                        convoId={convoId} 
                         assignedUser={user} 
                         currUser={currUser} 
                         jobId={jobId} 
