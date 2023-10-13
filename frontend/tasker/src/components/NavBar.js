@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Navbar, Nav, NavItem, NavbarBrand, NavbarToggler, Collapse, Button } from 'reactstrap';
+import { Navbar, Nav, NavItem, NavbarToggler, Collapse, Button } from 'reactstrap';
 import { TokenContext } from "../helpers/TokenContext";
 import { UserContext } from "../helpers/UserContext";
 import "./styles/NavBar.css";
@@ -31,6 +31,7 @@ const NavBar = () => {
     return(
         <div>
         <Navbar container="xl" expand="md" color="dark" dark data-testid="Navbar" >
+            {/* changes NavLink direction based on loggedIn status */}
             {!loggedIn ? (
                 <NavLink to="/" className="me-auto" >
                     <Button color="info" outline data-testid="Navbar-tasker">Tasker</Button>
