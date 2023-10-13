@@ -3,7 +3,18 @@ import TaskerApi from '../api';
 import JobCard from './JobCard.js';
 import { UserContext } from '../helpers/UserContext';
 import CreateJob from './CreateJob.js';
-import {Row, Spinner, Button, ButtonGroup, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Col, Modal} from "reactstrap";
+import {
+    Row, 
+    Spinner, 
+    Button, 
+    ButtonGroup, 
+    UncontrolledDropdown, 
+    DropdownToggle, 
+    DropdownMenu, 
+    DropdownItem, 
+    Col, 
+    Modal
+} from "reactstrap";
 import "./styles/Jobs.css";
 
 const Jobs = () => {
@@ -57,7 +68,7 @@ const Jobs = () => {
     */
     useEffect(() => {
 
-        // only call once jobs and user have been populated
+        // only call once jobs and currUser have been populated
         if(jobs !== jobsInitialState && currUser) {
             // create the job cards
             createJobCards();
@@ -137,18 +148,18 @@ const Jobs = () => {
 
     
     
-    // Function to determine the correct job value to return based on toggles and job status
+    /**Function to determine the correct job value to return based on toggles and job status  */ 
     function getJobToShow(job, applications) {
         
-        if (showAvailableJobs) {
+        if (showAvailableJobs) { // shows jobs to which worker can apply
             return job;
-        } else if (showAppliedJobs && applications.has(job.id)) {
+        } else if (showAppliedJobs && applications.has(job.id)) { // shows jobs to which user has already applied
             return job;
-        } else if (showWorkerJobs && job.status !== 'complete') {
+        } else if (showWorkerJobs && job.status !== 'complete') { // shows jobs to which user is assigned and are not yet complete
             return job;
-        } else if (showUserJobs && (job.status === 'pending' || job.status === 'active')) {
+        } else if (showUserJobs && (job.status === 'pending' || job.status === 'active')) { // shows jobs created by user and are not yet complete
             return job;
-        } else if (showPendingReviewJobs) {
+        } else if (showPendingReviewJobs) { // shows jobs created by user which are complete and awaiting review
             return job;
         }
 
@@ -202,10 +213,7 @@ const Jobs = () => {
     /**
     * Fetches data for a single user from the Tasker API based on the given ID.
     *
-    * @async
-    * @param {number} id - The ID of the user to fetch.
-    * @returns {Promise<object>} A Promise that resolves with the user data as an object.
-    * @throws {Error} If there's an error during the API call or the user data cannot be retrieved.
+    * Updates state of currUser with the response user
     */
     async function fetchCurrUser(id){
         try {
@@ -220,10 +228,10 @@ const Jobs = () => {
     /**
     * Fetches data for jobs matching filter(s) passed as an argument
     *
-    * @async
-    * @param {object} filters - Object containing filter parameters
-    * @returns {Promise<object>} A Promise that resolves with the jobs data as an object.
-    * @throws {Error} If there's an error during the API call or the user data cannot be retrieved.
+    * Calls api to findAndFilterJobs
+    * 
+    * Updates state of jobs with the response array of jobs
+    * 
     */
     async function fetchAndSetFilteredJobs(filters) {
         try {
@@ -356,7 +364,7 @@ const Jobs = () => {
         }
     }
 
-
+    // default state of page shows spinner when isLoading is true
     if(isLoading){
         return (
         <div>
