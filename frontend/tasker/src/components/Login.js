@@ -3,7 +3,7 @@ import { TokenContext } from '../helpers/TokenContext.js';
 import { useNavigate } from "react-router-dom";
 import TaskerApi from "../api.js";
 import { UserContext } from "../helpers/UserContext.js";
-import {Button, CardBody, Form, FormText, Card, CardTitle} from "reactstrap";
+import {Button, Form, FormText} from "reactstrap";
 import "./styles/Login.css";
 
 
@@ -18,7 +18,7 @@ import "./styles/Login.css";
  */
 
 const Login = () => {
-    
+
     const navigate = useNavigate();
 
     const { updateToken } = useContext(TokenContext);
@@ -31,6 +31,7 @@ const Login = () => {
 
     const [formData, setFormData] = useState(INITIAL_STATE);
 
+    /** handles events on the form to update as the user types */
     const handleChange = (e) => {
         const {name, value} = e.target;
         setFormData(formData => ({
@@ -38,7 +39,15 @@ const Login = () => {
             [name]: value
         }))
     }
-
+    /** handles submission of the form 
+     * 
+     * Calls api to log user in
+     * Updates token and user context state
+     * 
+     * resets the form data
+     * 
+     * redirects user to jobs page
+    */
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -48,9 +57,11 @@ const Login = () => {
         }
 
         try {
-            
+            // call api to login user
             const res = await TaskerApi.login(userInfo.email, userInfo.password);
+            // destructure token and user objects from response
             const { token, user } = res;
+            // create stringified user object to store in local storage
             const newUser = JSON.stringify({id: user.id, email: user.email, isWorker: user.isWorker});
             
             // update localStorage token and user
@@ -59,8 +70,8 @@ const Login = () => {
 
             // clear the form data
             setFormData(INITIAL_STATE);
-            // redirect to dashboard
-            navigate("/dashboard");
+            // redirect to jobs
+            navigate("/jobs");
         } catch(err) {
             return err;
         }
