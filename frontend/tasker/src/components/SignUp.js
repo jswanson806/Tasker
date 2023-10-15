@@ -36,17 +36,24 @@ const SignUp = () => {
     const { token, updateToken } = useContext(TokenContext);
     const { user, updateUser } = useContext(UserContext);
 
-    // accepts a value and removes non-integer characters and inserts hyphens
+    /** Dynamically formats phone number input to match expected format in db
+     * 
+     * accepts a value inserts hyphens 
+     */
     function formatPhoneNumber(value) {
-        let cleanedValue = value.replace(/\D/g, '');
-        let match = cleanedValue.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
+        let match = value.match(/^(\d{0,3})(\d{0,3})(\d{0,4})$/);
         
-        if (!match) return cleanedValue;
+        if (!match) return value;
     
         return match[1] + (match[1] && match[2] ? '-' : '') + match[2] + (match[3] ? '-' : '') + match[3];
       }
 
-
+    /** Dynamically updates form fields as user types
+     * 
+     * Removes non-digit characters from phone number input and calls helper function to format correctly
+     * 
+     * updates the formData state as user types
+     */
     const handleChange = (e) => {
         const {name, value} = e.target;
 
@@ -71,10 +78,19 @@ const SignUp = () => {
             }))
         }
     }
-
+    /** Handles submission of the form
+     * 
+     * Creates user object and updates isWorker property depending on which type of registration is being submitted
+     * 
+     * Calls api to register user and to log in the user upon successful registration
+     * 
+     * updates the token and user contexts with new user info
+     * 
+     * resets the form data and navigates to the jobs page
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        // construct user object
         let userInfo = {user: {
             email: formData.email,
             firstName: formData.firstName,
@@ -83,8 +99,6 @@ const SignUp = () => {
             password: formData.password,
             isWorker: false,
         }};
-
-        
 
         // set isWorker property on userInfo object based on state of isWorker
         if(isWorker){
@@ -99,9 +113,11 @@ const SignUp = () => {
             if(registerToken) {
                 // login call to api
                 const res = await TaskerApi.login(userInfo.user.email, userInfo.user.password);
+                // destructure user and token from api response
                 const { token, user } = res;
+                // stringify the user info for localStorage
                 const newUser = JSON.stringify({id: user.id, email: user.email, isWorker: user.isWorker});
-                // set token in local storage for further auth
+                // set token and user in local storage for further auth
                 updateToken(token);
                 updateUser(newUser);
             }
@@ -109,7 +125,7 @@ const SignUp = () => {
             // clear the form data
             setFormData(INITIAL_STATE);
             // redirect to dashboard
-            navigate("/dashboard");
+            navigate("/jobs");
 
         } catch(err) {
             return err;
