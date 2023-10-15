@@ -166,7 +166,7 @@ describe("Buttons call functions correctly", () => {
         })
 
         expect(onMessageSent).toHaveBeenCalledTimes(1);
-        expect(onMessageSent).toHaveBeenCalledWith(assignedUser, currUser.id, convoId);
+        expect(onMessageSent).toHaveBeenCalledWith(assignedUser, currUser.id, 1);
         
     })
 

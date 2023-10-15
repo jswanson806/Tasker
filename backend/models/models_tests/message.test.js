@@ -125,7 +125,7 @@ describe('gets all recent messages from conversations involving a single user', 
         const result = await Message.getRecentConvoMessagesInvolving(testUserIds[0]);
 
         // should have 2 test messages between these two users
-        expect(result.length).toBe(1)
+        expect(result.length).toBe(2)
 
         expect(result[0]).toEqual({
             id: expect.any(Number),

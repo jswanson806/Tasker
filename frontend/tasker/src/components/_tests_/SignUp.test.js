@@ -112,9 +112,9 @@ describe("Handles form input correctly", () => {
 
         expect(mockRegisterUser).toHaveBeenCalledWith({user: { 
             email: "test@email.com", 
-            first_name: "Testy",
-            last_name: "McTesty",
-            is_worker: false,
+            firstName: "Testy",
+            lastName: "McTesty",
+            isWorker: false,
             phone: "444-444-4444",
             password: "Password1"
         }});

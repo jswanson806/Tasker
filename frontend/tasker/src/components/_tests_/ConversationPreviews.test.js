@@ -159,9 +159,9 @@ describe('renders child component correctly', () => {
         await waitFor(() => {
             const convoContainer = screen.queryAllByTestId("message-container");
             expect(convoContainer[0]).toBeInTheDocument();
+        })
             expect(getConversationBetween).toHaveBeenCalledTimes(1);
             expect(updateMessage).toHaveBeenCalledTimes(1);
-        })
 
     });
    

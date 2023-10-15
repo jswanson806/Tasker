@@ -6,8 +6,8 @@ import "reactstrap";
 const onClose = jest.fn();
 const onMessageSent = jest.fn();
 
-const currUser = {id: 1, first_name: "Joe", last_name: "Doe", email: "test@email.com", is_worker: true, applications: [1]};
-const targetUser = {id: 2, first_name: "Jane", last_name: "Doe", email: "test@email.com", is_worker: false, applications: [1]};
+const currUser = {id: 1, firstName: "Joe", lastName: "Doe", email: "test@email.com", is_worker: true, applications: [1]};
+const targetUser = {id: 2, firstName: "Jane", lastName: "Doe", email: "test@email.com", is_worker: false, applications: [1]};
 const jobId = 1;
 
 describe('smoke and snapshot tests', () => {
