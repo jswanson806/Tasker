@@ -124,12 +124,10 @@ const ConversationPreviews = () => {
      * 
      * Updates state of conversationId, targetUser, jobId, convo, and isLoading
     */
-    async function fetchAndSetConversation(user, currUserId, conversationId) {
+    async function fetchAndSetConversation(user, currUserId, jobId) {
         try {
             // target is recipient
             const target = user;
-            // extracts job id from conversation id (string) and returns integer. Ex: input = 'u2u3j1' output = 1
-            const jobId = await getTargetJobFromConvoId(conversationId);
             // calls api to retrieve the full conversation history between these two users on this particular job
             const res = await TaskerApi.getConversationBetween(user.id, currUserId, jobId);
             // destructure conversation array from api response
@@ -157,23 +155,6 @@ const ConversationPreviews = () => {
         } catch(err) {
             console.error(err);
         }
-    }
-
-    /** Extracts the job id from a string conversationId in format 'u1u2j3' 
-     * 
-     * Returns the extracted jobId as an integer
-    */
-    async function getTargetJobFromConvoId(conversationId) {
-        // set input string to argument value
-        const inputString = conversationId;
-        // set delimiter to character 'j' -> format of conversation_id is <u + user1Id + user2Id + j + jobId>
-        const delimiter = 'j';
-        // split the string on delimiter 'j'
-        const convoIdParts = inputString.split(delimiter);
-        // coerce second half of split string to Number and assign to 'jobId'
-        const jobId = +convoIdParts[1];
-        // return the jobId
-        return jobId;
     }
 
 
