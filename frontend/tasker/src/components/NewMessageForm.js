@@ -1,9 +1,9 @@
 import React, {useState} from "react";
 import TaskerApi from "../api";
-import {Button, Col, Form, FormGroup, Input, Label, ModalBody, ModalHeader} from "reactstrap";
+import {Button, Form, FormGroup, Input, Label, ModalBody, ModalHeader} from "reactstrap";
 import "./styles/NewMessageForm.css";
 
-const NewMessageForm = ({convoId, assignedUser, currUser, jobId, onAction, onMessageSent, onClose}) => {
+const NewMessageForm = ({assignedUser, currUser, jobId, onAction, onMessageSent, onClose}) => {
     
     const INITIAL_STATE = {
         body: '', 
@@ -14,71 +14,94 @@ const NewMessageForm = ({convoId, assignedUser, currUser, jobId, onAction, onMes
 
     const [formData, setFormData] = useState(INITIAL_STATE);
 
+    /** Handles submission of the form
+     * 
+     * Creates message update object and calls api to create new message
+     * 
+     * Uses onAction prop passed from JobDetails or onMessageSent passed from ConversationPreviews depening on which parent is rendering
+     * 
+     * Resets form data to inital state
+    */
 
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        let message = {message: {
-            body: formData.body,
-            sent_by: currUser.id, 
-            sent_to: assignedUser.id, 
-            job_id: jobId
-        }}
-        
-        await TaskerApi.createMessage(message);
+        try{
+            // construct message object to create message in db
+            let message = {message: {
+                body: formData.body,
+                sent_by: currUser.id, 
+                sent_to: assignedUser.id, 
+                job_id: jobId
+            }}
+            // call api to create message passing message object
+            await TaskerApi.createMessage(message);
 
-        if(onAction){ // onAction is passed from the JobDetails component
-            handleClose(); 
-        } else { // onAction was not passed, which means onMessageSent was passed from Conversation component
-            onMessageSent(assignedUser, currUser.id, convoId);
-            const textarea = document.querySelector('#body');
-            adjustTextareaHeight(textarea);
+            if(onAction){ // onAction is passed from the JobDetails component
+                // calls onAction from jobDetails, which hides the modal rendering NewMessageForm
+                onAction(); 
+            } else { // onAction was not passed, which means onMessageSent was passed from ConversationPreviews component
+                // calls fetchAndSetConversation to get the latest messages in the conversation
+                onMessageSent(assignedUser, currUser.id, jobId);
+                // adjusts text area size
+                const textarea = document.querySelector('#body');
+                adjustTextareaHeight(textarea);
+            }
+            // clears the form
+            setFormData(INITIAL_STATE);
+        } catch(err) {
+            console.error(err);
         }
-
-        setFormData(INITIAL_STATE);
     };
 
-
+    /** Handles changes to the form input field 
+     * 
+     * Adjusts the text area and modal height as the user types
+    */
     const handleChange = (e) => {
         const {name, value} = e.target;
         setFormData(formData => ({
             ...formData,
             [name]: value
         }))
+        // adjusts textarea height dynamically
         adjustTextareaHeight(e.target);
+        // adjusts modal height dynamically
         adjustModalHeight();
     }
 
+    /** Dynamically adjusts the text area */
     const adjustTextareaHeight = (textarea) => {
-        textarea.style.height = 'auto'; // Reset the height to auto
-        textarea.style.height = textarea.scrollHeight + 'px'; // Set the height to the scrollHeight
+        // Reset the height to auto
+        textarea.style.height = 'auto';
+        // Set the height to the scrollHeight
+        textarea.style.height = textarea.scrollHeight + 'px'; 
       };
-
+    
+    /** Dynamically adjusts the modal height */
     const adjustModalHeight = () => {
+        // get the elements that need to be adjusted
         const modalContent = document.querySelector('.centered-card');
         const modalContainer = document.querySelector('.new-message-container');
         const textarea = document.querySelector('#body');  
 
         if (modalContent && modalContainer && textarea) {
-            modalContent.style.maxHeight = `${textarea.scrollHeight + 400}px`; // Adjust as needed
-            modalContainer.style.maxHeight = `${textarea.scrollHeight + 400}px`; // Adjust as needed
+            modalContent.style.maxHeight = `${textarea.scrollHeight + 400}px`;
+            modalContainer.style.maxHeight = `${textarea.scrollHeight + 400}px`;
       }
     };
 
-    const handleClose = () => {
-        onAction();
-    }
-    
 
     return (
         <div className="new-message-container">
+            {/* this renders when being rendered from the JobDetails component */}
             {!onMessageSent && ( 
                 <div className="centered-card">
                     <ModalHeader>New Message</ModalHeader>
                     <ModalBody>
                         <Form onSubmit={handleSubmit}>
                             <FormGroup row>
-                            <Label htmlFor="message">Message: </Label>
+                            <Label htmlFor="body">Message: </Label>
 
                                 <Input 
                                     id="body"
@@ -100,7 +123,7 @@ const NewMessageForm = ({convoId, assignedUser, currUser, jobId, onAction, onMes
                     </ModalBody>
                 </div>
             )}
-
+            {/* this renders when being rendered from the Conversation component */}
             {onMessageSent && (
                 <div className="new-message-centered-card">
                     <Form onSubmit={handleSubmit}>
