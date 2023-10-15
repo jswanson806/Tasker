@@ -8,6 +8,7 @@ const userValue = { user: {id: 1, first_name: "Joe", last_name: "Doe", email: "t
 const userValue2 = { user: {id: 2, email: "test@email.com", isWorker: false} };
 const userValue3 = { user: {id: 3, email: "test@email.com", isWorker: true, applications: []} };
 
+
 const job = {
     id: 1,
     title: "test job 1",
@@ -89,6 +90,7 @@ const applyToJob = jest.spyOn(TaskerApi, 'applyToJob');
 const getBeforeImage = jest.spyOn(TaskerApi, 'getBeforeImage');
 const getAfterImage = jest.spyOn(TaskerApi, 'getAfterImage');
 const updateSingleJob = jest.spyOn(TaskerApi, 'updateSingleJob');
+const createMessage = jest.spyOn(TaskerApi, 'createMessage');
 const onEndWork = jest.fn();
 const startWork = jest.fn();
 const withdrawApplication = jest.fn();
@@ -954,5 +956,93 @@ describe('confirmation component integration', () => {
             }
         });
     })
+
+    test('confirm button calls sendAutomatedMessage', async () => {
+
+        expect.assertions(7);
+
+        getSingleUser.mockResolvedValueOnce({user: 
+            {
+                id: 1, 
+                firstName: "Joe", 
+                lastName: "Doe", 
+                email: "test@email.comm", 
+                isWorker: true, 
+                applications: [1]
+            }});
+
+        await act (async () => {
+            render(
+                <JobDetails
+                    user={userValue2.user} 
+                    applications={applications} 
+                    applyToJob={applyToJob}
+                    job={job} 
+                    fetchCurrUser={fetchCurrUser} 
+                    onEndWork={onEndWork} 
+                    startWork={startWork} 
+                    withdrawApplication={withdrawApplication} 
+                    onJobComplete={onJobComplete} 
+                    toggleDetails={toggleDetails}
+                    triggerEffect={triggerEffect}
+                />
+            );
+        });
+
+        const button = screen.getByTestId('jobCard-applicants-button');
+        expect(button).toBeInTheDocument();
+
+        fireEvent.click(button);
+
+        let applicantLi;
+
+        await waitFor(async () => {
+            applicantLi = screen.queryByTestId('jobDetails-applicant-li');
+            expect(applicantLi).toBeInTheDocument();
+        })
+
+        await act(async () => {
+            fireEvent.click(applicantLi);
+        })
+
+        let confirmBtn;
+
+         await waitFor(async () => {
+            confirmBtn = screen.queryByTestId("confirmation-confirm-button");
+            expect(confirmBtn).toBeInTheDocument();
+        })
+
+        await act(async () => {
+            getSingleUser.mockResolvedValueOnce({user: 
+                {
+                    id: 1, 
+                    firstName: "Joe", 
+                    lastName: "Doe", 
+                    email: "test@email.comm", 
+                    isWorker: true, 
+                    applications: [1]
+                }});
+            fireEvent.click(confirmBtn);
+        })
+
+        expect(updateSingleJob).toHaveBeenCalled();
+        expect(updateSingleJob).toHaveBeenCalledWith({ job: 
+            {
+                id: 1,
+                assigned_to: 1,
+                status: 'active'
+            }});
+
+        const msgBody = `Hi! I just hired you to work on my job, ${job.title}! The address is ${job.address}. How soon can you start?`;
+
+        expect(createMessage).toHaveBeenCalledTimes(1);
+        expect(createMessage).toHaveBeenCalledWith({
+            message:{
+                body: msgBody,
+                sent_by: userValue2.user.id, 
+                sent_to: 1, 
+                job_id: job.id
+            }})
+    });
 
 })
