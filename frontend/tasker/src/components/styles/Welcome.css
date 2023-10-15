@@ -1,0 +1,47 @@
+.welcome-card-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f2f2f2;
+    padding-bottom: 40%;
+}
+
+.welcome-centered-card {
+    width: 70vw; 
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    background-color: #fff;
+}
+  
+.welcome-centered-card h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+  
+.welcome-centered-card h4 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.welcome-centered-card h6 {
+    text-align: center;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.welcome-buttons-container {
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.nav {
+    display: block !important;
+    margin-top: 0 !important;
+}
+  
+
+  
