@@ -65,12 +65,12 @@ describe("Handles form input correctly", () => {
         fireEvent.change(emailInput, {target: {value: "test@email.com"}});
         fireEvent.change(firstName, {target: {value: "Testy"}});
         fireEvent.change(lastName, {target: {value: "McTesty"}});
-        fireEvent.change(phone, {target: {value: "(444)444-4444"}});
+        fireEvent.change(phone, {target: {value: "444-444-4444"}});
         fireEvent.change(password, {target: {value: "Password1"}});
         expect(emailInput).toHaveValue("test@email.com");
         expect(firstName).toHaveValue("Testy");
         expect(lastName).toHaveValue("McTesty");
-        expect(phone).toHaveValue("(444)444-4444");
+        expect(phone).toHaveValue("444-444-4444");
         expect(password).toHaveValue("Password1");
 
     })
@@ -101,7 +101,7 @@ describe("Handles form input correctly", () => {
         fireEvent.change(emailInput, {target: {value: "test@email.com"}});
         fireEvent.change(firstName, {target: {value: "Testy"}});
         fireEvent.change(lastName, {target: {value: "McTesty"}});
-        fireEvent.change(phone, {target: {value: "(444)444-4444"}});
+        fireEvent.change(phone, {target: {value: "444-444-4444"}});
         fireEvent.change(password, {target: {value: "Password1"}});
 
         const btn = screen.getByTestId("signup-form-button");
@@ -112,10 +112,10 @@ describe("Handles form input correctly", () => {
 
         expect(mockRegisterUser).toHaveBeenCalledWith({user: { 
             email: "test@email.com", 
-            firstName: "Testy",
-            lastName: "McTesty",
-            isWorker: false,
-            phone: "(444)444-4444",
+            first_name: "Testy",
+            last_name: "McTesty",
+            is_worker: false,
+            phone: "444-444-4444",
             password: "Password1"
         }});
 
