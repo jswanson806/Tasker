@@ -6,17 +6,6 @@ import TaskerApi from "../api";
 import {Form, Input, Label, FormGroup, Button, ButtonGroup, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem} from "reactstrap";
 import "./styles/SignUp.css";
 
-/**
- * SignUp component for user registration.
- *
- * This component renders a sign-up form where users can enter their email, first name,
- * last name, phone number, and password to register for an account. Users can select either 'user' or 'worker' as the registration type.
- * Upon successful registration, the user is logged in, and their token is stored in the local storage
- * for further authentication. The user is then redirected to the dashboard.
- *
- * @returns {JSX.Element} The rendered sign-up form component.
- */
-
 
 const SignUp = () => {
 
