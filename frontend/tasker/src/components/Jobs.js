@@ -242,7 +242,8 @@ const Jobs = () => {
             console.error(err);
         }
     }
-
+    
+    /** Sets all state toggles back to false */
     const resetStates = () => {
         setShowWorkerJobs(false);
         setShowPendingReviewJobs(false);
@@ -283,7 +284,10 @@ const Jobs = () => {
         setShowCreateJob(true);
     }
 
-
+    /** Renders the header based on isWorker property of currUser
+     * 
+     * Renders specific header based on toggled state
+     */
     const renderHeader = () => {
         // check isWorker property of currUser and render different headers based on state values
         if(currUser.isWorker) {
