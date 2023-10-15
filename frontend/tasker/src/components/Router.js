@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { TokenContext } from '../helpers/TokenContext.js';
 import Welcome from '../components/Welcome.js';
-import Dashboard from '../components/Dashboard.js';
 import Login from '../components/Login.js';
 import SignUp from '../components/SignUp.js';
 import CreateJob from '../components/CreateJob.js';
@@ -20,14 +19,13 @@ const Router = () => {
     return(
         <main>
             <Routes>
-                <Route path="/" element={loggedIn ? <Navigate to="/dashboard"/> : <Welcome />} />
-                <Route path="/dashboard" element={!loggedIn ? <Navigate to="/"/> : <Dashboard />} />
-                <Route path="/login" element={loggedIn ? <Navigate to="/dashboard"/> : <Login />} />
-                <Route path="/signup" element={loggedIn ? <Navigate to="/dashboard"/> : <SignUp />} />
-                <Route path="/create-job" element={!loggedIn ? <Navigate to="/"/> : <CreateJob />} />
-                <Route path="/jobs" element={!loggedIn ? <Navigate to="/"/> : <Jobs />} />
-                <Route path="/messages" element={!loggedIn ? <Navigate to="/"/> : <ConversationPreviews />} />
-                <Route path="/account" element={!loggedIn ? <Navigate to="/"/> : <Account />} />
+                <Route path="/" element={loggedIn ? <Navigate to="/jobs"/> : <Welcome />} />
+                <Route path="/login" element={loggedIn ? <Navigate to="/jobs"/> : <Login />} />
+                <Route path="/signup" element={loggedIn ? <Navigate to="/jobs"/> : <SignUp />} />
+                <Route path="/create-job" element={!loggedIn ? <Navigate to="/login"/> : <CreateJob />} />
+                <Route path="/jobs" element={!loggedIn ? <Navigate to="/login"/> : <Jobs />} />
+                <Route path="/messages" element={!loggedIn ? <Navigate to="/login"/> : <ConversationPreviews/>} />
+                <Route path="/account" element={!loggedIn ? <Navigate to="/login"/> : <Account />} />
 
                 {/* default catch all redirect to 404 page */}
                 <Route path="/not-found" element={<NotFound />} />
