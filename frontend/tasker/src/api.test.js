@@ -261,7 +261,7 @@ describe('TaskerApi', () => {
       const requestSpy = jest.spyOn(TaskerApi, 'request');
       requestSpy.mockResolvedValue(responseData);
 
-      const res = await TaskerApi.updateSingleJob(1);
+      const res = await TaskerApi.updateSingleJob({job: {id: 1}});
 
       expect(res).toEqual({ Message: `Updated job: {title: 'test job', body: 'this is a test', status: 'accepted', address: '181 N Coastline Drive'}`});
     });
