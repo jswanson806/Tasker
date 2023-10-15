@@ -6,17 +6,20 @@ exports[`login form smoke and snapshot tests should match snapshot 1`] = `
     class="login-container"
   >
     <div
-      class="login-card"
+      class="login-centered-card"
     >
-      <h1>
+      <h5>
         Login
-      </h1>
-      <form>
-        <label
+      </h5>
+      <form
+        class=""
+      >
+        <small
+          class="form-text text-muted"
           for="email"
         >
           Email
-        </label>
+        </small>
         <input
           data-testid="login-form-email-input"
           id="email"
@@ -25,20 +28,22 @@ exports[`login form smoke and snapshot tests should match snapshot 1`] = `
           type="text"
           value=""
         />
-        <label
+        <small
+          class="form-text text-muted"
           for="password"
         >
           Password
-        </label>
+        </small>
         <input
           data-testid="login-form-password-input"
           id="password"
           name="password"
-          placeholder=""
+          placeholder="********"
           type="password"
           value=""
         />
         <button
+          class="login-button btn btn-info"
           data-testid="login-form-button"
           type="submit"
         >

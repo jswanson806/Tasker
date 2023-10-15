@@ -6,83 +6,151 @@ exports[`signup form smoke and snapshot tests should match snapshot 1`] = `
     class="signup-container"
   >
     <div
-      class="signup-card"
+      class="signup-centered-card"
     >
-      <h1>
+      <h5>
         Sign Up to Post Jobs
-      </h1>
-      <button
-        data-testid="signup-form-toggle"
+      </h5>
+      <div
+        class="my-2 btn-group"
+        role="group"
       >
-        User
-      </button>
-      <form>
-        <label
-          for="email"
+        <div
+          class="dropdown"
         >
-          Email
-        </label>
-        <input
-          data-testid="signup-form-email-input"
-          id="email"
-          name="email"
-          placeholder="Email Address"
-          type="text"
-          value=""
-        />
-        <label
-          for="firstName"
+          <button
+            aria-expanded="false"
+            aria-haspopup="true"
+            class="dropdown-toggle btn btn-secondary"
+            type="button"
+          >
+            User
+          </button>
+          <div
+            aria-hidden="true"
+            class="dropdown-menu"
+            role="menu"
+            tabindex="-1"
+          >
+            <button
+              class="dropdown-item"
+              role="menuitem"
+              tabindex="0"
+              type="button"
+            >
+              Worker
+            </button>
+            <button
+              class="dropdown-item"
+              role="menuitem"
+              tabindex="0"
+              type="button"
+            >
+              User
+            </button>
+          </div>
+        </div>
+      </div>
+      <form
+        class=""
+      >
+        <div
+          class="form-group"
         >
-          First Name
-        </label>
-        <input
-          data-testid="signup-form-first-name-input"
-          id="firstName"
-          name="firstName"
-          placeholder="First Name"
-          type="text"
-          value=""
-        />
-        <label
-          for="lastName"
+          <label
+            class=""
+            for="email"
+          >
+            Email
+          </label>
+          <input
+            class="form-control"
+            data-testid="signup-form-email-input"
+            id="email"
+            name="email"
+            placeholder="Email Address"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="form-group"
         >
-          Last Name
-        </label>
-        <input
-          data-testid="signup-form-last-name-input"
-          id="lastName"
-          name="lastName"
-          placeholder="Last Name"
-          type="text"
-          value=""
-        />
-        <label
-          for="phone"
+          <label
+            class=""
+            for="firstName"
+          >
+            First Name
+          </label>
+          <input
+            class="form-control"
+            data-testid="signup-form-first-name-input"
+            id="firstName"
+            name="firstName"
+            placeholder="First Name"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="form-group"
         >
-          Phone
-        </label>
-        <input
-          data-testid="signup-form-phone-input"
-          id="phone"
-          name="phone"
-          placeholder="Phone"
-          type="text"
-          value=""
-        />
-        <label
-          for="password"
+          <label
+            class=""
+            for="lastName"
+          >
+            Last Name
+          </label>
+          <input
+            class="form-control"
+            data-testid="signup-form-last-name-input"
+            id="lastName"
+            name="lastName"
+            placeholder="Last Name"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="form-group"
         >
-          Password
-        </label>
-        <input
-          data-testid="signup-form-password-input"
-          id="password"
-          name="password"
-          placeholder=""
-          type="password"
-          value=""
-        />
+          <label
+            class=""
+            for="phone"
+          >
+            Phone
+          </label>
+          <input
+            class="form-control"
+            data-testid="signup-form-phone-input"
+            id="phone"
+            name="phone"
+            placeholder="Phone"
+            type="tel"
+            value=""
+          />
+        </div>
+        <div
+          class="form-group"
+        >
+          <label
+            class=""
+            for="password"
+          >
+            Password
+          </label>
+          <input
+            class="form-control"
+            data-testid="signup-form-password-input"
+            id="password"
+            name="password"
+            placeholder=""
+            type="password"
+            value=""
+          />
+        </div>
         <button
+          class="signup-button btn btn-info"
           data-testid="signup-form-button"
           type="submit"
         >

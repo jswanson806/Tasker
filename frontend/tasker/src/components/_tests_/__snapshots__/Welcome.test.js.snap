@@ -2,30 +2,70 @@
 
 exports[`smoke and snapshot tests renders without crashing 1`] = `
 <DocumentFragment>
-  <div>
-    <h1>
-      Welcome to Tasker!
-    </h1>
-    <p>
-      Tasker is your personal marketplace for finding help to get things done. Sign up to post your open jobs or register as a Worker to get hired today!
-    </p>
-    <p>
-      New here?
-    </p>
-    <a
-      href="/signup"
+  <div
+    class="welcome-card-container"
+  >
+    <div
+      class="welcome-centered-card"
     >
-      Sign Up
-    </a>
-    <br />
-    <p>
-      Already registered?
-    </p>
-    <a
-      href="/login"
-    >
-      Login
-    </a>
+      <h1>
+        Welcome to Tasker!
+      </h1>
+      <h4>
+        Tasker is your personal marketplace for finding help to get things done.
+      </h4>
+      <h6>
+        Sign up as a 'User' to post your open jobs or as a 'Worker' to get hired today!
+      </h6>
+      <div
+        class="welcome-buttons-container"
+      >
+        <h6>
+          New here?
+        </h6>
+        <ul
+          class="ml-auto nav"
+        >
+          <li
+            class="mr-2 nav-item"
+          >
+            <a
+              class="me-auto"
+              href="/signup"
+            >
+              <button
+                class="btn btn-info"
+                data-testid="welcome-signup-button"
+              >
+                Sign Up
+              </button>
+            </a>
+          </li>
+        </ul>
+        <h6>
+          Already registered?
+        </h6>
+        <ul
+          class="ml-auto nav"
+        >
+          <li
+            class="mr-2 nav-item"
+          >
+            <a
+              class="me-auto"
+              href="/login"
+            >
+              <button
+                class="welcome-login-button btn btn-warning"
+                data-testid="welcome-login-button"
+              >
+                Login
+              </button>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </DocumentFragment>
 `;
