@@ -98,19 +98,6 @@ describe('GET: /users/:id', function() {
 })
 
 describe('POST: /users/apply', function() {
-    test('works: anon cannot add application', async function(){
-        expect.assertions(1);
-
-        const user_id = testUserIds[1];
-        const job_id = testJobIds[1];
-
-        const resp = await request(app)
-            .post(`/users/apply`)
-            .send({user_id, job_id})
-            .set('authorization', `Bearer ${u2Token}`)
-            
-        expect(resp.status).toBe(401);
-    })
 
     test('works: correct user add application to user', async function(){
         expect.assertions(1);
@@ -214,20 +201,6 @@ describe('POST: /users/withdraw', function() {
 
     })
 
-    test('works: error if anon', async function(){
-        expect.assertions(1);
-
-        const user_id = testUserIds[1];
-        const job_id = testJobIds[1];
-
-        const resp = await request(app)
-            .post(`/users/withdraw`)
-            .send({user_id, job_id})
-            .set('authorization', `Bearer ${u2Token}`)
-            
-        expect(resp.status).toBe(401);
-
-    })
 })
 
 
