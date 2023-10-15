@@ -20,6 +20,7 @@ class TaskerApi {
             let message = err.response.data.error.message;
             throw Array.isArray(message) ? message : [message];
         }
+        
     }
 
     // ************** AUTH **************
