@@ -1,7 +1,7 @@
 import React, { useState, useContext, useRef } from "react";
 import { UserContext } from "../helpers/UserContext";
 import TaskerApi from "../api";
-import { Button, Input, Form, FormGroup, Label, FormText, FormFeedback, ModalBody, ModalHeader } from "reactstrap";
+import { Button, Input, Form, FormGroup, Label, FormText, FormFeedback} from "reactstrap";
 import "./styles/CreateJob.css";
 
 const CreateJob = ({onCreate, onClose}) => {
@@ -47,7 +47,7 @@ const CreateJob = ({onCreate, onClose}) => {
         const textarea = document.querySelector('#body');  
 
         if (cardContent && textarea) {
-            cardContent.style.maxHeight = `${textarea.scrollHeight + 600}px`; // Adjust as needed
+          cardContent.style.maxHeight = `${textarea.scrollHeight + 600}px`;
       }
     };
 
