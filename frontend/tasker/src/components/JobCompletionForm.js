@@ -26,15 +26,12 @@ const JobCompletionForm = ({job, onUpload}) => {
        
         try{
             const updateInfo = createJobUpdate();
-            // create job update object and spread job
-            const jobInfo = { job: {...updateInfo}};
-           
             // initilize new FormData object and append image/imageFile key/value pair
             const form = new FormData();
             form.append('image', imageFile);
             
             // update job in db
-            await TaskerApi.updateSingleJob(jobInfo);
+            await TaskerApi.updateSingleJob({job: updateInfo});
             // call api to upload file to S3 storage
             await TaskerApi.uploadAfterImage(form, job.assigned_to);
             // call onUpload function from JobCard component, which calls endWork to hide the form and trigger rerender
@@ -101,7 +98,7 @@ const JobCompletionForm = ({job, onUpload}) => {
         job.after_image_url = imageFile.name;
         // update job status
         job.status = 'pending review';
- 
+        
         return job;
     }
 
