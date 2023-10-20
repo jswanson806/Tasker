@@ -176,7 +176,6 @@ class TaskerApi {
     /** PATCH single job by id*/
     static async updateSingleJob(job_info) {
         try{
-            console.log(job_info)
             const res = await this.request(`jobs/update/${job_info.job.id}`, job_info, "patch");
             return res;
         } catch(err) {
@@ -201,6 +200,7 @@ class TaskerApi {
     /** GET conversation between two users by id */
     static async getConversationBetween(u1_id, u2_id, j_id) {
         try{
+            
             const res = await this.request(`messages/conversation/${u1_id}/${u2_id}/${j_id}`);
             return res;
         } catch(err) {
@@ -264,85 +264,12 @@ class TaskerApi {
         }
     }
 
-    // ************** PAYOUTS **************
-
-    /** GET all payouts for a single user by id */
-    static async getPayoutsForUser(id) {
-        try{
-            const res = await this.request(`payouts/for/${id}`);
-            return res;
-        } catch(err) {
-            console.log("Error in getPayoutsForUser method of the TaskerApi:", err);
-            throw err;
-        }
-    }
-
-    /** GET all payouts from a single user by id */
-    static async getPayoutsFromUser(id) {
-        try{
-            const res = await this.request(`payouts/from/${id}`);
-            return res;
-        } catch(err) {
-            console.log("Error in getPayoutsFromUser method of the TaskerApi:", err);
-            throw err;
-        }
-    }
-
-    /** POST a new payout for a single user by id */
-    static async createPayoutForUser(payout) {
-        try{
-            // trans_to is user id
-            const { trans_to } = payout;
-            const res = await this.request(`payouts/create/${trans_to}`, payout, "post");
-            return res;
-        } catch(err) {
-            console.log("Error in createPayoutForUser method of the TaskerApi:", err);
-            throw err;
-        }
-    }
-
-
-    // ************** REVIEWS **************
-
-    /** GET all reviews for a single user by id */
-    static async getAllReviewsForUser(id) {
-        try{
-            const res = await this.request(`reviews/for/${id}`);
-            return res;
-        } catch(err) {
-            console.log("Error in getAllReviewsForUser method of the TaskerApi:", err);
-            throw err;
-        }
-    }
-
-    /** GET all reviews from a single user by id */
-    static async getAllReviewsFromUser(id) {
-        try{
-            const res = await this.request(`reviews/from/${id}`);
-            return res;
-        } catch(err) {
-            console.log("Error in getAllReviewsFromUser method of the TaskerApi:", err);
-            throw err;
-        }
-    }
-
-    /** POST a new reivew */
-    static async createReview(review) {
-        try{
-            const res = await this.request(`reviews/create`, review, "post");
-            return res;
-        } catch(err) {
-            console.log("Error in createReview method of the TaskerApi:", err);
-            throw err;
-        }
-    }
-
+    
     // ************** PAYMENTS **************
 
     /** POST a new checkout session for a job */
     static async createCheckoutSession(job) {
         try{
-            console.log("api - job: ", job)
             const res = await this.request(`payments/create-checkout-session`, job, "post");
             return res;
         } catch(err) {
@@ -408,6 +335,80 @@ class TaskerApi {
             throw err;
         }
     }
+
+
+    // ************** PAYOUTS **************
+
+    /** GET all payouts for a single user by id */
+    // static async getPayoutsForUser(id) {
+    //     try{
+    //         const res = await this.request(`payouts/for/${id}`);
+    //         return res;
+    //     } catch(err) {
+    //         console.log("Error in getPayoutsForUser method of the TaskerApi:", err);
+    //         throw err;
+    //     }
+    // }
+
+    // /** GET all payouts from a single user by id */
+    // static async getPayoutsFromUser(id) {
+    //     try{
+    //         const res = await this.request(`payouts/from/${id}`);
+    //         return res;
+    //     } catch(err) {
+    //         console.log("Error in getPayoutsFromUser method of the TaskerApi:", err);
+    //         throw err;
+    //     }
+    // }
+
+    // /** POST a new payout for a single user by id */
+    // static async createPayoutForUser(payout) {
+    //     try{
+    //         // trans_to is user id
+    //         const { trans_to } = payout;
+    //         const res = await this.request(`payouts/create/${trans_to}`, payout, "post");
+    //         return res;
+    //     } catch(err) {
+    //         console.log("Error in createPayoutForUser method of the TaskerApi:", err);
+    //         throw err;
+    //     }
+    // }
+
+
+    // ************** REVIEWS **************
+
+    /** GET all reviews for a single user by id */
+    // static async getAllReviewsForUser(id) {
+    //     try{
+    //         const res = await this.request(`reviews/for/${id}`);
+    //         return res;
+    //     } catch(err) {
+    //         console.log("Error in getAllReviewsForUser method of the TaskerApi:", err);
+    //         throw err;
+    //     }
+    // }
+
+    // /** GET all reviews from a single user by id */
+    // static async getAllReviewsFromUser(id) {
+    //     try{
+    //         const res = await this.request(`reviews/from/${id}`);
+    //         return res;
+    //     } catch(err) {
+    //         console.log("Error in getAllReviewsFromUser method of the TaskerApi:", err);
+    //         throw err;
+    //     }
+    // }
+
+    // /** POST a new reivew */
+    // static async createReview(review) {
+    //     try{
+    //         const res = await this.request(`reviews/create`, review, "post");
+    //         return res;
+    //     } catch(err) {
+    //         console.log("Error in createReview method of the TaskerApi:", err);
+    //         throw err;
+    //     }
+    // }
 
 
 }
