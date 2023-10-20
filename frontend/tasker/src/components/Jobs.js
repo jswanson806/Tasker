@@ -278,7 +278,7 @@ const Jobs = () => {
         resetStates();
         setShowPendingReviewJobs(true);
     }
-
+ 
     const toggleCreateJob = () => {
         resetStates();
         setShowCreateJob(true);
@@ -397,7 +397,8 @@ const Jobs = () => {
                 toggle={() => setShowCreateJob(true)} 
                 style={{position: "relative", marginTop: "20%"}}
             >
-                <CreateJob onCreate={() => 
+                <CreateJob 
+                    onCreate={() => 
                     {
                         toggleUserJobs(); 
                         setTriggerEffect(!triggerEffect);
