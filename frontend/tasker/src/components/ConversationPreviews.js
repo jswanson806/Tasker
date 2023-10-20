@@ -124,18 +124,29 @@ const ConversationPreviews = () => {
      * 
      * Updates state of conversationId, targetUser, jobId, convo, and isLoading
     */
-    async function fetchAndSetConversation(user, currUserId, jobId) {
+    async function fetchAndSetConversation(user, currUserId, conversationId) {
         try {
-            // target is recipient
-            const target = user;
-            // calls api to retrieve the full conversation history between these two users on this particular job
-            const res = await TaskerApi.getConversationBetween(user.id, currUserId, jobId);
-            // destructure conversation array from api response
+
+            const targetUser = user;
+            const convoId = conversationId;
+            let jobId;
+            let res;
+
+            if(typeof convoId === 'string'){
+                jobId = getTargetJobFromConvoId(conversationId);
+                res = await TaskerApi.getConversationBetween(user.id, currUserId, jobId);
+            } else {
+                jobId = convoId;
+                res = await TaskerApi.getConversationBetween(user.id, currUserId, jobId);
+            }
+
             const {conversation} = res;
+
             // if conversation was returned
             if(conversation[0]) {
+
                 // update targetUser state
-                setTargetUser(target);
+                setTargetUser(targetUser);
                 // update jobId state
                 setJobId(jobId);
                 // map messages update convo state with array of Message components
@@ -157,12 +168,18 @@ const ConversationPreviews = () => {
         }
     }
 
-
-    if(isLoading) {
-        // default state of the page before asynchronous api calls are complete
-        return (<Spinner>Loading...</Spinner>)
+    function getTargetJobFromConvoId(conversationId) {
+        // set input string to argument value
+        const inputString = conversationId;
+        // set delimiter to character 'j' -> format of conversation_id is <u + user1Id + user2Id + j + jobId>
+        const delimiter = 'j';
+        // split the string on delimiter 'j'
+        const convoIdParts = inputString.split(delimiter);
+        // coerce second half of split string to Number and assign to 'jobId'
+        const jobId = +convoIdParts[1];
+        // return the jobId
+        return jobId;
     }
-
 
     /** Updates state of showConvo to hide the modal
      * 
@@ -175,6 +192,10 @@ const ConversationPreviews = () => {
         setTriggerEffect(!triggerEffect);
     }
 
+    if(isLoading) {
+        // default state of the page before asynchronous api calls are complete
+        return (<Spinner>Loading...</Spinner>)
+    }
 
     return (
         <>
