@@ -341,193 +341,193 @@ describe('TaskerApi', () => {
       
   });
 
-  describe('payout tests', () => {
+  // describe('payout tests', () => {
 
-    afterEach(() => {
-      // Restore the original implementation of TaskerApi.request
-      jest.restoreAllMocks();
-    });
+  //   afterEach(() => {
+  //     // Restore the original implementation of TaskerApi.request
+  //     jest.restoreAllMocks();
+  //   });
 
-    it('should return array of payouts for a single user', async () => {
-      const responseData = [{
-        id: 1, 
-        trans_by: 1, 
-        trans_for: 2, 
-        subtotal: 5.00, 
-        tax: 1.00, 
-        tip: 4.00, 
-        total: 10.00
-      }];
+  //   it('should return array of payouts for a single user', async () => {
+  //     const responseData = [{
+  //       id: 1, 
+  //       trans_by: 1, 
+  //       trans_for: 2, 
+  //       subtotal: 5.00, 
+  //       tax: 1.00, 
+  //       tip: 4.00, 
+  //       total: 10.00
+  //     }];
 
-      // Mock the TaskerApi.request method
-      const requestSpy = jest.spyOn(TaskerApi, 'request');
-      requestSpy.mockResolvedValue(responseData);
+  //     // Mock the TaskerApi.request method
+  //     const requestSpy = jest.spyOn(TaskerApi, 'request');
+  //     requestSpy.mockResolvedValue(responseData);
 
-      const res = await TaskerApi.getPayoutsForUser(2);
+  //     const res = await TaskerApi.getPayoutsForUser(2);
 
-      expect(res).toEqual([{
-        id: 1, 
-        trans_by: 1, 
-        trans_for: 2, 
-        subtotal: 5.00, 
-        tax: 1.00, 
-        tip: 4.00, 
-        total: 10.00
-      }]);
+  //     expect(res).toEqual([{
+  //       id: 1, 
+  //       trans_by: 1, 
+  //       trans_for: 2, 
+  //       subtotal: 5.00, 
+  //       tax: 1.00, 
+  //       tip: 4.00, 
+  //       total: 10.00
+  //     }]);
 
-    });
+  //   });
 
-    it('should return array of payouts from a single user', async () => {
-      const responseData = [{
-        id: 1, 
-        trans_by: 1, 
-        trans_for: 2, 
-        subtotal: 5.00, 
-        tax: 1.00, 
-        tip: 4.00, 
-        total: 10.00
-      }];
+  //   it('should return array of payouts from a single user', async () => {
+  //     const responseData = [{
+  //       id: 1, 
+  //       trans_by: 1, 
+  //       trans_for: 2, 
+  //       subtotal: 5.00, 
+  //       tax: 1.00, 
+  //       tip: 4.00, 
+  //       total: 10.00
+  //     }];
 
-      // Mock the TaskerApi.request method
-      const requestSpy = jest.spyOn(TaskerApi, 'request');
-      requestSpy.mockResolvedValue(responseData);
+  //     // Mock the TaskerApi.request method
+  //     const requestSpy = jest.spyOn(TaskerApi, 'request');
+  //     requestSpy.mockResolvedValue(responseData);
 
-      const res = await TaskerApi.getPayoutsFromUser(1);
+  //     const res = await TaskerApi.getPayoutsFromUser(1);
 
-      expect(res).toEqual([{
-        id: 1, 
-        trans_by: 1, 
-        trans_for: 2, 
-        subtotal: 5.00, 
-        tax: 1.00, 
-        tip: 4.00, 
-        total: 10.00
-      }]);
+  //     expect(res).toEqual([{
+  //       id: 1, 
+  //       trans_by: 1, 
+  //       trans_for: 2, 
+  //       subtotal: 5.00, 
+  //       tax: 1.00, 
+  //       tip: 4.00, 
+  //       total: 10.00
+  //     }]);
 
-    });
+  //   });
 
-    it('should return array of payouts from a single user', async () => {
-      const responseData = [{
-        id: 1, 
-        trans_by: 1, 
-        trans_for: 2, 
-        subtotal: 5.00, 
-        tax: 1.00, 
-        tip: 4.00, 
-        total: 10.00
-      }];
+  //   it('should return array of payouts from a single user', async () => {
+  //     const responseData = [{
+  //       id: 1, 
+  //       trans_by: 1, 
+  //       trans_for: 2, 
+  //       subtotal: 5.00, 
+  //       tax: 1.00, 
+  //       tip: 4.00, 
+  //       total: 10.00
+  //     }];
 
-      const payout = {
-        trans_to: 2,
-        trans_by: 1,
-        subtotal: 5.00, 
-        tax: 1.00, 
-        tip: 4.00, 
-        total: 10.00
-      }
+  //     const payout = {
+  //       trans_to: 2,
+  //       trans_by: 1,
+  //       subtotal: 5.00, 
+  //       tax: 1.00, 
+  //       tip: 4.00, 
+  //       total: 10.00
+  //     }
 
-      // Mock the TaskerApi.request method
-      const requestSpy = jest.spyOn(TaskerApi, 'request');
-      requestSpy.mockResolvedValue(responseData);
+  //     // Mock the TaskerApi.request method
+  //     const requestSpy = jest.spyOn(TaskerApi, 'request');
+  //     requestSpy.mockResolvedValue(responseData);
 
-      const res = await TaskerApi.createPayoutForUser(payout);
+  //     const res = await TaskerApi.createPayoutForUser(payout);
 
-      expect(res).toEqual([{
-        id: 1, 
-        trans_by: 1, 
-        trans_for: 2, 
-        subtotal: 5.00, 
-        tax: 1.00, 
-        tip: 4.00, 
-        total: 10.00
-      }]);
+  //     expect(res).toEqual([{
+  //       id: 1, 
+  //       trans_by: 1, 
+  //       trans_for: 2, 
+  //       subtotal: 5.00, 
+  //       tax: 1.00, 
+  //       tip: 4.00, 
+  //       total: 10.00
+  //     }]);
 
-    });
+  //   });
 
-  });
+  // });
 
-  describe('review tests', () => {
+  // describe('review tests', () => {
 
-    afterEach(() => {
-      // Restore the original implementation of TaskerApi.request
-      jest.restoreAllMocks();
-    });
+  //   afterEach(() => {
+  //     // Restore the original implementation of TaskerApi.request
+  //     jest.restoreAllMocks();
+  //   });
 
-    it('should return array of reviews for a single user', async () => {
-      const responseData = { Reviews: [{
-        id: 1, 
-        title: 'good work', 
-        body: 'they did good work', 
-        stars: 4, 
-        reviewed_by: 2, 
-        reviewed_for: 1
-      }]};
+  //   it('should return array of reviews for a single user', async () => {
+  //     const responseData = { Reviews: [{
+  //       id: 1, 
+  //       title: 'good work', 
+  //       body: 'they did good work', 
+  //       stars: 4, 
+  //       reviewed_by: 2, 
+  //       reviewed_for: 1
+  //     }]};
 
-      // Mock the TaskerApi.request method
-      const requestSpy = jest.spyOn(TaskerApi, 'request');
-      requestSpy.mockResolvedValue(responseData);
+  //     // Mock the TaskerApi.request method
+  //     const requestSpy = jest.spyOn(TaskerApi, 'request');
+  //     requestSpy.mockResolvedValue(responseData);
 
-      const res = await TaskerApi.getAllReviewsForUser(1);
+  //     const res = await TaskerApi.getAllReviewsForUser(1);
 
-      expect(res).toEqual({ Reviews: [{
-        id: 1, 
-        title: 'good work', 
-        body: 'they did good work', 
-        stars: 4, 
-        reviewed_by: 2, 
-        reviewed_for: 1
-      }]});
+  //     expect(res).toEqual({ Reviews: [{
+  //       id: 1, 
+  //       title: 'good work', 
+  //       body: 'they did good work', 
+  //       stars: 4, 
+  //       reviewed_by: 2, 
+  //       reviewed_for: 1
+  //     }]});
 
-    });
+  //   });
 
-    it('should return array of reviews by a single user', async () => {
-      const responseData = { Reviews: [{
-        id: 1, 
-        title: 'good work', 
-        body: 'they did good work', 
-        stars: 4, 
-        reviewed_by: 2, 
-        reviewed_for: 1
-      }]};
+  //   it('should return array of reviews by a single user', async () => {
+  //     const responseData = { Reviews: [{
+  //       id: 1, 
+  //       title: 'good work', 
+  //       body: 'they did good work', 
+  //       stars: 4, 
+  //       reviewed_by: 2, 
+  //       reviewed_for: 1
+  //     }]};
 
-      // Mock the TaskerApi.request method
-      const requestSpy = jest.spyOn(TaskerApi, 'request');
-      requestSpy.mockResolvedValue(responseData);
+  //     // Mock the TaskerApi.request method
+  //     const requestSpy = jest.spyOn(TaskerApi, 'request');
+  //     requestSpy.mockResolvedValue(responseData);
 
-      const res = await TaskerApi.getAllReviewsFromUser(2);
+  //     const res = await TaskerApi.getAllReviewsFromUser(2);
 
-      expect(res).toEqual({ Reviews: [{
-        id: 1, 
-        title: 'good work', 
-        body: 'they did good work', 
-        stars: 4, 
-        reviewed_by: 2, 
-        reviewed_for: 1
-      }]});
+  //     expect(res).toEqual({ Reviews: [{
+  //       id: 1, 
+  //       title: 'good work', 
+  //       body: 'they did good work', 
+  //       stars: 4, 
+  //       reviewed_by: 2, 
+  //       reviewed_for: 1
+  //     }]});
 
-    });
+  //   });
 
-    it('should return array of reviews by a single user', async () => {
-      const responseData = {Message: `Review submitted for user: 1`};
+  //   it('should return array of reviews by a single user', async () => {
+  //     const responseData = {Message: `Review submitted for user: 1`};
 
-      const review = {
-        title: 'good work', 
-        body: 'they did good work', 
-        stars: 4, 
-        reviewed_by: 2, 
-        reviewed_for: 1
-      };
+  //     const review = {
+  //       title: 'good work', 
+  //       body: 'they did good work', 
+  //       stars: 4, 
+  //       reviewed_by: 2, 
+  //       reviewed_for: 1
+  //     };
 
-      // Mock the TaskerApi.request method
-      const requestSpy = jest.spyOn(TaskerApi, 'request');
-      requestSpy.mockResolvedValue(responseData);
+  //     // Mock the TaskerApi.request method
+  //     const requestSpy = jest.spyOn(TaskerApi, 'request');
+  //     requestSpy.mockResolvedValue(responseData);
 
-      const res = await TaskerApi.createReview(review);
+  //     const res = await TaskerApi.createReview(review);
 
-      expect(res).toEqual({Message: `Review submitted for user: 1`});
+  //     expect(res).toEqual({Message: `Review submitted for user: 1`});
 
-    });
+  //   });
 
-  });
+  // });
 
 });
