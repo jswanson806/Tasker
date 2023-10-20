@@ -118,7 +118,7 @@ const NewMessageForm = ({assignedUser, currUser, jobId, onAction, onMessageSent,
 
                             </FormGroup>
                             <Button className="button" color="info" type="submit" data-testid="convo-form-button">Send</Button>
-                            <Button className="button" color="danger" onClick={() => onClose()} data-testid="convo-close-button">Close</Button>
+                            <Button className="button" color="danger" onClick={onAction} data-testid="convo-close-button">Close</Button>
                         </Form>
                     </ModalBody>
                 </div>
@@ -145,7 +145,7 @@ const NewMessageForm = ({assignedUser, currUser, jobId, onAction, onMessageSent,
 
                         </FormGroup>
                         <Button className="button" color="info" type="submit" data-testid="convo-form-button">Send</Button>
-                        <Button className="button" color="danger" onClick={() => onClose()} data-testid="convo-close-button">Close</Button>
+                        <Button className="button" color="danger" onClick={onClose} data-testid="convo-close-button">Close</Button>
                     </Form>
                 </div>
             )}
