@@ -402,7 +402,7 @@ const JobDetails = (
      * Updates activeIndex state
      */
     const next = () => {
-        const nextIndex = activeIndex === items.length - 1 ? 0 : activeIndex + 1;
+        const nextIndex = activeIndex === slides.length - 1 ? 0 : activeIndex + 1;
         setActiveIndex(nextIndex);
     };
     /** Called by the Carousel to go to the previous image index in the items array
@@ -410,7 +410,7 @@ const JobDetails = (
      * Updates activeIndex state
      */
     const previous = () => {
-        const nextIndex = activeIndex === 0 ? items.length - 1 : activeIndex - 1;
+        const nextIndex = activeIndex === 0 ? slides.length - 1 : activeIndex - 1;
         setActiveIndex(nextIndex);
     };
     /** Called by the Carousel indicator to jump to specifc index 
@@ -462,7 +462,7 @@ const JobDetails = (
                                 />
                                 {slides}
                                 {/* conditionally render controls when more than 1 image available */}
-                                {items.length > 1 && (
+                                {slides.length > 0 && (
                                     <>
                                         <CarouselControl
                                             direction="prev"
