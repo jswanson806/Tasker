@@ -166,7 +166,10 @@ class Job {
                        body, 
                        status, 
                        address, 
-                       posted_by, 
+                       posted_by,
+                       start_time,
+                       end_time,
+                       payment_due, 
                        before_image_url,
                        after_image_url`
 
