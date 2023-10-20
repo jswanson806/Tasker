@@ -227,7 +227,10 @@ describe('updates a job', function() {
             'address': '444 update street',
             'status': 'active',
             "after_image_url": "http://after1.img",
-            "before_image_url": "http://before1.img"
+            "before_image_url": "http://before1.img",
+            "end_time": expect.any(Date),
+            "start_time": expect.any(Date),
+            "payment_due": expect.any(Number),
         })
         // query the job that was just updated
         const result2 = await Job.get(testJobIds[0]);

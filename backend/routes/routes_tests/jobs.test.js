@@ -348,6 +348,9 @@ describe("PATCH /update", () => {
             "posted_by": testUserIds[0],
             "status": "pending",
             "title": "updatedTitle",
+            "end_time": null,
+            "start_time": null,
+            "payment_due": null,
         }})
         const resp3 = await request(app)
             .get(`/jobs/${job_id}`)
