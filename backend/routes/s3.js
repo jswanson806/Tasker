@@ -8,13 +8,15 @@ const upload = multer({storage});
 
 const router = new express.Router();
 const client = new S3Client();
-
+const s3Bucket = process.env(AWS_S3_BUCKET);
+const s3BucketBeforeImagesKey = process.env(AWS_S3_TASKER_BEFORE_IMAGE_FOLDER_KEY);
+const s3BucketAfterImagesKey = process.env(AWS_S3_TASKER_AFTER_IMAGE_FOLDER_KEY);
 
 router.get("/download-before-image", async (req, res, next) => {
 
     const params = {
-        bucket: "tasker-tyckaf4h614d3cryjaesfgnc1g5fouse2a-s3alias",
-        key: `before-images/${req.query.params.data.userId}/${req.query.params.data.key}`,
+        bucket: s3Bucket,
+        key: `${s3BucketBeforeImagesKey}/${req.query.params.data.userId}/${req.query.params.data.key}`,
     }
 
     const createPresignedUrlWithClient = async ({bucket, key}) => {
@@ -45,8 +47,8 @@ router.get("/download-after-image", async (req, res, next) => {
 
 
     const params = {
-        bucket: "tasker-tyckaf4h614d3cryjaesfgnc1g5fouse2a-s3alias",
-        key: `after-images/${req.query.params.data.userId}/${req.query.params.data.key}`,
+        bucket: s3Bucket,
+        key: `${s3BucketAfterImagesKey}/${req.query.params.data.userId}/${req.query.params.data.key}`,
     }
 
     const createPresignedUrlWithClient = async ({bucket, key}) => {
@@ -86,8 +88,8 @@ router.post("/upload-before-image/:userId", upload.single("image"), async (req, 
         
         const params = {
             Body: file.buffer,
-            Bucket: "tasker-tyckaf4h614d3cryjaesfgnc1g5fouse2a-s3alias",
-            Key: `before-images/${userId}/${file.originalname}`,
+            Bucket: s3Bucket,
+            Key: `${s3BucketBeforeImagesKey}/${userId}/${file.originalname}`,
         }
 
         const resp = await client.send(new PutObjectCommand(params));
@@ -115,8 +117,8 @@ router.post("/upload-after-image/:userId", upload.single("image"), async (req, r
         
         const params = {
             Body: file.buffer,
-            Bucket: "tasker-tyckaf4h614d3cryjaesfgnc1g5fouse2a-s3alias",
-            Key: `after-images/${userId}/${file.originalname}`,
+            Bucket: s3Bucket,
+            Key: `${s3BucketAfterImagesKey}/${userId}/${file.originalname}`,
         }
 
         const resp = await client.send(new PutObjectCommand(params));
