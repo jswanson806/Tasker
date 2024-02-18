@@ -107,8 +107,8 @@ const SignUp = () => {
                 // stringify the user info for localStorage
                 const newUser = JSON.stringify({id: user.id, email: user.email, isWorker: user.isWorker});
                 // set token and user in local storage for further auth
-                updateToken(token);
-                updateUser(newUser);
+                await updateToken(token);
+                await updateUser(newUser);
             }
 
             // clear the form data
