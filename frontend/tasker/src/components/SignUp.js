@@ -22,8 +22,11 @@ const SignUp = () => {
 
     const [formData, setFormData] = useState(INITIAL_STATE);
     const [ isWorker, setIsWorker ] = useState(false);
+    const [errors, setErrors] = useState({});
+
     const { token, updateToken } = useContext(TokenContext);
     const { user, updateUser } = useContext(UserContext);
+    
 
     /** Dynamically formats phone number input to match expected format in db
      * 
@@ -52,7 +55,7 @@ const SignUp = () => {
             let formattedValue = formatPhoneNumber(inputValue);
             
             // update field with formatted value as user types
-            e.target.value = formattedValue;
+            // e.target.value = formattedValue;
 
             setFormData(formData => ({
                 ...formData,
@@ -79,47 +82,100 @@ const SignUp = () => {
      */
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // construct user object
-        let userInfo = {user: {
-            email: formData.email,
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            phone: formData.phone,
-            password: formData.password,
-            isWorker: false,
-        }};
 
-        // set isWorker property on userInfo object based on state of isWorker
-        if(isWorker){
-            userInfo.user.isWorker = true;
+        // handle form field errors
+        const errors = {};
+        // validate email field
+        if(!formData.email){
+            errors.email = "Email address is required."
+        } else if(!formData.email.match(/\S+@\S+\.\S+/)) {
+            errors.email = "A valid email address is required."
+        }
+        // validate firstName field
+        if(!formData.firstName){
+            errors.firstName = "First name is required."
+        }
+        // validate lastName field
+        if(!formData.lastName){
+            errors.lastName = "Last name is required."
+        }
+        // validate phone number field
+        if(!formData.phone){
+            errors.phone = "Phone number is required."
+        } else if(formData.phone.length < 10){
+            errors.phone = "Phone number must be at least 10 numbers long"
+        }
+        // validate password field
+        if(!formData.password){
+            errors.password = "Password is required."
+        }
+        // Check for at least 8 characters in password
+        if (formData.password.length < 8) {
+            errors.password = 'Password must be at least 8 characters long';
+        }
+    
+        // Check for at least 1 number in password
+        if (!/\d/.test(formData.password)) {
+            errors.password = 'Password must contain at least one number';
+        }
+    
+        // Check for at least 1 uppercase letter in password
+        if (!/[A-Z]/.test(formData.password)) {
+            errors.password = 'Password must contain at least one uppercase letter';
+        }
+    
+        // Check for at least 1 special character in password
+        if (!/[^A-Za-z0-9]/.test(formData.password)) {
+            errors.password = 'Password must contain at least one special character';
         }
 
-        try {
-            // register call to api
-            const registerToken = await TaskerApi.registerUser(userInfo);
-        
-            // check for registerToken to be true
-            if(registerToken) {
-                // login call to api
-                const res = await TaskerApi.login(userInfo.user.email, userInfo.user.password);
-                // destructure user and token from api response
-                const { token, user } = res;
-                // stringify the user info for localStorage
-                const newUser = JSON.stringify({id: user.id, email: user.email, isWorker: user.isWorker});
-                // set token and user in local storage for further auth
-                await updateToken(token);
-                await updateUser(newUser);
+        setErrors(errors);
+
+        if(Object.keys(errors).length === 0){
+            // construct user object
+            let userInfo = {user: {
+                email: formData.email,
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                phone: formData.phone,
+                password: formData.password,
+                isWorker: false,
+            }};
+
+            // set isWorker property on userInfo object based on state of isWorker
+            if(isWorker){
+                userInfo.user.isWorker = true;
             }
 
-            // clear the form data
-            setFormData(INITIAL_STATE);
-            // redirect to dashboard
-            navigate("/jobs");
+            try {
+                // register call to api
+                const registerToken = await TaskerApi.registerUser(userInfo);
+                
+            
+                // check for registerToken to be true
+                if(registerToken) {
+                    // login call to api
+                    const res = await TaskerApi.login(userInfo.user.email, userInfo.user.password);
+                    // destructure user and token from api response
+                    const { token, user } = res;
+                    // stringify the user info for localStorage
+                    const newUser = JSON.stringify({id: user.id, email: user.email, isWorker: user.isWorker});
+                    // set token and user in local storage for further auth
+                    await updateToken(token);
+                    await updateUser(newUser);
+                }
 
-        } catch(err) {
-            return err;
+                // clear the form data
+                setFormData(INITIAL_STATE);
+                // redirect to dashboard
+                navigate("/jobs");
+
+            } catch(err) {
+                errors.api = err[0];
+                setErrors(errors);
+                return err;
+            }
         }
-        
     }
 
     return (
@@ -156,9 +212,10 @@ const SignUp = () => {
                         name="email"
                         placeholder="Email Address"
                         data-testid="signup-form-email-input"
-                        value={FormData.email}
+                        value={formData.email}
                         onChange={handleChange}
                     />
+                    {errors && errors.email && <span className="text-danger">{errors.email}</span>}
                     </FormGroup>
                     <FormGroup>
                     <Label htmlFor="firstName">First Name</Label>
@@ -168,9 +225,10 @@ const SignUp = () => {
                         name="firstName"
                         placeholder="First Name"
                         data-testid="signup-form-first-name-input"
-                        value={FormData.firstName}
+                        value={formData.firstName}
                         onChange={handleChange}
                     />
+                    {errors && errors.firstName && <span className="text-danger">{errors.firstName}</span>}
                     </FormGroup>
                     <FormGroup>
                     <Label htmlFor="lastName">Last Name</Label>
@@ -180,9 +238,10 @@ const SignUp = () => {
                         name="lastName"
                         placeholder="Last Name"
                         data-testid="signup-form-last-name-input"
-                        value={FormData.lastName}
+                        value={formData.lastName}
                         onChange={handleChange}
                     />
+                    {errors && errors.lastName && <span className="text-danger">{errors.lastName}</span>}
                     </FormGroup>
                     <FormGroup>
                     <Label htmlFor="phone">Phone</Label>
@@ -192,9 +251,10 @@ const SignUp = () => {
                         name="phone"
                         placeholder="Phone"
                         data-testid="signup-form-phone-input"
-                        value={FormData.phone}
+                        value={formData.phone}
                         onChange={handleChange}
                     />
+                    {errors && errors.phone && <span className="text-danger">{errors.phone}</span>}
                     </FormGroup>
                     <FormGroup> 
                     <Label htmlFor="password">Password</Label>
@@ -204,11 +264,13 @@ const SignUp = () => {
                         name="password"
                         placeholder=""
                         data-testid="signup-form-password-input"
-                        value={FormData.password}
+                        value={formData.password}
                         onChange={handleChange}
                     />
+                    {errors && errors.password && <span className="text-danger">{errors.password}</span>}
                     </FormGroup>
                     <Button className="signup-button" color="info" type="submit" data-testid="signup-form-button">Signup</Button>
+                    {errors && errors.api && <span className="text-danger">{errors.api}</span>}
                 </Form>
                 
             </div>
