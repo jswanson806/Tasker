@@ -11,8 +11,8 @@ const PORT = +process.env.PORT || 3001;
 // sets database to development, production, or test based on env var
 function getDatabaseUri() {
     return (process.env.NODE_ENV === "test")
-        ? process.env.POSTGESQL_TASKER_TEST
-        : process.env.DATABASE_URL || process.env.POSTGESQL_TASKER_DATABASE_URL;
+        ? process.env.POSTGRESQL_TASKER_TEST
+        : process.env.DATABASE_URL || process.env.POSTGRESQL_TASKER_DATABASE_URL;
 }
 
 // bcrypt work factor is faster during tests
