@@ -102,7 +102,7 @@ describe("Handles form input correctly", () => {
         fireEvent.change(firstName, {target: {value: "Testy"}});
         fireEvent.change(lastName, {target: {value: "McTesty"}});
         fireEvent.change(phone, {target: {value: "444-444-4444"}});
-        fireEvent.change(password, {target: {value: "Password1"}});
+        fireEvent.change(password, {target: {value: "P@ssword1"}});
 
         const btn = screen.getByTestId("signup-form-button");
 
@@ -110,16 +110,17 @@ describe("Handles form input correctly", () => {
             fireEvent.click(btn);
         })
 
+        expect(mockRegisterUser).toHaveBeenCalledTimes(1);
         expect(mockRegisterUser).toHaveBeenCalledWith({user: { 
             email: "test@email.com", 
             firstName: "Testy",
             lastName: "McTesty",
             isWorker: false,
             phone: "444-444-4444",
-            password: "Password1"
+            password: "P@ssword1"
         }});
 
-        expect(mockLogin).toHaveBeenCalledWith("test@email.com", "Password1")
+        expect(mockLogin).toHaveBeenCalledWith("test@email.com", "P@ssword1")
     })
 
 })
