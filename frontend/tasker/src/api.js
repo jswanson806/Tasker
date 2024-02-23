@@ -128,25 +128,35 @@ class TaskerApi {
 
     // ************** JOBS **************
 
-    /** GET all jobs */
-    static async getAllJobs() {
+    /** GET all jobs to which worker can apply */
+    static async findAllAvailableJobs() {
         try{
             const res = await this.request(`jobs`);
             return res;
         } catch(err) {
-            console.log("Error in getAllJobs method of the TaskerApi:", err);
+            console.log("Error in findAllAvailableJobs method of the TaskerApi:", err);
             throw err;
         }
     }
 
-    /** GET jobs with filter */
-    static async findAndFilterJobs(filters) {
-        try {
-            
-            const res = await this.request(`jobs/filter`, filters);
+    /** GET all jobs to which worker has applied*/
+    static async findAppliedWorkerJobs(workerId) {
+        try{
+            const res = await this.request(`jobs/applied/${workerId}`);
             return res;
         } catch(err) {
-            console.log("Error in findAndFilterJobs method of the TaskerApi:", err);
+            console.log("Error in findAppliedWorkerJobs method of the TaskerApi:", err);
+            throw err;
+        }
+    }
+
+    /** GET all jobs to which worker has been assigned */
+    static async findAllAssignedWorkerJobs(workerId) {
+        try{
+            const res = await this.request(`jobs/assigned/${workerId}`);
+            return res;
+        } catch(err) {
+            console.log("Error in findAllAssignedWorkerJobs method of the TaskerApi:", err);
             throw err;
         }
     }
@@ -159,6 +169,28 @@ class TaskerApi {
         } catch(err) {
             console.log("Error in getSingleJob method of the TaskerApi:", err);
             throw err;
+        }
+    }
+
+    /** GET all active jobs posted by a single user */
+    static async findActiveUserJobs(userId) {
+
+        try {
+            const res = await this.request(`jobs/user/${userId}`);
+            return res;
+        } catch(err) {
+            console.log("Error in findActiveUserJobs method of the TaskerApi: ", err);
+        }
+    }
+
+    /** GET all pending review jobs posted by a single user */
+    static async findPendingReviewUserJobs(userId) {
+
+        try {
+            const res = await this.request(`jobs/pending-review/${userId}`);
+            return res;
+        } catch(err) {
+            console.log("Error in findPendingReviewUserJobs method of the TaskerApi: ", err);
         }
     }
 
