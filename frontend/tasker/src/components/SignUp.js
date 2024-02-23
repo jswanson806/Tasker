@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { TokenContext } from "../helpers/TokenContext";
 import { UserContext } from "../helpers/UserContext";
@@ -27,6 +27,13 @@ const SignUp = () => {
     const { token, updateToken } = useContext(TokenContext);
     const { user, updateUser } = useContext(UserContext);
     
+
+    useEffect(() => {
+        if(user){
+            // redirect to dashboard
+            navigate("/jobs");
+        }
+    }, [user])
 
     /** Dynamically formats phone number input to match expected format in db
      * 
@@ -167,8 +174,6 @@ const SignUp = () => {
 
                 // clear the form data
                 setFormData(INITIAL_STATE);
-                // redirect to dashboard
-                navigate("/jobs");
 
             } catch(err) {
                 errors.api = err[0];
