@@ -2,14 +2,13 @@
 
 const db = require("../db.js");
 const { NotFoundError, ExpressError } = require("../expressError.js");
-const { filterSqlQuery } = require("../helpers/filterSqlQuery.js");
 const { partialUpdate } = require("../helpers/partialSqlUpdate.js");
 
 class Job {
     
-    /** Find all jobs in the database */
+    /** Find all jobs in the database available for workers to apply */
 
-    static async findAll(){
+    static async findAllAvailableJobs(){
         const result = await db.query(
             `SELECT id,
                     title, 
@@ -24,26 +23,17 @@ class Job {
                     before_image_url, 
                     after_image_url
             FROM jobs
+            WHERE assigned_to IS NULL AND status = 'pending'
             ORDER BY title`
         );
+        
         return result.rows;
     }
 
-    /** Find all jobs in the database matching filter
-     * 
-     * Joins on applications table
-     */
+    /** Find all jobs in the database to which worker has already applied */
 
-    static async findAndFilterJobs(data){
-
-        if(!data) {
-
-            throw new ExpressError('No data provided')
-        }
-
-        const {matchers, setVals} = filterSqlQuery(data);
-
-        const queryString = 
+    static async findAllAppliedWorkerJobs(workerId){
+        const result = await db.query(
             `SELECT j.id,
                 j.title, 
                 j.body, 
@@ -59,21 +49,97 @@ class Job {
                 ARRAY_AGG(a.applied_by) AS "applicants"
             FROM jobs j
             LEFT JOIN applications a ON j.id = a.applied_to
-            WHERE ${matchers}
+            WHERE a.applied_by = $1
             GROUP BY j.id, j.title, j.body, j.status, j.address, j.posted_by, j.assigned_to, 
                      j.start_time, j.end_time, j.payment_due, j.before_image_url, j.after_image_url
-            ORDER BY j.title`;
-
-        const result = await db.query(queryString, [...setVals]);
+            ORDER BY j.title`,
+            [workerId]
+        );
         
-        const jobs = result.rows;
+        return result.rows;
+    }
 
-        if(!jobs) {
-            throw new NotFoundError(`No matching jobs found`)
-        }
+    /** Find all jobs in the database to which worker has been assigned */
 
+    static async findAllAssignedWorkerJobs(workerId){
+        const result = await db.query(
+            `SELECT id,
+                    title, 
+                    body, 
+                    status, 
+                    address,
+                    posted_by, 
+                    assigned_to, 
+                    TO_CHAR(start_time, 'MM/DD/YYYY HH:MI') AS "start_time", 
+                    TO_CHAR(end_time, 'MM/DD/YYYY HH:MI') AS "end_time", 
+                    payment_due, 
+                    before_image_url, 
+                    after_image_url
+            FROM jobs
+            WHERE assigned_to = $1 AND status = 'active'
+            ORDER BY title`,
+            [workerId]
+        );
+        
+        return result.rows;
+    }
 
-        return jobs;
+    /** Find all jobs in the database posted by single user which are pending review */
+
+    static async findAllPendingReviewUserJobs(userId){
+        const result = await db.query(
+            `SELECT id,
+                    title, 
+                    body, 
+                    status, 
+                    address,
+                    posted_by, 
+                    assigned_to, 
+                    TO_CHAR(start_time, 'MM/DD/YYYY HH:MI') AS "start_time", 
+                    TO_CHAR(end_time, 'MM/DD/YYYY HH:MI') AS "end_time", 
+                    payment_due, 
+                    before_image_url, 
+                    after_image_url
+            FROM jobs
+            WHERE posted_by = $1 AND status = 'pending review'
+            ORDER BY title`,
+            [userId]
+        );
+        
+        return result.rows;
+    }
+
+    /** find all jobs posted by a single user
+     * 
+     * Joins on applications table 
+     */
+    static async getAllJobsPostedByUser(userId){
+        const result = await db.query(
+            `SELECT j.id,
+                j.title, 
+                j.body, 
+                j.status, 
+                j.address,
+                j.posted_by, 
+                j.assigned_to, 
+                TO_CHAR(j.start_time, 'MM/DD/YYYY HH:MI AM') AS "start_time", 
+                TO_CHAR(j.end_time, 'MM/DD/YYYY HH:MI AM') AS "end_time", 
+                j.payment_due, 
+                j.before_image_url, 
+                j.after_image_url,
+                ARRAY_AGG(a.applied_by) AS "applicants"
+            FROM jobs j
+            LEFT JOIN applications a ON j.id = a.applied_to
+            WHERE j.posted_by = $1
+            GROUP BY j.id, j.title, j.body, j.status, j.address, j.posted_by, j.assigned_to, 
+                     j.start_time, j.end_time, j.payment_due, j.before_image_url, j.after_image_url
+            ORDER BY j.title`,
+            [userId]
+        )
+
+        const job = result.rows;
+
+        return job;
     }
 
     /** find one job by id
