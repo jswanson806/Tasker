@@ -8,7 +8,7 @@ const upload = multer({storage});
 
 const router = new express.Router();
 const client = new S3Client();
-const s3Bucket = process.env(AWS_S3_BUCKET);
+const s3Bucket = process.env.AWS_S3_BUCKET;
 const s3BucketBeforeImagesKey = process.env.AWS_S3_TASKER_BEFORE_IMAGE_FOLDER_KEY;
 const s3BucketAfterImagesKey = process.env.AWS_S3_TASKER_AFTER_IMAGE_FOLDER_KEY;
 
