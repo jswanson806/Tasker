@@ -19,3 +19,15 @@
     margin: 2% 2%;
     align-content: center;
 }
+
+.jobs-notFound-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+}
+
+.jobs-dynamic-page-header {
+    font-weight: bold;
+    
+}
