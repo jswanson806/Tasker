@@ -1,0 +1,146 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "job"
+    ],
+    "properties": {
+        "job": {
+            "type": "object",
+            "default": {},
+            "title": "The job Schema",
+            "required": [],
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The id Schema",
+                    "examples": [
+                        1
+                    ]
+                },
+                "title": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The title Schema",
+                    "examples": [
+                        "j4"
+                    ]
+                },
+                "body": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The body Schema",
+                    "examples": [
+                        "jb4"
+                    ]
+                },
+                "status": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The status Schema",
+                    "examples": [
+                        "posted"
+                    ]
+                },
+                "address": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The address Schema",
+                    "examples": [
+                        "444 j street"
+                    ]
+                },
+                "posted_by": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The postedBy Schema",
+                    "examples": [
+                        1
+                    ]
+                },
+                "start_time": {
+                    "type": "string",
+                    "default": null,
+                    "title": "The startTime Schema",
+                    "examples": [
+                        "2023-06-01 09:00:00"
+                    ]
+                },
+                "end_time": {
+                    "type": "string",
+                    "default": null,
+                    "title": "The endTime Schema",
+                    "examples": [
+                        "2023-06-01 10:00:00"
+                    ]
+                },
+                "assigned_to": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The assignedTo Schema",
+                    "examples": [
+                        2
+                    ]
+                },
+                "payment_due": {
+                    "type": "number",
+                    "default": null,
+                    "title": "The paymentDue Schema",
+                    "examples": [
+                        100.25
+                    ]
+                },
+                "before_image_url": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The beforeImageUrl Schema",
+                    "examples": [
+                        "http://before4.img"
+                    ]
+                },
+                "after_image_url": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The afterImageUrl Schema",
+                    "examples": [
+                        "http://after4.img"
+                    ]
+                }
+            },
+            "examples": [{
+                "id": 1,
+                "title": "j4",
+                "body": "jb4",
+                "status": "posted",
+                "address": "444 j street",
+                "posted_by": 1,
+                "start_time": "2023-06-01 09:00:00",
+                "end_time": "2023-06-01 10:00:00",
+                "assigned_to": 2,
+                "payment_due": 100.25,
+                "before_image_url": "http://before4.img",
+                "after_image_url": "http://after4.img"
+            }]
+        }
+    },
+    "examples": [{
+        "job": {
+            "id": 1,
+            "title": "j4",
+            "body": "jb4",
+            "status": "posted",
+            "address": "444 j street",
+            "posted_by": 1,
+            "start_time": "2023-06-01 09:00:00",
+            "end_time": "2023-06-01 10:00:00",
+            "assigned_to": 2,
+            "payment_due": 100.25,
+            "before_image_url": "http://before4.img",
+            "after_image_url": "http://after4.img"
+        }
+    }]
+}
