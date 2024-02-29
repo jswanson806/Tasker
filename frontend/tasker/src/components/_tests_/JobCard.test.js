@@ -38,7 +38,7 @@ const job3 = {
 
 const applications = new Set([job.id]);
 
-const fetchCurrUser = jest.fn();
+const getCurrUser = jest.fn();
 const triggerEffect = jest.fn();
 const getBeforeImage = jest.spyOn(TaskerApi, 'getBeforeImage');
 const getAfterImage = jest.spyOn(TaskerApi, 'getAfterImage');
@@ -49,14 +49,14 @@ describe('smoke and snapshot tests', () => {
 
     test('JobCard component renders correctly', async () => {
         render(
-            <JobCard user={userValue.user} applications={applications} job={job} fetchCurrUser={fetchCurrUser}/>
+            <JobCard user={userValue.user} applications={applications} job={job} getCurrUser={getCurrUser}/>
         );
     });
 
     test('JobCard component matches snapshot', async () => {
 
         render(
-            <JobCard user={userValue.user} applications={applications} job={job3} fetchCurrUser={fetchCurrUser}/>
+            <JobCard user={userValue.user} applications={applications} job={job3} getCurrUser={getCurrUser}/>
         );
     });
 
@@ -70,7 +70,7 @@ describe('renders correct information', () => {
         expect.assertions(3);
 
         const {container} = render(
-            <JobCard user={userValue3.user} applications={applications} job={job3} fetchCurrUser={fetchCurrUser}/>
+            <JobCard user={userValue3.user} applications={applications} job={job3} getCurrUser={getCurrUser}/>
         );
 
         expect(container).toHaveTextContent("test job 3");
@@ -82,7 +82,7 @@ describe('renders correct information', () => {
         expect.assertions(2);
 
         const {container} = render(
-            <JobCard user={userValue.user} applications={applications} job={job} fetchCurrUser={fetchCurrUser}/>
+            <JobCard user={userValue.user} applications={applications} job={job} getCurrUser={getCurrUser}/>
         );
 
         expect(container).toHaveTextContent('job 1 body for testing the job...');
@@ -102,7 +102,7 @@ describe('renders child', () => {
         getAfterImage.mockResolvedValueOnce({preSignedUrl: ''})
 
         const {container, getByTestId} = render(
-            <JobCard triggerEffect={triggerEffect} user={userValue.user} applications={applications} job={job} fetchCurrUser={fetchCurrUser}/>
+            <JobCard triggerEffect={triggerEffect} user={userValue.user} applications={applications} job={job} getCurrUser={getCurrUser}/>
         );
 
         const jobCard = document.querySelector('.jobCard-card');
