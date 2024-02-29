@@ -27,7 +27,7 @@ const Jobs = () => {
     const [jobs, setJobs] = useState(jobsInitialState);
     const [jobCards, setJobCards] = useState(jobCardsInitialState);
     const [currUser, setCurrUser] = useState(null);
-    const [header, setHeader] = useState('Jobs');
+    const [header, setHeader] = useState('');
     const [buttons, setButtons] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [triggerEffect, setTriggerEffect] = useState(false);
@@ -46,7 +46,7 @@ const Jobs = () => {
         // parsed user string received from user context
         const parsedUser = JSON.parse(user);
         // call api to get user from db and set state of currUser
-        fetchCurrUser(parsedUser.id);
+        getCurrUser(parsedUser.id);
         
     }, []);
 
@@ -61,12 +61,12 @@ const Jobs = () => {
         if(currUser && !showCreateJob){
 
             if(!isWorker){ // if user is not worker, get the in progress jobs for this user
-                fetchAndSetActiveUserJobs(currUser.id);
+                getAndSetActiveUserJobs(currUser.id);
                 // set buttons for users
                 setButtons(renderUserButtons());
                 renderHeader('My Active Jobs');
             } else { // else the user is a worker, get all available jobs
-                fetchAndSetAllAvailableJobs();
+                getAndSetAllAvailableJobs();
                 // set buttons for workers
                 setButtons(renderWorkerButtons());
                 renderHeader('Available Jobs');
@@ -92,16 +92,13 @@ const Jobs = () => {
             // create the job cards
             createJobCards();
             setNotFound(false);
-        } 
-        
-        if(!jobs.length){
-            setJobCards(jobCardsInitialState);
+            
+        } else {
             setNotFound(true);
         }
-
         setIsLoading(false);
         
-    }, [ jobs ]);
+    }, [ jobs, currUser ]);
 
 
 
@@ -111,7 +108,7 @@ const Jobs = () => {
     * Updates state of currUser with the response object
     * Updates isWorker with the isWorker property of the response object
     */
-    async function fetchCurrUser(id){
+    async function getCurrUser(id){
         try {
             const res = await TaskerApi.getSingleUser(id);
             const { user } = res;
@@ -140,7 +137,7 @@ const Jobs = () => {
                         user={currUser}
                         applications={applications}
                         job={job}
-                        fetchCurrUser={fetchCurrUser}
+                        getCurrUser={getCurrUser}
                         setJobs={setJobs}
                         key={job.id}
                         triggerEffect={() => setTriggerEffect(!triggerEffect)}
@@ -160,10 +157,10 @@ const Jobs = () => {
      * 
      * Updates state of jobs with the response array of jobs
      */
-    async function fetchAndSetActiveUserJobs(userId){
+    async function getAndSetActiveUserJobs(userId){
         setIsLoading(true);
         try {
-            const inProgressUserJobs = await TaskerApi.findActiveUserJobs(userId);
+            const inProgressUserJobs = await TaskerApi.getActiveUserJobs(userId);
             const { jobs } = inProgressUserJobs;
             setJobs(jobs);
             
@@ -179,10 +176,10 @@ const Jobs = () => {
      * 
      * Updates state of jobs with the response array of jobs
     */
-    async function fetchAndSetPendingReviewUserJobs(userId){
+    async function getAndSetPendingReviewUserJobs(userId){
         setIsLoading(true);
         try {
-            const allPendingReviewUserJobs = await TaskerApi.findPendingReviewUserJobs(userId);
+            const allPendingReviewUserJobs = await TaskerApi.getPendingReviewUserJobs(userId);
             if(!allPendingReviewUserJobs.pendingReviewUserJobs) {
                 setJobs(jobsInitialState);
             } else {   
@@ -201,10 +198,10 @@ const Jobs = () => {
      * 
      * Updates state of jobs with the response array of jobs
     */
-    async function fetchAndSetAllAvailableJobs(){
+    async function getAndSetAllAvailableJobs(){
         setIsLoading(true);
         try {
-            const allAvailableJobs = await TaskerApi.findAllAvailableJobs();
+            const allAvailableJobs = await TaskerApi.getAllAvailableJobs();
             const { allJobs } = allAvailableJobs;
             setJobs(allJobs);
         } catch(err) {
@@ -219,11 +216,10 @@ const Jobs = () => {
      * 
      * Updates state of jobs with the response array of jobs
     */
-    async function fetchAndSetAllAppliedWorkerJobs(workerId){
+    async function getAndSetAllAppliedWorkerJobs(workerId){
         setIsLoading(true);
         try {
-            const allAppliedJobs = await TaskerApi.findAppliedWorkerJobs(workerId);
-            console.log(allAppliedJobs)
+            const allAppliedJobs = await TaskerApi.getAppliedWorkerJobs(workerId);
             if(!allAppliedJobs.appliedJobs){
                 setJobs(jobsInitialState);
             } else {
@@ -242,10 +238,10 @@ const Jobs = () => {
      * 
      * Updates state of jobs with the response array of jobs
     */
-    async function fetchAndSetAllAssignedWorkerJobs(workerId){
+    async function getAndSetAllAssignedWorkerJobs(workerId){
         setIsLoading(true);
         try {
-            const allAssignedWorkerJobs = await TaskerApi.findAllAssignedWorkerJobs(workerId);
+            const allAssignedWorkerJobs = await TaskerApi.getAllAssignedWorkerJobs(workerId);
             if(!allAssignedWorkerJobs.assignedJobs){
                 setJobs(jobsInitialState);
             } else {
@@ -276,19 +272,19 @@ const Jobs = () => {
                         </DropdownToggle>
                         <DropdownMenu>
                             <DropdownItem onClick={() => {
-                                    fetchAndSetAllAvailableJobs();
+                                    getAndSetAllAvailableJobs();
                                     renderHeader('Available Jobs');
                                 }} data-testid="available-jobs-menu-item">
                                 Available Jobs
                             </DropdownItem>
                             <DropdownItem onClick={() => {
-                                    fetchAndSetAllAppliedWorkerJobs(currUser.id);
+                                    getAndSetAllAppliedWorkerJobs(currUser.id);
                                     renderHeader('My Applications');
                                 }} data-testid="applications-menu-item">
                                 Applications
                             </DropdownItem>
                             <DropdownItem onClick={() => {
-                                    fetchAndSetAllAssignedWorkerJobs(currUser.id);
+                                    getAndSetAllAssignedWorkerJobs(currUser.id);
                                     renderHeader('My Assigned Jobs');
                                 }} data-testid="my-jobs-menu-item">
                                 My Jobs
@@ -310,13 +306,13 @@ const Jobs = () => {
                         </DropdownToggle>
                         <DropdownMenu>
                             <DropdownItem onClick={() => {
-                                    fetchAndSetActiveUserJobs(currUser.id);
+                                    getAndSetActiveUserJobs(currUser.id);
                                     renderHeader('My Active Jobs');
                                 }} data-testid="my-jobs-menu-item">
                                 Active Jobs
                             </DropdownItem>
                             <DropdownItem onClick={() => {
-                                    fetchAndSetPendingReviewUserJobs(currUser.id);
+                                    getAndSetPendingReviewUserJobs(currUser.id);
                                     renderHeader('Jobs Pending Review');
                                 }} data-testid="pending-review-menu-item">
                                 Pending Review

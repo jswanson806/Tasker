@@ -13,7 +13,7 @@ const { ensureLoggedIn, ensureIsAdmin } = require('../middleware/auth.js');
  */
 router.get("/", ensureLoggedIn, async function(req, res, next) {
     try {
-        const allJobs = await Job.findAllAvailableJobs();
+        const allJobs = await Job.getAllAvailableJobs();
         return res.status(200).json({ allJobs: allJobs });
     } catch(err) {
         return next(err);
@@ -26,7 +26,7 @@ router.get("/", ensureLoggedIn, async function(req, res, next) {
  */
 router.get("/applied/:workerId", ensureLoggedIn, async function(req, res, next) {
     try {
-        const appliedJobs = await Job.findAllAppliedWorkerJobs(req.params.workerId);
+        const appliedJobs = await Job.getAllAppliedWorkerJobs(req.params.workerId);
         return res.status(200).json({ appliedJobs: appliedJobs });
     } catch(err) {
         return next(err);
@@ -39,7 +39,7 @@ router.get("/applied/:workerId", ensureLoggedIn, async function(req, res, next) 
  */
 router.get("/assigned/:workerId", ensureLoggedIn, async function(req, res, next) {
     try {
-        const assignedJobs = await Job.findAllAssignedWorkerJobs(req.params.workerId);
+        const assignedJobs = await Job.getAllAssignedWorkerJobs(req.params.workerId);
         return res.status(200).json({ assignedJobs: assignedJobs });
     } catch(err) {
         return next(err);
@@ -68,7 +68,7 @@ router.get("/user/:userId", ensureLoggedIn, async function(req, res, next) {
 
 router.get("/pending-review/:userId", ensureLoggedIn, async function(req, res, next) {
     try {
-        const jobsPostedByUserId = await Job.findAllPendingReviewUserJobs(req.params.userId);
+        const jobsPostedByUserId = await Job.getAllPendingReviewUserJobs(req.params.userId);
         return res.status(200).json({ jobs: jobsPostedByUserId });
     } catch(err) {
         return next(err);

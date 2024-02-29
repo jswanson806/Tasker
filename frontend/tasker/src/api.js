@@ -129,7 +129,7 @@ class TaskerApi {
     // ************** JOBS **************
 
     /** GET all jobs to which worker can apply */
-    static async findAllAvailableJobs() {
+    static async getAllAvailableJobs() {
         try{
             const res = await this.request(`jobs`);
             return res;
@@ -140,7 +140,7 @@ class TaskerApi {
     }
 
     /** GET all jobs to which worker has applied*/
-    static async findAppliedWorkerJobs(workerId) {
+    static async getAppliedWorkerJobs(workerId) {
         try{
             const res = await this.request(`jobs/applied/${workerId}`);
             return res;
@@ -151,7 +151,7 @@ class TaskerApi {
     }
 
     /** GET all jobs to which worker has been assigned */
-    static async findAllAssignedWorkerJobs(workerId) {
+    static async getAllAssignedWorkerJobs(workerId) {
         try{
             const res = await this.request(`jobs/assigned/${workerId}`);
             return res;
@@ -173,7 +173,7 @@ class TaskerApi {
     }
 
     /** GET all active jobs posted by a single user */
-    static async findActiveUserJobs(userId) {
+    static async getActiveUserJobs(userId) {
 
         try {
             const res = await this.request(`jobs/user/${userId}`);
@@ -184,7 +184,7 @@ class TaskerApi {
     }
 
     /** GET all pending review jobs posted by a single user */
-    static async findPendingReviewUserJobs(userId) {
+    static async getPendingReviewUserJobs(userId) {
 
         try {
             const res = await this.request(`jobs/pending-review/${userId}`);

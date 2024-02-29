@@ -4,7 +4,7 @@ import JobCompletionForm from './JobCompletionForm.js';
 import TaskerApi from '../api.js';
 import { Modal, Card, CardTitle, Badge, CardText, Col } from 'reactstrap';
 
-const JobCard = ({user, applications, job, fetchCurrUser, triggerEffect}) => {
+const JobCard = ({user, applications, job, getCurrUser, triggerEffect}) => {
 
     const [showCompletionForm, setShowCompletionForm] = useState(false);
     const [currJob, setCurrJob] = useState(job);
@@ -19,7 +19,7 @@ const JobCard = ({user, applications, job, fetchCurrUser, triggerEffect}) => {
      * 
      * Hides the Modal
      * 
-     * Calls fetchCurrUser from Jobs component, triggering useEffect to refresh the jobCards
+     * Calls getCurrUser from Jobs component, triggering useEffect to refresh the jobCards
      */
     const applyToJob = async (user_id, job_id) => {
         try {
@@ -28,7 +28,7 @@ const JobCard = ({user, applications, job, fetchCurrUser, triggerEffect}) => {
             // hide the Modal
             toggleDetails();
             // refresh user info to get latest applications list
-            await fetchCurrUser(user_id);
+            await getCurrUser(user_id);
             
         } catch(err) {
             console.error('Error: ', err)
@@ -39,7 +39,7 @@ const JobCard = ({user, applications, job, fetchCurrUser, triggerEffect}) => {
      * 
      * Hides the Modal
      * 
-     * Calls fetchCurrUser from Jobs component, triggering useEffect to refresh the jobCards
+     * Calls getCurrUser from Jobs component, triggering useEffect to refresh the jobCards
      */
     const withdrawApplication = async (user_id, job_id) => {
         try {
@@ -49,7 +49,7 @@ const JobCard = ({user, applications, job, fetchCurrUser, triggerEffect}) => {
             toggleDetails();
             // refresh user info to get latest user applications list
             // this will trigger useEffect in Jobs component and refresh the job cards
-            await fetchCurrUser(user_id)
+            await getCurrUser(user_id)
 
         } catch(err) {
             console.error('Error: ', err)

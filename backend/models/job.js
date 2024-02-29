@@ -8,7 +8,7 @@ class Job {
     
     /** Find all jobs in the database available for workers to apply */
 
-    static async findAllAvailableJobs(){
+    static async getAllAvailableJobs(){
         const result = await db.query(
             `SELECT id,
                     title, 
@@ -32,7 +32,7 @@ class Job {
 
     /** Find all jobs in the database to which worker has already applied */
 
-    static async findAllAppliedWorkerJobs(workerId){
+    static async getAllAppliedWorkerJobs(workerId){
         const result = await db.query(
             `SELECT j.id,
                 j.title, 
@@ -61,7 +61,7 @@ class Job {
 
     /** Find all jobs in the database to which worker has been assigned */
 
-    static async findAllAssignedWorkerJobs(workerId){
+    static async getAllAssignedWorkerJobs(workerId){
         const result = await db.query(
             `SELECT id,
                     title, 
@@ -86,7 +86,7 @@ class Job {
 
     /** Find all jobs in the database posted by single user which are pending review */
 
-    static async findAllPendingReviewUserJobs(userId){
+    static async getAllPendingReviewUserJobs(userId){
         const result = await db.query(
             `SELECT id,
                     title, 
