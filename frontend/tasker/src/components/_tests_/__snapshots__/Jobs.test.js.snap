@@ -8,11 +8,11 @@ exports[`smoke and snapshot tests should match snapshot 1`] = `
     <div
       class="jobs-header-container"
     >
-      <h3
-        data-testid="jobs-available-worker-jobs-title"
+      <h2
+        class="jobs-dynamic-page-header"
       >
         Available Jobs
-      </h3>
+      </h2>
     </div>
     <div
       class="jobs-buttons-container"
