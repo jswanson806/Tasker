@@ -55,8 +55,7 @@ const JobDetails = (
             // calls api and updates assignedUser state 
             fetchAndSetAssignedUserInfo(job.assigned_to)
         };
-        // triggers useEffect in Jobs component to refresh the jobCards
-        triggerEffect();
+
         // isAssigned state triggers this useEffect
     }, [isAssigned])
 
