@@ -161,9 +161,12 @@ const Jobs = () => {
         setIsLoading(true);
         try {
             const inProgressUserJobs = await TaskerApi.getActiveUserJobs(userId);
-            const { jobs } = inProgressUserJobs;
-            setJobs(jobs);
-            
+            if(!inProgressUserJobs.jobs) {
+                setJobs(jobsInitialState);
+            } else {
+                const { jobs } = inProgressUserJobs;
+                setJobs(jobs);
+            };
         } catch(err) {
             console.error(err);
         }
