@@ -163,6 +163,7 @@ const Jobs = () => {
             const inProgressUserJobs = await TaskerApi.getActiveUserJobs(userId);
             if(!inProgressUserJobs.jobs) {
                 setJobs(jobsInitialState);
+                setJobCards(jobCardsInitialState);
             } else {
                 const { jobs } = inProgressUserJobs;
                 setJobs(jobs);
@@ -185,6 +186,7 @@ const Jobs = () => {
             const allPendingReviewUserJobs = await TaskerApi.getPendingReviewUserJobs(userId);
             if(!allPendingReviewUserJobs.pendingReviewUserJobs) {
                 setJobs(jobsInitialState);
+                setJobCards(jobCardsInitialState);
             } else {   
                 const { pendingReviewUserJobs } = allPendingReviewUserJobs;
                 setJobs(pendingReviewUserJobs);
@@ -225,6 +227,7 @@ const Jobs = () => {
             const allAppliedJobs = await TaskerApi.getAppliedWorkerJobs(workerId);
             if(!allAppliedJobs.appliedJobs){
                 setJobs(jobsInitialState);
+                setJobCards(jobCardsInitialState);
             } else {
                 const { appliedJobs } = allAppliedJobs;
                 setJobs(appliedJobs);
@@ -247,6 +250,7 @@ const Jobs = () => {
             const allAssignedWorkerJobs = await TaskerApi.getAllAssignedWorkerJobs(workerId);
             if(!allAssignedWorkerJobs.assignedJobs){
                 setJobs(jobsInitialState);
+                setJobCards(jobCardsInitialState);
             } else {
                 const { assignedJobs } = allAssignedWorkerJobs;
                 setJobs(assignedJobs);
