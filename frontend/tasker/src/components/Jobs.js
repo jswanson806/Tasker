@@ -4,15 +4,8 @@ import JobCard from './JobCard.js';
 import { UserContext } from '../helpers/UserContext';
 import CreateJob from './CreateJob.js';
 import {
-    Row, 
     Spinner, 
     Button, 
-    ButtonGroup, 
-    UncontrolledDropdown, 
-    DropdownToggle, 
-    DropdownMenu, 
-    DropdownItem, 
-    Col, 
     Modal
 } from "reactstrap";
 import "./styles/Jobs.css";
@@ -132,7 +125,7 @@ const Jobs = () => {
         // map each job to a JobCard componenet
         const jobCards = jobs.map((job) => {
             return (
-                <Col key={job.id}>
+                
                     <JobCard
                         user={currUser}
                         applications={applications}
@@ -143,7 +136,7 @@ const Jobs = () => {
                         triggerEffect={() => setTriggerEffect(!triggerEffect)}
                         data-testid="jobCard-component"
                     />
-                </Col>
+                
             );
         });
 
@@ -271,7 +264,7 @@ const Jobs = () => {
 
     const renderWorkerButtons = () => { // buttons for workers
         return (
-            <div>
+            <div className="jobs-button-container">
                 
                 <Button onClick={() => {
                         getAndSetAllAvailableJobs();
@@ -307,7 +300,7 @@ const Jobs = () => {
         
     const renderUserButtons = () => { // buttons for users
         return (
-            <div>
+            <div className="jobs-button-container">
                
                 <Button onClick={() => {
                         getAndSetActiveUserJobs(currUser.id);
@@ -386,9 +379,9 @@ const Jobs = () => {
             
             {!showCreateJob && (
                 <div className="jobs-jobCard-container">
-                    <Row md="4" sm="1" >
+                    <div class="row">
                         {jobCards}
-                    </Row>
+                    </div>
                 </div>
             )}
 

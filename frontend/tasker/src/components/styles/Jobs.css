@@ -14,10 +14,9 @@
 }
 
 .jobs-jobCard-container {
-    /* display: flex; */
+    display: flex;
+    justify-content: center;
     padding: 20px;
-    margin: 2% 2%;
-    align-content: center;
 }
 
 .jobs-notFound-message {
@@ -30,4 +29,28 @@
 .jobs-dynamic-page-header {
     font-weight: bold;
     
+}
+
+.jobCard-card {
+    height: 15em;
+}
+
+.jobCard-badge {
+    position: static !important;
+    padding: 5px !important;
+}
+
+.jobCard-badge-container {
+  position: relative;
+  top: 34%;
+}
+
+p {
+    position: relative;
+    top: 25%;
+}
+
+h5 {
+    position: relative;
+    top: 25%;
 }

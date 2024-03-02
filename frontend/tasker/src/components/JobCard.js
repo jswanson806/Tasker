@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import JobDetails from './JobDetails.js';
 import JobCompletionForm from './JobCompletionForm.js';
 import TaskerApi from '../api.js';
-import { Modal, Card, CardTitle, Badge, CardText, Col } from 'reactstrap';
+import { Modal, Card, Badge } from 'reactstrap';
 
 const JobCard = ({user, applications, job, getCurrUser, triggerEffect}) => {
 
@@ -184,9 +184,9 @@ const JobCard = ({user, applications, job, getCurrUser, triggerEffect}) => {
         // worker has not applied and the job statys is still pending
         if(!applications.has(job.id) && job.status === 'pending') {
             return (
-                <Badge 
-                    color="info" 
-                    style={{padding: '5px'}}
+                <Badge
+                    className="jobCard-badge"
+                    color="info"     
                 >
                     {job.status}
                 </Badge>
@@ -194,7 +194,8 @@ const JobCard = ({user, applications, job, getCurrUser, triggerEffect}) => {
         // job status is active
         } else if (job.status === 'active') {
             return (
-                <Badge 
+                <Badge
+                    className="jobCard-badge"
                     color="success" 
                     style={{padding: '5px'}}
                 >
@@ -224,12 +225,14 @@ const JobCard = ({user, applications, job, getCurrUser, triggerEffect}) => {
 
     return (
         
-        <Col sm="5" >
+        <div class="col d-flex align-items-center justify-content-center" >
             <Card 
                 body
                 className="text-center"
                 style={{
-                    width: '15rem'
+                    position: 'relative',
+                    width: '15rem',
+                    height: '15rem'
                 }}
                 onClick={toggleDetails}
               >
@@ -238,17 +241,19 @@ const JobCard = ({user, applications, job, getCurrUser, triggerEffect}) => {
                 </div>
                     
                 <div className="jobCard-card">
-                    <CardTitle tag="h5">{job.title}</CardTitle>
-                    {appliedBadge}
-                    {statusBadge}
-                    <CardText>{job.body.slice(0,30) + "..."}</CardText>
+                    <h5>{job.title}</h5>
+                    <p>{job.body.slice(0,30) + "..."}</p>
+                    <div className="jobCard-badge-container">
+                        {appliedBadge}
+                        {statusBadge}
+                    </div>
                 </div>
           
                 {/* JobDetails component as a pop-up based on showDetails status */}
                 <Modal 
                     isOpen={modal} 
                     toggle={() => setModal(!modal)} 
-                    style={{position: "relative", marginTop: "20%"}}
+                    style={{position: "relative", marginTop: "10%"}}
                 >
                     <JobDetails 
                         job={job} 
@@ -267,7 +272,7 @@ const JobCard = ({user, applications, job, getCurrUser, triggerEffect}) => {
                 <Modal 
                     isOpen={showCompletionForm}
                     toggle={() => setShowCompletionForm(!showCompletionForm)}
-                    style={{position: "relative", marginTop: "20%"}}    
+                    style={{position: "relative", marginTop: "10%"}}    
                 >
                     <div data-testid="jobCompletion-form-container">
                         <JobCompletionForm 
@@ -277,7 +282,7 @@ const JobCard = ({user, applications, job, getCurrUser, triggerEffect}) => {
                     </div>
                 </Modal>
             </Card>
-        </Col>
+        </div>
         
         
     )
