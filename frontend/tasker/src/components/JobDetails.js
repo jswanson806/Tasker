@@ -461,7 +461,7 @@ const JobDetails = (
                                 />
                                 {slides}
                                 {/* conditionally render controls when more than 1 image available */}
-                                {slides.length > 0 && (
+                                {slides.length > 1 && (
                                     <>
                                         <CarouselControl
                                             direction="prev"
