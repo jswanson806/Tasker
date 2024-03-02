@@ -133,7 +133,7 @@ class Job {
             WHERE j.posted_by = $1
             GROUP BY j.id, j.title, j.body, j.status, j.address, j.posted_by, j.assigned_to, 
                      j.start_time, j.end_time, j.payment_due, j.before_image_url, j.after_image_url
-            ORDER BY j.title`,
+            ORDER BY j.status, j.title`,
             [userId]
         )
 
