@@ -265,36 +265,38 @@ const Jobs = () => {
     }
 
 
-    const renderWorkerButtons = () => {
+    const renderWorkerButtons = () => { // buttons for workers
         return (
             <div>
-                <ButtonGroup>
-                    <UncontrolledDropdown>
-                        <DropdownToggle color="info" caret >
-                            Sort
-                        </DropdownToggle>
-                        <DropdownMenu>
-                            <DropdownItem onClick={() => {
-                                    getAndSetAllAvailableJobs();
-                                    renderHeader('Available Jobs');
-                                }} data-testid="available-jobs-menu-item">
-                                Available Jobs
-                            </DropdownItem>
-                            <DropdownItem onClick={() => {
-                                    getAndSetAllAppliedWorkerJobs(currUser.id);
-                                    renderHeader('My Applications');
-                                }} data-testid="applications-menu-item">
-                                Applications
-                            </DropdownItem>
-                            <DropdownItem onClick={() => {
-                                    getAndSetAllAssignedWorkerJobs(currUser.id);
-                                    renderHeader('My Assigned Jobs');
-                                }} data-testid="my-jobs-menu-item">
-                                My Jobs
-                            </DropdownItem>
-                        </DropdownMenu>
-                    </UncontrolledDropdown>
-                </ButtonGroup>
+                
+                <Button onClick={() => {
+                        getAndSetAllAvailableJobs();
+                        renderHeader('Available Jobs');
+                    }}
+                    className="jobs-button"
+                    color="info"
+                    data-testid="available-jobs-menu-item">
+                    Available Jobs
+                </Button>
+                <Button onClick={() => {
+                        getAndSetAllAppliedWorkerJobs(currUser.id);
+                        renderHeader('My Applications');
+                    }}
+                    className="jobs-button"
+                    color="info" 
+                    data-testid="applications-menu-item">
+                    Applications
+                </Button>
+                <Button onClick={() => {
+                        getAndSetAllAssignedWorkerJobs(currUser.id);
+                        renderHeader('My Assigned Jobs');
+                    }} 
+                    className="jobs-button"
+                    color="info"
+                    data-testid="my-jobs-menu-item">
+                    My Jobs
+                </Button>
+
             </div>
         );
     };
@@ -302,28 +304,25 @@ const Jobs = () => {
     const renderUserButtons = () => { // buttons for users
         return (
             <div>
-                <ButtonGroup>
-                    <UncontrolledDropdown>
-                        <DropdownToggle color="info" caret >
-                            Sort
-                        </DropdownToggle>
-                        <DropdownMenu>
-                            <DropdownItem onClick={() => {
-                                    getAndSetActiveUserJobs(currUser.id);
-                                    renderHeader('My Active Jobs');
-                                }} data-testid="my-jobs-menu-item">
-                                Active Jobs
-                            </DropdownItem>
-                            <DropdownItem onClick={() => {
-                                    getAndSetPendingReviewUserJobs(currUser.id);
-                                    renderHeader('Jobs Pending Review');
-                                }} data-testid="pending-review-menu-item">
-                                Pending Review
-                            </DropdownItem>
-                            
-                        </DropdownMenu>
-                    </UncontrolledDropdown>
-                </ButtonGroup>
+               
+                <Button onClick={() => {
+                        getAndSetActiveUserJobs(currUser.id);
+                        renderHeader('My Active Jobs');
+                    }} 
+                    className="jobs-button"
+                    color="info"
+                    data-testid="my-jobs-menu-item">
+                    Active Jobs
+                </Button>
+                <Button onClick={() => {
+                        getAndSetPendingReviewUserJobs(currUser.id);
+                        renderHeader('Jobs Pending Review');
+                    }} 
+                    className="jobs-button"
+                    color="info"
+                    data-testid="pending-review-menu-item">
+                    Pending Review
+                </Button>
                 <Button 
                     className="jobs-button" 
                     color="info" 
