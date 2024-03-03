@@ -4,7 +4,7 @@
 }
 
 .jobs-buttons-container {
-    padding: 2px;
+    padding-bottom: 2rem;
     text-align: center;
 }
 
@@ -14,7 +14,6 @@
 }
 
 .jobs-jobCard-container {
-    display: flex;
     justify-content: center;
     padding: 20px;
 }
@@ -53,4 +52,9 @@ p {
 h5 {
     position: relative;
     top: 25%;
+}
+
+.item {
+    flex: 1 0 20%;
+    max-width: 20%;
 }

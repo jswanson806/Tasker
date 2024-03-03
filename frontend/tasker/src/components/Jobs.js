@@ -6,7 +6,9 @@ import CreateJob from './CreateJob.js';
 import {
     Spinner, 
     Button, 
-    Modal
+    Modal,
+    Row,
+    Container
 } from "reactstrap";
 import "./styles/Jobs.css";
 
@@ -378,11 +380,18 @@ const Jobs = () => {
             </Modal>
             
             {!showCreateJob && (
-                <div className="jobs-jobCard-container">
-                    <div class="row">
+                <Container>
+                    <Row 
+                        xs={1} 
+                        sm={2} 
+                        md={3} 
+                        lg={4} 
+                        xl={5} 
+                        className="justify-content-center"
+                    >
                         {jobCards}
-                    </div>
-                </div>
+                    </Row>
+                </Container>
             )}
 
             {notFound && (

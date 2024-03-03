@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import JobDetails from './JobDetails.js';
 import JobCompletionForm from './JobCompletionForm.js';
 import TaskerApi from '../api.js';
-import { Modal, Card, Badge } from 'reactstrap';
+import { Modal, Card, Badge, Col } from 'reactstrap';
 
 const JobCard = ({user, applications, job, getCurrUser, triggerEffect}) => {
 
@@ -225,14 +225,12 @@ const JobCard = ({user, applications, job, getCurrUser, triggerEffect}) => {
 
     return (
         
-        <div class="col d-flex align-items-center justify-content-center" >
+        <Col className="item d-flex justify-content-center align-items-stretch">
             <Card 
                 body
-                className="text-center"
+                className="flex-fill text-center"
                 style={{
-                    position: 'relative',
-                    width: '15rem',
-                    height: '15rem'
+                    height: '15rem',
                 }}
                 onClick={toggleDetails}
               >
@@ -282,7 +280,7 @@ const JobCard = ({user, applications, job, getCurrUser, triggerEffect}) => {
                     </div>
                 </Modal>
             </Card>
-        </div>
+        </Col>
         
         
     )
