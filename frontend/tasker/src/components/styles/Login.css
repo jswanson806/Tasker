@@ -1,40 +1,68 @@
 .login-container {
   display: flex;
+  align-items: stretch;
+  height: 100vh; /* Make the login container full height */
+}
+
+.login-message-container,
+.login-form-container {
+  flex: 1; /* Each container takes up half of the available space */
+}
+
+.login-message-container {
+  display: block;
+  background-color: #040404; /* Set a background color for the image container */
+  padding: 20px;
+  padding-bottom: 40px
+}
+
+.login-message-container p {
+  display: relative;
+  font-size: 60px;
+  color: whitesmoke; /* Ensure the image doesn't exceed its container */
+  margin-bottom: auto;
+
+}
+
+.login-form-container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  padding-bottom: 40%;
-  background-color: #f2f2f2;
+  padding: 20px; /* Add padding for spacing */
+  margin-bottom: 25vh;
 }
 
-.login-centered-card {
-  width: 300px; 
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add a drop shadow */
-  background-color: #fff; /* Card background color */
+.login-button-container {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
 }
 
-.login-centered-card h5 {
+.login-signup-message-container {
   text-align: center;
-  margin-bottom: 20px; /* Add spacing below the title */
+  padding-top: 15px;
 }
 
-.login-centered-card input {
-  width: 100%;
-  padding: 10px;
+.login-signup-message-container p {
+  margin-bottom: auto;
+}
+
+.login-header {
+  display: flex;
+  justify-content: center;
   margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-
 }
 
-.login-centered-card button.login-button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+/* Media query for smaller screens */
+@media screen and (max-width: 768px) {
+  .login-container {
+    flex-direction: column; /* Stack elements vertically on smaller screens */
+  }
 
+  .login-form-container {
+    flex: 1; /* Take up the entire width of the screen */
+    padding: 20px; /* Add padding for spacing */
+  }
 }
-
