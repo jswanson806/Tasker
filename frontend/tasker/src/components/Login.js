@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import TaskerApi from "../api.js";
 import { UserContext } from "../helpers/UserContext.js";
 import {Button, Form, FormText} from "reactstrap";
+import todo_list from "../images/todo_list.jpg";
 import "./styles/Login.css";
 
 
@@ -80,37 +81,46 @@ const Login = () => {
 
     return (
         <div className="login-container">
+            <div className="login-message-container">
+                <p>Welcome Back to Tasker</p>
+            </div>
             
-                <div className="login-centered-card">
-                    
-                    <h5>Login</h5>
-
-                    <Form onSubmit={handleSubmit}>
-                        <FormText htmlFor="email">Email</FormText>
-                        <input
-                            id="email"
-                            type="text"
-                            name="email"
-                            placeholder="Email Address"
-                            data-testid="login-form-email-input"
-                            value={FormData.email}
-                            onChange={handleChange}
-                        />
-                        <FormText htmlFor="password">Password</FormText>
-                        <input
-                            id="password"
-                            type="password"
-                            name="password"
-                            placeholder="********"
-                            data-testid="login-form-password-input"
-                            value={FormData.password}
-                            onChange={handleChange}
-                        />
-                        <Button className="login-button" type="submit" color="info" data-testid="login-form-button">Login</Button>
-                    </Form>
-                    
+            <div className="login-form-container">
+            
+                <div className="login-header">
+                    <h3>Login</h3>
                 </div>
-
+                
+                <form onSubmit={handleSubmit}>
+                    <FormText htmlFor="email">Email</FormText>
+                    <input
+                        id="email"
+                        type="text"
+                        name="email"
+                        placeholder="Email Address"
+                        data-testid="login-form-email-input"
+                        value={FormData.email}
+                        onChange={handleChange}
+                    />
+                    <FormText htmlFor="password">Password</FormText>
+                    <input
+                        id="password"
+                        type="password"
+                        name="password"
+                        placeholder="********"
+                        data-testid="login-form-password-input"
+                        value={FormData.password}
+                        onChange={handleChange}
+                    />
+                    <div className="login-button-container">
+                        <Button className="login-button" type="submit" color="info" data-testid="login-form-button">Login</Button>
+                    </div>
+                    <div className="login-signup-message-container">
+                        <p>Not yet registered?</p>
+                        <a href="/signup">Sign Up</a>
+                    </div>
+                </form>
+            </div>
         </div>
     );
 }
