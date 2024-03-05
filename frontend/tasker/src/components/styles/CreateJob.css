@@ -1,44 +1,41 @@
-.createJob-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 0 2em;
-  }
-  
-  .createJob-centered-card {
-    max-height: 700px;
-    width: 100%;
-    margin: 0 auto;
-    background-color: #fff;
-    border-radius: 20px;
-    padding: 20px;
-    transition: max-height 0.2s ease-in-out;
-  }
-  
-  .createJob-centered-card h5 {
-    text-align: center;
-    margin-bottom: 20px; /* Add spacing below the title */
-  }
-  
-  .createJob-centered-card input {
-    width: 100%;
-    padding: 2%;
-    margin-bottom: 10px;
-    border-radius: 5px;
-  }
-  
-  .createJob-centered-card .button {
-    margin: 2px;
-    width: 100%;
-    padding: 10px;
-    color: #fff; /* Button text color */
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  
-  }
-  
-  .modal-content {
-    background-color: transparent !important;
-    border: none !important;
-  }
+.custom-modal {
+  position: fixed;
+  top: 0;
+  right: 0; /* Initially position off-screen to the right */
+  max-width: 400px; /* Set a maximum width for the drawer */
+  height: 100%;
+  background-color: white;
+  z-index: 1000;
+  overflow-x: hidden;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out; /* Add transition for smooth sliding animation */
+}
+
+.custom-modal.show {
+  transform: translateX(0%) !important; /* Slide in from the right when modal is open */
+}
+
+.modal-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+h2 {
+  text-align: center;
+}
+
+.button-container {
+  text-align: center;
+}
