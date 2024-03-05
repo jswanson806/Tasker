@@ -7,6 +7,8 @@ import {
     Spinner, 
     Button, 
     Modal,
+    ModalHeader,
+    ModalBody,
     Row,
     Container
 } from "reactstrap";
@@ -256,7 +258,7 @@ const Jobs = () => {
     }
  
     const toggleCreateJob = () => {
-        setShowCreateJob(true);
+        setShowCreateJob(!showCreateJob);
     }
 
     const renderHeader = (pageHeader) => {
@@ -353,33 +355,30 @@ const Jobs = () => {
                 {header}
             </div>
 
-            {!showCreateJob && (
+            
                 <div className="jobs-buttons-container">
                     {buttons}
                 </div>
-            )}
+            
                 
-            <Modal 
-                isOpen={showCreateJob} 
-                toggle={() => setShowCreateJob(true)} 
-                style={{position: "relative", marginTop: "20%"}}
-            >
-                <CreateJob 
+            
+            
+                <CreateJob
+                    isOpen={showCreateJob} 
+                    toggle={toggleCreateJob}
                     onCreate={() => 
                     {
                         setTriggerEffect(!triggerEffect);
-                        setShowCreateJob(false);
+                        toggleCreateJob();
                     }}
                     onClose={() => 
                     {
-                        setShowCreateJob(false);
-                        setTriggerEffect(!triggerEffect)
+                        toggleCreateJob();
                     }}
                 /> 
             
-            </Modal>
             
-            {!showCreateJob && (
+            
                 <Container>
                     <Row 
                         xs={1} 
@@ -392,7 +391,7 @@ const Jobs = () => {
                         {jobCards}
                     </Row>
                 </Container>
-            )}
+            
 
             {notFound && (
                 <span className="jobs-notFound-message">It looks like no jobs were found.</span>
