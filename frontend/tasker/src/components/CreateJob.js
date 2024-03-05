@@ -1,10 +1,10 @@
 import React, { useState, useContext, useRef } from "react";
 import { UserContext } from "../helpers/UserContext";
 import TaskerApi from "../api";
-import { Button, Input, Form, FormGroup, Label, FormText, FormFeedback} from "reactstrap";
+import { Button, Input, Form, FormGroup, Label, FormText, FormFeedback, Modal, ModalBody, ModalHeader} from "reactstrap";
 import "./styles/CreateJob.css";
 
-const CreateJob = ({onCreate, onClose}) => {
+const CreateJob = ({onCreate, onClose, isOpen}) => {
 
     const INITIAL_STATE = {
         title: '',
@@ -15,7 +15,6 @@ const CreateJob = ({onCreate, onClose}) => {
     }
 
     const [formData, setFormData] = useState(INITIAL_STATE);
-    const [visible, setVisible] = useState(true);
     const [isValid, setIsValid] = useState(true);
     const [imageFile, setImageFile] = useState('');
 
@@ -72,7 +71,6 @@ const CreateJob = ({onCreate, onClose}) => {
             await TaskerApi.uploadBeforeImage(form, JSON.parse(user).id,);
 
             setFormData(INITIAL_STATE);
-            setVisible(false);
             onCreate();
         } catch (error) {
             console.error('Error:', error);
@@ -95,79 +93,79 @@ const CreateJob = ({onCreate, onClose}) => {
     };
 
     return (
-        <div className="createJob-container" data-testid="createJob-form-container">
-          {visible && (
-            <div className="createJob-centered-card">
-              <Form onSubmit={handleSubmit}>
-                <FormGroup>
-                    <h5>Create Job</h5>
-                    <Label for="title">Job Title:</Label>
-                    <Input
-                      id="title"
-                      type="text"
-                      name="title"
-                      placeholder="Job Title"
-                      data-testid="createJob-form-title-input"
-                      value={FormData.title}
-                      onChange={handleChange}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label for="body">Job Description:</Label>
-                    <Input
-                      type="textarea"
-                      id="body"
-                      name="body"
-                      placeholder="Briefly describe the job..."
-                      data-testid="createJob-form-body-input"
-                      value={FormData.body}
-                      onChange={handleChange}
-                      rows={1}
-                      style={{resize: 'none', overflowY: 'hidden'}}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label for="address">Address:</Label>
-                    <Input
-                      id="address"
-                      type="text"
-                      name="address"
-                      placeholder="Address"
-                      data-testid="createJob-form-address-input"
-                      value={FormData.address}
-                      onChange={handleChange}
-                    />
-                  <FormFeedback>Please enter an address.</FormFeedback>
-                </FormGroup>
-                <FormGroup>
-                    <Label for="imageInput">
-                        Upload "Before" Image
-                    </Label>
-                    <Input
-                        id="imageInput"
-                        type="file"
-                        name="image"
-                        onChange={handleUpload}
-                        valid={isValid}
-                        invalid={!isValid}
-                    />
+      <div className={`custom-modal ${isOpen ? 'show' : ''}`}>
+        <div className="modal-content">
+          
+          <h2>Create a New Job</h2>
 
-                    {!isValid 
-                        ? 
-                        <FormFeedback >Invalid file type</FormFeedback> 
-                        : 
-                        <FormFeedback valid>Valid file type</FormFeedback>
-                    }
-                    <FormText>Supported File Types: jpg, png</FormText>
-                </FormGroup>
-
-                <Button className="button" color="info" type="submit" data-testid="createJob-submit-button">Post Job</Button>
-                <Button className="button" color="danger" type="submit" data-testid="createJob-close-button" onClick={onClose}>Close</Button>
-              </Form>
-            </div>
-          )}
+            <Form onSubmit={handleSubmit}>
+              <FormGroup>
+                  <Label for="title">Job Title:</Label>
+                  <Input
+                    id="title"
+                    type="text"
+                    name="title"
+                    placeholder="Job Title"
+                    data-testid="createJob-form-title-input"
+                    value={FormData.title}
+                    onChange={handleChange}
+                  />
+              </FormGroup>
+              <FormGroup>
+                  <Label for="body">Job Description:</Label>
+                  <Input
+                    type="textarea"
+                    id="body"
+                    name="body"
+                    placeholder="Briefly describe the job..."
+                    data-testid="createJob-form-body-input"
+                    value={FormData.body}
+                    onChange={handleChange}
+                    rows={1}
+                    style={{resize: 'none', overflowY: 'hidden'}}
+                  />
+              </FormGroup>
+              <FormGroup>
+                  <Label for="address">Address:</Label>
+                  <Input
+                    id="address"
+                    type="text"
+                    name="address"
+                    placeholder="Address"
+                    data-testid="createJob-form-address-input"
+                    value={FormData.address}
+                    onChange={handleChange}
+                  />
+                <FormFeedback>Please enter an address.</FormFeedback>
+              </FormGroup>
+              <FormGroup>
+                  <Label for="imageInput">
+                      Upload "Before" Image
+                  </Label>
+                  <Input
+                      id="imageInput"
+                      type="file"
+                      name="image"
+                      onChange={handleUpload}
+                      valid={isValid}
+                      invalid={!isValid}
+                  />
+                  {!isValid 
+                      ? 
+                      <FormFeedback >Invalid file type</FormFeedback> 
+                      : 
+                      <FormFeedback valid>Valid file type</FormFeedback>
+                  }
+                  <FormText>Supported File Types: jpg, png</FormText>
+              </FormGroup>
+              <div className="button-container">
+              <Button className="button" color="info" type="submit" data-testid="createJob-submit-button">Post Job</Button>
+              <Button className="button" color="danger" type="submit" data-testid="createJob-close-button" onClick={onClose}>Close</Button>
+              </div>
+            </Form>
+          </div>
         </div>
-      );
-    }
+    );
+  }
 
 export default CreateJob;
