@@ -1,43 +1,78 @@
 .signup-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    padding-bottom: 30%;
-    background-color: #f2f2f2;
+  display: flex;
+  align-items: stretch;
+  height: 100vh; /* Make the login container full height */
+}
+
+.signup-message-container,
+.signup-form-container {
+  flex: 1; /* Each container takes up half of the available space */
+}
+
+.signup-message-container {
+  display: block;
+  background-color: #040404; /* Set a background color for the image container */
+  padding: 20px;
+  padding-bottom: 15vh;
+  margin-top: -50px;
+}
+
+.signup-message-header{
+  display: relative;
+  font-size: 60px;
+  color: whitesmoke; /* Ensure the image doesn't exceed its container */
+  margin-bottom: auto;
+}
+
+.signup-message-details {
+  display: relative;
+  font-size: 30px;
+  color: whitesmoke;
+  margin-bottom: auto;
+}
+
+.signup-form-container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  padding: 20px; /* Add padding for spacing */
+  margin-bottom: 25vh;
+}
+
+.signup-type-button-container .btn {
+  margin: 5px;
+}
+
+.signup-button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.signup-login-message-container {
+  text-align: center;
+  padding-top: 15px;
+}
+
+.signup-login-message-container p {
+  margin-bottom: auto;
+}
+
+.signup-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 768px) {
+  .signup-container {
+    flex-direction: column; /* Stack elements vertically on smaller screens */
   }
-  
-  .signup-centered-card {
-    width: 300px; 
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add a drop shadow */
-    background-color: #fff; /* Card background color */
+
+  .signup-form-container {
+    flex: 1; /* Take up the entire width of the screen */
+    padding: 20px; /* Add padding for spacing */
   }
-  
-  .signup-centered-card h5 {
-    text-align: center;
-    margin-bottom: 20px; /* Add spacing below the title */
-  }
-  
-  .signup-centered-card input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  
-  }
-  
-  .signup-centered-card button.signup-button {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff; /* Button background color */
-    color: #fff; /* Button text color */
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  
-  }
-  
-  
+}

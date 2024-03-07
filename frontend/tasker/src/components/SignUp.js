@@ -185,27 +185,28 @@ const SignUp = () => {
 
     return (
         <div className="signup-container">
-            <div className="signup-centered-card">
+            <div className="signup-message-container">
 
                 {/* render title depending on state of isWorker */}
-                <h5>{!isWorker ? 'Sign Up to Post Jobs' : 'Sign Up to Find Jobs'}</h5>
+                <p className="signup-message-header">Welcome to Tasker!</p>
+                <p className="signup-message-details">
+                    Post Jobs as a {<p style={{color: "#14A2B8"}}>User</p>} Find Jobs as a {<p style={{color: "#FFC008"}}>Worker</p>}
+                </p>
+            </div>
 
+            <div className="signup-form-container">
+                <div className="signup-header">
+                    <h3>Sign Up</h3>
+                </div>
                 {/* render button to toggle between user and worker signup */}
-                <ButtonGroup className="my-2">
-                  <UncontrolledDropdown>
-                    <DropdownToggle caret>
-                      {isWorker ? <>Worker</> : <>User</>}
-                    </DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem onClick={() => setIsWorker(true)}>
+                    <div className="signup-type-button-container">
+                      <Button type="radio" color="warning" onClick={() => setIsWorker(true)}>
                         Worker
-                      </DropdownItem>
-                      <DropdownItem onClick={() => setIsWorker(false)}>
+                      </Button>
+                      <Button color="info" onClick={() => setIsWorker(false)}>
                         User
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
-                </ButtonGroup>
+                      </Button>
+                    </div>
                 
                 {/* form for registering */}
                 <Form onSubmit={handleSubmit}>
@@ -267,15 +268,21 @@ const SignUp = () => {
                         id="password"
                         type="password"
                         name="password"
-                        placeholder=""
+                        placeholder="********"
                         data-testid="signup-form-password-input"
                         value={formData.password}
                         onChange={handleChange}
                     />
                     {errors && errors.password && <span className="text-danger">{errors.password}</span>}
                     </FormGroup>
-                    <Button className="signup-button" color="info" type="submit" data-testid="signup-form-button">Signup</Button>
-                    {errors && errors.api && <span className="text-danger">{errors.api}</span>}
+                    <div className="signup-button-container">
+                        <Button className="signup-button" color="info" type="submit" data-testid="signup-form-button">Signup</Button>
+                        {errors && errors.api && <span className="text-danger">{errors.api}</span>}
+                    </div>
+                    <div className="login-signup-message-container">
+                        <p>Already registered?</p>
+                        <a href="/login">Login</a>
+                    </div>
                 </Form>
                 
             </div>

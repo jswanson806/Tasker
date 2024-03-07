@@ -37,7 +37,6 @@
 .login-button-container {
   display: flex;
   justify-content: center;
-  padding: 10px;
 }
 
 .login-signup-message-container {
