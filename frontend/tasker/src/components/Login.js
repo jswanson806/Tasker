@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { TokenContext } from '../helpers/TokenContext.js';
 import { useNavigate } from "react-router-dom";
 import TaskerApi from "../api.js";
@@ -22,7 +22,14 @@ const Login = () => {
     const navigate = useNavigate();
 
     const { updateToken } = useContext(TokenContext);
-    const { updateUser } = useContext(UserContext);
+    const { user, updateUser } = useContext(UserContext);
+
+    useEffect(() => {
+        if(user !== ''){
+            // redirect to dashboard after user 
+            navigate("/jobs");
+        }
+    }, [user]);
 
     const INITIAL_STATE = {
         email: '',
@@ -70,8 +77,7 @@ const Login = () => {
 
             // clear the form data
             setFormData(INITIAL_STATE);
-            // redirect to jobs
-            navigate("/jobs");
+
         } catch(err) {
             return err;
         }

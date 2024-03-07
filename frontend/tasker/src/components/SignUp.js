@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { TokenContext } from "../helpers/TokenContext";
 import { UserContext } from "../helpers/UserContext";
 import TaskerApi from "../api";
-import {Form, Input, Label, FormGroup, Button, ButtonGroup, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem} from "reactstrap";
+import {Form, Input, Label, FormGroup, Button} from "reactstrap";
 import "./styles/SignUp.css";
 
 
@@ -29,7 +29,7 @@ const SignUp = () => {
     
 
     useEffect(() => {
-        if(user){
+        if(user !== ''){
             // redirect to dashboard
             navigate("/jobs");
         }
@@ -190,7 +190,7 @@ const SignUp = () => {
                 {/* render title depending on state of isWorker */}
                 <p className="signup-message-header">Welcome to Tasker!</p>
                 <p className="signup-message-details">
-                    Post Jobs as a {<p style={{color: "#14A2B8"}}>User</p>} Find Jobs as a {<p style={{color: "#FFC008"}}>Worker</p>}
+                    Post Jobs as a {<span style={{color: "#14A2B8"}}>User</span>}<br></br> Find Jobs as a {<span style={{color: "#FFC008"}}>Worker</span>}
                 </p>
             </div>
 
