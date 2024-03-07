@@ -184,7 +184,7 @@ describe('TaskerApi', () => {
       const requestSpy = jest.spyOn(TaskerApi, 'request');
       requestSpy.mockResolvedValue(responseData);
 
-      const res = await TaskerApi.findAllAvailableJobs();
+      const res = await TaskerApi.getAllAvailableJobs();
 
       expect(res).toEqual({ allJobs: [
         {

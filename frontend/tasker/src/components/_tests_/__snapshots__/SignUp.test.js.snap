@@ -6,50 +6,56 @@ exports[`signup form smoke and snapshot tests should match snapshot 1`] = `
     class="signup-container"
   >
     <div
-      class="signup-centered-card"
+      class="signup-message-container"
     >
-      <h5>
-        Sign Up to Post Jobs
-      </h5>
-      <div
-        class="my-2 btn-group"
-        role="group"
+      <p
+        class="signup-message-header"
       >
-        <div
-          class="dropdown"
+        Welcome to Tasker!
+      </p>
+      <p
+        class="signup-message-details"
+      >
+        Post Jobs as a 
+        <span
+          style="color: rgb(20, 162, 184);"
         >
-          <button
-            aria-expanded="false"
-            aria-haspopup="true"
-            class="dropdown-toggle btn btn-secondary"
-            type="button"
-          >
-            User
-          </button>
-          <div
-            aria-hidden="true"
-            class="dropdown-menu"
-            role="menu"
-            tabindex="-1"
-          >
-            <button
-              class="dropdown-item"
-              role="menuitem"
-              tabindex="0"
-              type="button"
-            >
-              Worker
-            </button>
-            <button
-              class="dropdown-item"
-              role="menuitem"
-              tabindex="0"
-              type="button"
-            >
-              User
-            </button>
-          </div>
-        </div>
+          User
+        </span>
+        <br />
+         Find Jobs as a 
+        <span
+          style="color: rgb(255, 192, 8);"
+        >
+          Worker
+        </span>
+      </p>
+    </div>
+    <div
+      class="signup-form-container"
+    >
+      <div
+        class="signup-header"
+      >
+        <h3>
+          Sign Up
+        </h3>
+      </div>
+      <div
+        class="signup-type-button-container"
+      >
+        <button
+          class="btn btn-warning"
+          type="radio"
+        >
+          Worker
+        </button>
+        <button
+          class="btn btn-info"
+          type="button"
+        >
+          User
+        </button>
       </div>
       <form
         class=""
@@ -144,18 +150,34 @@ exports[`signup form smoke and snapshot tests should match snapshot 1`] = `
             data-testid="signup-form-password-input"
             id="password"
             name="password"
-            placeholder=""
+            placeholder="********"
             type="password"
             value=""
           />
         </div>
-        <button
-          class="signup-button btn btn-info"
-          data-testid="signup-form-button"
-          type="submit"
+        <div
+          class="signup-button-container"
         >
-          Signup
-        </button>
+          <button
+            class="signup-button btn btn-info"
+            data-testid="signup-form-button"
+            type="submit"
+          >
+            Signup
+          </button>
+        </div>
+        <div
+          class="login-signup-message-container"
+        >
+          <p>
+            Already registered?
+          </p>
+          <a
+            href="/login"
+          >
+            Login
+          </a>
+        </div>
       </form>
     </div>
   </div>

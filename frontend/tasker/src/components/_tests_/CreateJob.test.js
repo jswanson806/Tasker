@@ -11,6 +11,7 @@ const createJob = jest.spyOn(TaskerApi, 'createJob')
 
 const toggleCreateJob = jest.fn();
 const onCreate = jest.fn();
+const onClose = jest.fn();
 const uploadBeforeImage = jest.spyOn(TaskerApi, 'uploadBeforeImage');
 
 describe("createJob form smoke and snapshot tests", () => {
@@ -134,8 +135,8 @@ describe("Handles form input correctly", () => {
 
     });
 
-    it('should call onCreate to hide the form after submitting', async () => {
-        expect.assertions(7);
+    it('should call onCreate after submitting', async () => {
+        expect.assertions(1);
 
         await act(async () => {render(
             <UserContext.Provider value={userValue}>
@@ -151,10 +152,6 @@ describe("Handles form input correctly", () => {
         fireEvent.change(bodyInput, {target: {value: "test body"}});
         fireEvent.change(addressInput, {target: {value: "test address"}});
 
-        expect(titleInput).toBeInTheDocument();
-        expect(bodyInput).toBeInTheDocument();
-        expect(addressInput).toBeInTheDocument();
-
         const btn = screen.getByTestId("createJob-submit-button");
 
         // submit the form
@@ -163,33 +160,27 @@ describe("Handles form input correctly", () => {
         });
 
         expect(onCreate).toHaveBeenCalledTimes(1);
-
-        expect(titleInput).not.toBeInTheDocument();
-        expect(bodyInput).not.toBeInTheDocument();
-        expect(addressInput).not.toBeInTheDocument();
-
     });
 
 });
 
-describe('closing form', () => {
+describe('closing form should call onClose', () => {
     it('works', async () => {
-        expect.assertions(2);
+        expect.assertions(1);
 
         await act(async () => {render(
             <UserContext.Provider value={userValue}>
-                <CreateJob onCreate={onCreate}/>
+                <CreateJob onCreate={onCreate} onClose={onClose}/>
             </UserContext.Provider>
         )
         });
 
         const closeBtn = screen.queryByTestId("createJob-close-button");
-        expect(closeBtn).toBeInTheDocument();
 
         await act(async () => {
             fireEvent.click(closeBtn);
         })
 
-        expect(closeBtn).not.toBeInTheDocument();
+        expect(onClose).toHaveBeenCalledTimes(1);
     })
 })

@@ -622,7 +622,7 @@ describe('tests the jobCard integration for users', () => {
 
     test('should render job details', async () => {
 
-        // expect.assertions(3);
+        expect.assertions(3);
         
 
         let renderResult;
@@ -704,6 +704,24 @@ describe('tests the createJob function integration', () => {
         expect.assertions(1);
 
         getSingleUser.mockResolvedValueOnce({user: {id: 1, isWorker: true}});
+        getAllAvailableJobs.mockResolvedValueOnce({allJobs: [
+            {
+                id: 1, 
+                title: 'testing jobs 1', 
+                body: 'job 1 body for testing the job card', 
+                postedBy: 1, 
+                status: 'active',
+                applicants: []
+            }, 
+            {
+                id: 2, 
+                title: 'testing jobs 2', 
+                body: 'job 2 body', 
+                postedBy: 1, 
+                status: 'pending',
+                applicants: []
+            }
+        ]});
         
         let renderResult;
 

@@ -6,49 +6,86 @@ exports[`login form smoke and snapshot tests should match snapshot 1`] = `
     class="login-container"
   >
     <div
-      class="login-centered-card"
+      class="login-message-container"
     >
-      <h5>
-        Login
-      </h5>
+      <p>
+        Welcome Back to Tasker!
+      </p>
+    </div>
+    <div
+      class="login-form-container"
+    >
+      <div
+        class="login-header"
+      >
+        <h3>
+          Login
+        </h3>
+      </div>
       <form
         class=""
       >
-        <small
-          class="form-text text-muted"
-          for="email"
+        <div
+          class="form-group"
         >
-          Email
-        </small>
-        <input
-          data-testid="login-form-email-input"
-          id="email"
-          name="email"
-          placeholder="Email Address"
-          type="text"
-          value=""
-        />
-        <small
-          class="form-text text-muted"
-          for="password"
+          <label
+            class=""
+            for="email"
+          >
+            Email
+          </label>
+          <input
+            class="form-control"
+            data-testid="login-form-email-input"
+            id="email"
+            name="email"
+            placeholder="Email Address"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="form-group"
         >
-          Password
-        </small>
-        <input
-          data-testid="login-form-password-input"
-          id="password"
-          name="password"
-          placeholder="********"
-          type="password"
-          value=""
-        />
-        <button
-          class="login-button btn btn-info"
-          data-testid="login-form-button"
-          type="submit"
+          <label
+            class=""
+            for="password"
+          >
+            Password
+          </label>
+          <input
+            class="form-control"
+            data-testid="login-form-password-input"
+            id="password"
+            name="password"
+            placeholder="********"
+            type="password"
+            value=""
+          />
+        </div>
+        <div
+          class="login-button-container"
         >
-          Login
-        </button>
+          <button
+            class="login-button btn btn-info"
+            data-testid="login-form-button"
+            type="submit"
+          >
+            Login
+          </button>
+        </div>
+        <div
+          class="login-signup-message-container"
+        >
+          <p>
+            Not yet registered?
+          </p>
+          <a
+            href="/signup"
+          >
+            Sign Up
+          </a>
+        </div>
       </form>
     </div>
   </div>

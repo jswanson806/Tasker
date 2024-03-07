@@ -17,85 +17,180 @@ exports[`smoke and snapshot tests should match snapshot 1`] = `
     <div
       class="jobs-buttons-container"
     >
-      <div>
-        <div
-          class="btn-group"
-          role="group"
+      <div
+        class="jobs-button-container"
+      >
+        <button
+          class="jobs-button btn btn-info"
+          data-testid="available-jobs-menu-item"
+          type="button"
         >
-          <div
-            class="dropdown"
-          >
-            <button
-              aria-expanded="false"
-              aria-haspopup="true"
-              class="dropdown-toggle btn btn-info"
-              type="button"
-            >
-              Sort
-            </button>
-            <div
-              aria-hidden="true"
-              class="dropdown-menu"
-              role="menu"
-              tabindex="-1"
-            >
-              <button
-                class="dropdown-item"
-                data-testid="available-jobs-menu-item"
-                role="menuitem"
-                tabindex="0"
-                type="button"
-              >
-                Available Jobs
-              </button>
-              <button
-                class="dropdown-item"
-                data-testid="applications-menu-item"
-                role="menuitem"
-                tabindex="0"
-                type="button"
-              >
-                Applications
-              </button>
-              <button
-                class="dropdown-item"
-                data-testid="my-jobs-menu-item"
-                role="menuitem"
-                tabindex="0"
-                type="button"
-              >
-                My Jobs
-              </button>
-            </div>
-          </div>
-        </div>
+          Available Jobs
+        </button>
+        <button
+          class="jobs-button btn btn-info"
+          data-testid="applications-menu-item"
+          type="button"
+        >
+          Applications
+        </button>
+        <button
+          class="jobs-button btn btn-info"
+          data-testid="my-jobs-menu-item"
+          type="button"
+        >
+          My Jobs
+        </button>
       </div>
     </div>
     <div
-      class="jobs-jobCard-container"
+      class="custom-modal "
     >
       <div
-        class="row row-cols-sm-1 row-cols-md-4"
+        class="modal-content"
       >
-        <div
-          class="col"
+        <h2>
+          Create a New Job
+        </h2>
+        <form
+          class=""
         >
           <div
-            class="col-sm-5"
+            class="form-group"
           >
-            <div
-              class="text-center card card-body"
-              style="width: 15rem;"
+            <label
+              class=""
+              for="title"
             >
-              <div />
+              Job Title:
+            </label>
+            <input
+              class="form-control"
+              data-testid="createJob-form-title-input"
+              id="title"
+              name="title"
+              placeholder="Job Title"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="form-group"
+          >
+            <label
+              class=""
+              for="body"
+            >
+              Job Description:
+            </label>
+            <textarea
+              class="form-control"
+              data-testid="createJob-form-body-input"
+              id="body"
+              name="body"
+              placeholder="Briefly describe the job..."
+              rows="1"
+              style="resize: none; overflow-y: hidden;"
+            />
+          </div>
+          <div
+            class="form-group"
+          >
+            <label
+              class=""
+              for="address"
+            >
+              Address:
+            </label>
+            <input
+              class="form-control"
+              data-testid="createJob-form-address-input"
+              id="address"
+              name="address"
+              placeholder="Address"
+              type="text"
+              value=""
+            />
+            <div
+              class="invalid-feedback"
+            >
+              Please enter an address.
+            </div>
+          </div>
+          <div
+            class="form-group"
+          >
+            <label
+              class=""
+              for="imageInput"
+            >
+              Upload "Before" Image
+            </label>
+            <input
+              aria-invalid="false"
+              class="is-valid form-control-file"
+              id="imageInput"
+              name="image"
+              type="file"
+            />
+            <div
+              class="valid-feedback"
+            >
+              Valid file type
+            </div>
+            <small
+              class="form-text text-muted"
+            >
+              Supported File Types: jpg, png
+            </small>
+          </div>
+          <div
+            class="button-container"
+          >
+            <button
+              class="button btn btn-info"
+              data-testid="createJob-submit-button"
+              type="submit"
+            >
+              Post Job
+            </button>
+            <button
+              class="button btn btn-danger"
+              data-testid="createJob-close-button"
+              type="submit"
+            >
+              Close
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div
+      class="container"
+    >
+      <div
+        class="justify-content-center row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5"
+      >
+        <div
+          class="item d-flex justify-content-center align-items-stretch col"
+        >
+          <div
+            class="flex-fill text-center card card-body"
+            style="height: 15rem;"
+          >
+            <div />
+            <div
+              class="jobCard-card"
+            >
+              <h5>
+                testing jobs 2
+              </h5>
+              <p>
+                job 2 body...
+              </p>
               <div
-                class="jobCard-card"
+                class="jobCard-badge-container"
               >
-                <h5
-                  class="card-title"
-                >
-                  testing jobs 2
-                </h5>
                 <div
                   class="jobCard-badge"
                 >
@@ -106,11 +201,6 @@ exports[`smoke and snapshot tests should match snapshot 1`] = `
                     Applied
                   </span>
                 </div>
-                <p
-                  class="card-text"
-                >
-                  job 2 body...
-                </p>
               </div>
             </div>
           </div>

@@ -3,21 +3,20 @@
 exports[`createJob form smoke and snapshot tests should match snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="createJob-container"
-    data-testid="createJob-form-container"
+    class="custom-modal "
   >
     <div
-      class="createJob-centered-card"
+      class="modal-content"
     >
+      <h2>
+        Create a New Job
+      </h2>
       <form
         class=""
       >
         <div
           class="form-group"
         >
-          <h5>
-            Create Job
-          </h5>
           <label
             class=""
             for="title"
@@ -104,20 +103,24 @@ exports[`createJob form smoke and snapshot tests should match snapshot 1`] = `
             Supported File Types: jpg, png
           </small>
         </div>
-        <button
-          class="button btn btn-info"
-          data-testid="createJob-submit-button"
-          type="submit"
+        <div
+          class="button-container"
         >
-          Post Job
-        </button>
-        <button
-          class="button btn btn-danger"
-          data-testid="createJob-close-button"
-          type="submit"
-        >
-          Close
-        </button>
+          <button
+            class="button btn btn-info"
+            data-testid="createJob-submit-button"
+            type="submit"
+          >
+            Post Job
+          </button>
+          <button
+            class="button btn btn-danger"
+            data-testid="createJob-close-button"
+            type="submit"
+          >
+            Close
+          </button>
+        </div>
       </form>
     </div>
   </div>
