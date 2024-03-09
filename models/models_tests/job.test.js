@@ -24,112 +24,55 @@ afterAll(commonAfterAll);
 
 //************ Tests ************
 
-describe('find all jobs', function() {
-    test('works', async function() {
+describe('testing job model functions for querying database', function() {
+    test('only returns job where status is pending', async function() {
 
-        const result = await Job.findAll();
-        // length of returned result should be 4 to match test data
-        expect(result.length).toBe(4);
-    })
-})
-
-describe('find jobs by filter ', function() {
-    test('works - status active', async function() {
-        const data = {
-            status: 'active'
-        }
-
-        const result = await Job.findAndFilterJobs(data);
+        const result = await Job.getAllAvailableJobs();
         // length of returned result should be 1 to match test data
         expect(result.length).toBe(1);
     })
 
-    test('works - status pending', async function() {
-        const data = {
-            status: 'pending'
-        }
+    test('only returns jobs posted by the current user', async function() {
 
-        const result = await Job.findAndFilterJobs(data);
+        const result = await Job.getAllJobsPostedByUser(testUserIds[1]);
         // length of returned result should be 1 to match test data
         expect(result.length).toBe(1);
     })
 
-    test('works - status complete', async function() {
-        const data = {
-            status: 'complete'
-        }
+    test('only returns jobs where status is pending review', async function() {
 
-        const result = await Job.findAndFilterJobs(data);
-        // length of returned result should be 2 to match test data
-        expect(result.length).toBe(2);
+        const result = await Job.getAllPendingReviewUserJobs(testUserIds[2]);
+        // length of returned result should be 1 to match test data
+        expect(result.length).toBe(1);
     })
 
-    test('works - assigned_to', async function() {
-        const data = {
-            assigned_to: testUserIds[1]
-        }
+    test('only returns jobs where assigned_to is current user and status is active', async function() {
 
-        const result = await Job.findAndFilterJobs(data);
-        // length of returned result should be 4 to match test data
-        expect(result.length).toBe(3);
+        const result = await Job.getAllAssignedWorkerJobs(testUserIds[1]);
+        // length of returned result should be 1 to match test data
+        expect(result.length).toBe(1);
     })
 
-    test('works - posted_by', async function() {
-        const data = {
-            posted_by: testUserIds[0]
-        }
-
-        const result = await Job.findAndFilterJobs(data);
-        // length of returned result should be 2 to match test data
-        expect(result.length).toBe(2);
-    })
-
-    test('works - multiple filters', async function() {
-        const data = {
-            assigned_to: testUserIds[1],
-            status: 'complete'
-        }
-
-        const result = await Job.findAndFilterJobs(data);
-        // length of returned result should be 2 to match test data
-        expect(result.length).toBe(2);
-    })
-
-    test('works - no data throws error', async function() {
+    test('no id passed to getAllAppliedWorkerJobs throws error', async function() {
 
         try{
-            await Job.findAndFilterJobs();
+            await Job.getAllAppliedWorkerJobs();
         } catch(err) {
             expect(err instanceof ExpressError).toBeTruthy();
         }
     })
 
-    test('works - invalid data throws error', async function() {
-        try{
-            const data = {
-                status: 'nope'
-            }
-            
-            await Job.findAndFilterJobs(data);
-        } catch(err) {
-            expect(err instanceof NotFoundError).toBeTruthy();
-        }
-    })
-
     test('works - applicants array is attached', async function() {
-        const data = {
-            status: 'pending'
-        }
 
-        const result = await Job.findAndFilterJobs(data);
+        const result = await Job.getAllAppliedWorkerJobs(testUserIds[0]);
         // length of returned result should be 1 to match test data
-        expect(result.length).toBe(1);
+        expect(result.length).toBe(2);
 
         // returned result should contain applicants
-        expect(result[0]).toEqual({
+        expect(result[1]).toEqual({
             "address": "444 j street", 
             "after_image_url": null, 
-            "applicants": [testUserIds[0], testUserIds[1]], 
+            "applicants": [testUserIds[0]], 
             "assigned_to": null, 
             "before_image_url": "http://before3.img", 
             "body": "jb4", 
@@ -145,8 +88,8 @@ describe('find jobs by filter ', function() {
 
 });
 
-describe('find a single job', function() {
-    test('works', async function() {
+describe('find a single job function tests', function() {
+    test('returns a single job matching the job ID argument', async function() {
         // query a single job
         const result = await Job.get(testJobIds[0]);
 
@@ -178,8 +121,8 @@ describe('find a single job', function() {
     })
 })
 
-describe('create a new job', function() {
-    test('works', async function() {
+describe('create a new job function tests', function() {
+    test('creates a new job in the database', async function() {
         // new job data
         const newJobData = {
             title: 'j5', 
@@ -201,14 +144,14 @@ describe('create a new job', function() {
             'before_image_url': 'http://before5.img',
         })
         // query all jobs
-        const result2 = await Job.findAll();
-        // result should now be length of 4 (+1 compared to test data)
-        expect(result2.length).toBe(5);
+        const result2 = await Job.getAllAvailableJobs();
+        // result should now be length of 2 (+1 compared to test data)
+        expect(result2.length).toBe(2);
     })
 })
 
-describe('updates a job', function() {
-    test('works', async function() {
+describe('tests updating a job', function() {
+    test('updates a job and returns the updated job', async function() {
         // new data with which to update job
         const updateData = {
             title: 'updatedj1', 
@@ -268,20 +211,20 @@ describe('updates a job', function() {
     })
 })
 
-describe('removes a job', function() {
-    test('works', async function() {
+describe('tests removing a job from the database', function() {
+    test('removes job from the database', async function() {
         // query all jobs
-        const result = await Job.findAll();
+        const result = await Job.getAllAvailableJobs();
         // expect length of 3 test jobs
-        expect(result.length).toBe(4);
+        expect(result.length).toBe(1);
 
         // remove first test job
-        await Job.remove(testJobIds[0]);
+        await Job.remove(testJobIds[3]);
 
         // query all jobs again
-        const result2 = await Job.findAll();
+        const result2 = await Job.getAllAvailableJobs();
         // length should now be 2
-        expect(result2.length).toBe(3);
+        expect(result2.length).toBe(0);
 
         // try to query first test job by id
         try {

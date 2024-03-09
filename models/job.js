@@ -33,6 +33,11 @@ class Job {
     /** Find all jobs in the database to which worker has already applied */
 
     static async getAllAppliedWorkerJobs(workerId){
+
+        if(!workerId) {
+            throw new ExpressError(`Invalid User ID ${workerId}`);
+        }
+        
         const result = await db.query(
             `SELECT j.id,
                 j.title, 
@@ -62,6 +67,11 @@ class Job {
     /** Find all jobs in the database to which worker has been assigned */
 
     static async getAllAssignedWorkerJobs(workerId){
+
+        if(!workerId) {
+            throw new ExpressError(`Invalid User ID ${workerId}`);
+        }
+
         const result = await db.query(
             `SELECT id,
                     title, 
@@ -87,6 +97,11 @@ class Job {
     /** Find all jobs in the database posted by single user which are pending review */
 
     static async getAllPendingReviewUserJobs(userId){
+
+        if(!userId) {
+            throw new ExpressError(`Invalid User ID ${userId}`);
+        }
+
         const result = await db.query(
             `SELECT id,
                     title, 
@@ -114,6 +129,11 @@ class Job {
      * Joins on applications table 
      */
     static async getAllJobsPostedByUser(userId){
+
+        if(!userId) {
+            throw new ExpressError(`Invalid User ID ${userId}`);
+        }
+
         const result = await db.query(
             `SELECT j.id,
                 j.title, 
