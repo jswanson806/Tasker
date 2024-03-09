@@ -102,17 +102,17 @@ VALUES
 INSERT INTO "jobs" ("title", "body", "status", "address", "posted_by", "assigned_to", "start_time", "end_time", "payment_due", "before_image_url", "after_image_url")
 VALUES
   ('Gardening', 'Need help with gardening tasks', 'pending', '123 Main St', 4, NULL, NULL, NULL, NULL, '', ''),
-  ('House Cleaning', 'Cleaning required for a 3-bedroom house', 'active', '456 Elm St', 1, 3, '2023-06-01 09:00:00', NULL, NULL, '', ''),
-  ('Painting', 'Interior painting for a small apartment', 'complete', '789 Oak St', 7, 3, '2023-06-02 10:00:00', '2023-06-02 15:00:00', 125, '', ''),
+  ('House Cleaning', 'Cleaning required for a 3-bedroom house', 'pending', '456 Elm St', 1, 3, '2023-06-01 09:00:00', NULL, NULL, '', ''),
+  ('Painting', 'Interior painting for a small apartment', 'pending', '789 Oak St', 7, 3, '2023-06-02 10:00:00', '2023-06-02 15:00:00', 125, '', ''),
   ('Dog Walking', 'Need someone to walk my dog twice a day', 'pending', '321 Maple Ave', 10, NULL, NULL, NULL, NULL, '', ''),
-  ('Furniture Assembly', 'Assembly required for new furniture', 'pending review', '987 Pine St', 12, 4, '2023-06-03 14:00:00', '2023-06-03 17:00:00', 75, '', ''),
-  ('Plumbing Repair', 'Fix a leaky faucet in the kitchen', 'active', '567 Walnut St', 1, 3, '2023-06-04 11:00:00', '2023-06-04 12:30:00', NULL, '', ''),
-  ('Lawn Mowing', 'Mow the lawn and trim the hedges', 'complete', '234 Oakwood Dr', 5, 6, '2023-06-05 09:00:00', '2023-06-05 11:00:00', 50, '', ''),
-  ('House Painting', 'Exterior painting for a two-story house', 'active', '456 Birch Ln', 12, 11, '2023-06-06 08:00:00', NULL, NULL, '', ''),
+  ('Furniture Assembly', 'Assembly required for new furniture', 'pending', '987 Pine St', 12, 4, '2023-06-03 14:00:00', '2023-06-03 17:00:00', 75, '', ''),
+  ('Plumbing Repair', 'Fix a leaky faucet in the kitchen', 'pending', '567 Walnut St', 1, 3, '2023-06-04 11:00:00', '2023-06-04 12:30:00', NULL, '', ''),
+  ('Lawn Mowing', 'Mow the lawn and trim the hedges', 'pending', '234 Oakwood Dr', 5, 6, '2023-06-05 09:00:00', '2023-06-05 11:00:00', 50, '', ''),
+  ('House Painting', 'Exterior painting for a two-story house', 'pending', '456 Birch Ln', 12, 11, '2023-06-06 08:00:00', NULL, NULL, '', ''),
   ('Electrical Repair', 'Fix a faulty electrical outlet in the living room', 'pending', '789 Cedar Rd', 4, NULL, NULL, NULL, NULL, '', ''),
-  ('Moving Assistance', 'Help with packing and moving furniture', 'pending review', '123 Elmwood Ave', 1, 3, '2023-06-07 10:00:00', '2023-06-07 14:00:00', 80, '', ''),
-  ('Carpet Cleaning', 'Deep cleaning for carpets in a large office space', 'active', '567 Willow Way', 10, NULL, NULL, NULL, NULL, '', ''),
-  ('Appliance Installation', 'Install a new dishwasher in the kitchen', 'active', '890 Pinecone Rd', 7, 11, '2023-06-08 13:00:00', NULL, NULL, '', '');
+  ('Moving Assistance', 'Help with packing and moving furniture', 'pending', '123 Elmwood Ave', 1, 3, '2023-06-07 10:00:00', '2023-06-07 14:00:00', 80, '', ''),
+  ('Carpet Cleaning', 'Deep cleaning for carpets in a large office space', 'pending', '567 Willow Way', 10, NULL, NULL, NULL, NULL, '', ''),
+  ('Appliance Installation', 'Install a new dishwasher in the kitchen', 'pending', '890 Pinecone Rd', 7, 11, '2023-06-08 13:00:00', NULL, NULL, '', '');
 
 -- Fake review data
 INSERT INTO "reviews" ("title", "body", "stars", "reviewed_by", "reviewed_for")
