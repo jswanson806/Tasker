@@ -11,7 +11,7 @@ const { ensureLoggedIn, ensureIsAdmin } = require('../middleware/auth.js');
  * 
  * Returns { allJobs: [{id, title, body, status, address, posted_by, assigned_to, start_time, end_time, payment_due, before_image, after_image}, ...]}
  */
-router.get("/", ensureLoggedIn, async function(req, res, next) {
+router.get("/", async function(req, res, next) {
     try {
         const allJobs = await Job.getAllAvailableJobs();
         return res.status(200).json({ allJobs: allJobs });
