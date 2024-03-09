@@ -6,8 +6,8 @@ import TaskerApi from '../../api.js';
 // import JobDetails from '../JobDetails.js';
 
 
-const userValue = { user: '{"id": 1, "email": "test@email.com", "isWorker": true}' };
-const userValue2 = { user: '{"id": 1, "email": "test@email.com", "isWorker": false}' };
+const userValue = { user: '{"id": 1, "isWorker": true}' };
+const userValue2 = { user: '{"id": 1, "isWorker": false}' };
 
 const getSingleUser = jest.spyOn(TaskerApi, 'getSingleUser');
 const getAllAvailableJobs = jest.spyOn(TaskerApi, 'getAllAvailableJobs');
