@@ -74,7 +74,7 @@ async function commonBeforeAll() {
 
                 ('j2',
                 'jb2', 
-                'complete', 
+                'pending review', 
                 '222 j street', 
                 $3, 
                 $4, 
