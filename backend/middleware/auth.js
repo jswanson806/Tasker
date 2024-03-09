@@ -18,7 +18,7 @@ function authenticateJWT(req, res, next){
         if(authHeader) {
             const token = authHeader.replace(/^[Bb]earer /, "").trim();
             const payload = jwt.verify(token, SECRET_KEY);
-            res.locals.user = payload;
+            req.user = payload;
         }
         return next();
     } catch(err) {
@@ -32,7 +32,7 @@ function authenticateJWT(req, res, next){
  */
 
 function ensureLoggedIn(req, res, next){
-    if(!res.locals.user) {
+    if(!req.user) {
         const e = new UnauthorizedError();
     
         return next(e);
@@ -50,7 +50,7 @@ function ensureLoggedIn(req, res, next){
 
 function ensureIsWorker(req, res, next){
 
-    if(!res.locals.user || res.locals.user.isWorker !== true) {
+    if(!req.user || req.user.isWorker !== true) {
         const e = new UnauthorizedError() 
         return next(e);
     } else {
@@ -67,7 +67,7 @@ function ensureIsWorker(req, res, next){
 
 function ensureIsAdmin(req, res, next) {
 
-    if(!res.locals.user || res.locals.user.isAdmin !== true) {
+    if(!req.user || req.user.isAdmin !== true) {
         return next(new UnauthorizedError())
     } else {
         return next();
@@ -84,7 +84,7 @@ function ensureIsAdmin(req, res, next) {
 
 function ensureCorrectUserOrAdmin(req, res, next){
 
-    if(!(res.locals.user && (res.locals.user.isAdmin || res.locals.user.id === req.params.id))){
+    if(!(req.user && (req.user.isAdmin || req.user.id === req.params.id))){
         const e = new UnauthorizedError();
     
         return next(e);
