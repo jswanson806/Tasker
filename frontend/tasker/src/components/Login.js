@@ -26,7 +26,7 @@ const Login = () => {
 
     useEffect(() => {
         if(user !== ''){
-            // redirect to dashboard after user 
+            // redirect to default route
             navigate("/");
         }
     }, [user]);

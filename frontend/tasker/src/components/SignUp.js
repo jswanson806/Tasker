@@ -30,7 +30,7 @@ const SignUp = () => {
 
     useEffect(() => {
         if(user !== ''){
-            // redirect to dashboard
+            // redirect to default route
             navigate("/");
         }
     }, [user])
