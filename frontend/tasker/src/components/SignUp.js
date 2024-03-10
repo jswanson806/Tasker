@@ -31,7 +31,7 @@ const SignUp = () => {
     useEffect(() => {
         if(user !== ''){
             // redirect to dashboard
-            navigate("/jobs");
+            navigate("/");
         }
     }, [user])
 
@@ -166,10 +166,10 @@ const SignUp = () => {
                     // destructure user and token from api response
                     const { token, user } = res;
                     // stringify the user info for localStorage
-                    const newUser = JSON.stringify({id: user.id, email: user.email, isWorker: user.isWorker});
+                    const newUser = JSON.stringify({id: user.id, isWorker: user.isWorker});
                     // set token and user in local storage for further auth
-                    await updateToken(token);
-                    await updateUser(newUser);
+                    updateToken(token);
+                    updateUser(newUser);
                 }
 
                 // clear the form data

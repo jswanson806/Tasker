@@ -27,7 +27,7 @@ const Login = () => {
     useEffect(() => {
         if(user !== ''){
             // redirect to dashboard after user 
-            navigate("/jobs");
+            navigate("/");
         }
     }, [user]);
 
@@ -69,7 +69,7 @@ const Login = () => {
             // destructure token and user objects from response
             const { token, user } = res;
             // create stringified user object to store in local storage
-            const newUser = JSON.stringify({id: user.id, email: user.email, isWorker: user.isWorker});
+            const newUser = JSON.stringify({id: user.id, isWorker: user.isWorker});
             
             // update localStorage token and user
             updateToken(token);
