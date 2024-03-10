@@ -28,7 +28,7 @@ const Jobs = () => {
     const [buttons, setButtons] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [triggerEffect, setTriggerEffect] = useState(false);
-    const [notFound, setNotFound] = useState(false);
+    const [notFound, setNotFound] = useState(null);
 
     // view toggles
     const [isWorker, setIsWorker] = useState(false);
@@ -57,15 +57,17 @@ const Jobs = () => {
         // if currUser is populated & create job form is not shown
         if(currUser && !showCreateJob){
 
-            if(!isWorker){ // if user is not worker, get the in progress jobs for this user
+            if(!isWorker){ // if user is not worker, get the jobs posted by this user
                 getAndSetActiveUserJobs(currUser.id);
                 // set buttons for users
                 setButtons(renderUserButtons());
+                // set header for page
                 renderHeader('My Active Jobs');
             } else { // else the user is a worker, get all available jobs
                 getAndSetAllAvailableJobs();
                 // set buttons for workers
                 setButtons(renderWorkerButtons());
+                // set header for page
                 renderHeader('Available Jobs');
             }
         }
@@ -77,7 +79,7 @@ const Jobs = () => {
     ]);
 
 
-    /** Calls functions to create and set job cards, set header, and set state of isLoading
+    /** Calls functions to create and set job cards, state of notFound, and set state of isLoading
      *  
      * Waits for jobs and currUser to be populated
      * 
@@ -88,15 +90,23 @@ const Jobs = () => {
         if(jobs !== jobsInitialState && currUser) {
             // create the job cards
             createJobCards();
+            // update state of notFound
             setNotFound(false);
-            
-        } else {
+        } else { // jobCards state is default
+            // update state of notFound
             setNotFound(true);
         }
-        setIsLoading(false);
         
     }, [ jobs, currUser ]);
 
+    /** Updates state of isLoading once state of notFound is updated */
+    useEffect(() => {
+        // notFound can either be truthy or falsy to trigger isLoading state update
+        if(notFound || notFound === false){
+            // set isLoading false
+            setIsLoading(false);
+        }
+    }, [notFound])
 
 
     /**
