@@ -192,9 +192,14 @@ const ConversationPreviews = () => {
         setTriggerEffect(!triggerEffect);
     }
 
-    if(isLoading) {
-        // default state of the page before asynchronous api calls are complete
-        return (<Spinner>Loading...</Spinner>)
+    if(isLoading){
+        return (
+        <div className="spinner">
+            <Spinner>
+                Loading...
+            </Spinner>
+        </div>
+          )
     }
 
     return (
