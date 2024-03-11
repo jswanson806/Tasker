@@ -68,8 +68,8 @@ router.get("/user/:userId", ensureLoggedIn, async function(req, res, next) {
 
 router.get("/pending-review/:userId", ensureLoggedIn, async function(req, res, next) {
     try {
-        const jobsPostedByUserId = await Job.getAllPendingReviewUserJobs(req.params.userId);
-        return res.status(200).json({ jobs: jobsPostedByUserId });
+        const jobsPendingReview = await Job.getAllPendingReviewUserJobs(req.params.userId);
+        return res.status(200).json({ pendingReviewUserJobs: jobsPendingReview });
     } catch(err) {
         return next(err);
     }
