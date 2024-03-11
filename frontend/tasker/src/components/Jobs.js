@@ -6,9 +6,6 @@ import CreateJob from './CreateJob.js';
 import {
     Spinner, 
     Button, 
-    Modal,
-    ModalHeader,
-    ModalBody,
     Row,
     Container
 } from "reactstrap";
@@ -90,24 +87,9 @@ const Jobs = () => {
         if(jobs !== jobsInitialState && currUser) {
             // create the job cards
             createJobCards();
-            // update state of notFound
-            setNotFound(false);
-        } else { // jobCards state is default
-            // update state of notFound
-            setNotFound(true);
         }
         
     }, [ jobs, currUser ]);
-
-    /** Updates state of isLoading once state of notFound is updated */
-    useEffect(() => {
-        // notFound can either be truthy or falsy to trigger isLoading state update
-        if(notFound || notFound === false){
-            // set isLoading false
-            setIsLoading(false);
-        }
-    }, [notFound])
-
 
     /**
     * Fetches data for a single user from the Tasker API based on the given ID.
@@ -165,16 +147,15 @@ const Jobs = () => {
      * Updates state of jobs with the response array of jobs
      */
     async function getAndSetActiveUserJobs(userId){
-        setIsLoading(true);
+        resetStates();
         try {
             const inProgressUserJobs = await TaskerApi.getActiveUserJobs(userId);
-            if(!inProgressUserJobs.jobs) {
-                setJobs(jobsInitialState);
-                setJobCards(jobCardsInitialState);
-            } else {
+            if(inProgressUserJobs.jobs.length > 0) {
                 const { jobs } = inProgressUserJobs;
                 setJobs(jobs);
+                setNotFound(false);
             };
+            setIsLoading(false);
         } catch(err) {
             console.error(err);
         }
@@ -188,16 +169,15 @@ const Jobs = () => {
      * Updates state of jobs with the response array of jobs
     */
     async function getAndSetPendingReviewUserJobs(userId){
-        setIsLoading(true);
+        resetStates();
         try {
             const allPendingReviewUserJobs = await TaskerApi.getPendingReviewUserJobs(userId);
-            if(!allPendingReviewUserJobs.pendingReviewUserJobs) {
-                setJobs(jobsInitialState);
-                setJobCards(jobCardsInitialState);
-            } else {   
+            if(allPendingReviewUserJobs.pendingReviewUserJobs.length > 0) {  
                 const { pendingReviewUserJobs } = allPendingReviewUserJobs;
                 setJobs(pendingReviewUserJobs);
+                setNotFound(false);
             }
+            setIsLoading(false);
         } catch(err) {
             console.error(err);
         }
@@ -211,11 +191,15 @@ const Jobs = () => {
      * Updates state of jobs with the response array of jobs
     */
     async function getAndSetAllAvailableJobs(){
-        setIsLoading(true);
+        resetStates();
         try {
             const allAvailableJobs = await TaskerApi.getAllAvailableJobs();
-            const { allJobs } = allAvailableJobs;
-            setJobs(allJobs);
+            if(allAvailableJobs.allJobs.length > 0){
+                const { allJobs } = allAvailableJobs;
+                setJobs(allJobs);
+                setNotFound(false);
+            }
+            setIsLoading(false);
         } catch(err) {
             console.error(err);
         }
@@ -229,16 +213,15 @@ const Jobs = () => {
      * Updates state of jobs with the response array of jobs
     */
     async function getAndSetAllAppliedWorkerJobs(workerId){
-        setIsLoading(true);
+        resetStates();
         try {
             const allAppliedJobs = await TaskerApi.getAppliedWorkerJobs(workerId);
-            if(!allAppliedJobs.appliedJobs){
-                setJobs(jobsInitialState);
-                setJobCards(jobCardsInitialState);
-            } else {
+            if(allAppliedJobs.appliedJobs.length > 0){
                 const { appliedJobs } = allAppliedJobs;
                 setJobs(appliedJobs);
+                setNotFound(false);
             }
+            setIsLoading(false);
         } catch(err) {
             console.error(err);
         }
@@ -252,19 +235,25 @@ const Jobs = () => {
      * Updates state of jobs with the response array of jobs
     */
     async function getAndSetAllAssignedWorkerJobs(workerId){
-        setIsLoading(true);
+        resetStates();
         try {
             const allAssignedWorkerJobs = await TaskerApi.getAllAssignedWorkerJobs(workerId);
-            if(!allAssignedWorkerJobs.assignedJobs){
-                setJobs(jobsInitialState);
-                setJobCards(jobCardsInitialState);
-            } else {
+            if(allAssignedWorkerJobs.assignedJobs.length > 0){
                 const { assignedJobs } = allAssignedWorkerJobs;
                 setJobs(assignedJobs);
+                setNotFound(false);
             }
+            setIsLoading(false);
         } catch(err) {
             console.error(err);
         }
+    }
+
+    const resetStates = () => {
+        setIsLoading(true);
+        setNotFound(true);
+        setJobs(jobsInitialState);
+        setJobCards(jobCardsInitialState);
     }
  
     const toggleCreateJob = () => {
