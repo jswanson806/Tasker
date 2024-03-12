@@ -1,7 +1,19 @@
 # Tasker
 
 ### Description:
-Tasker is an online marketplace where you can register as a user to post jobs and hire workers or register as a worker to accept and work jobs. Users post jobs and include a "before" image. Users can assign a specific worker from a list of those who have applied to work their job. The worker assigned will receive an automatic message with the address of that job. Once assigned, the worker can message back-and-forth with the user who created the job. Once the worker completes the job, they upload an "after" image. Once the user who created the job has reviewed the work done by the worker, they will pay the user via a pre-made Stripe checkout page.
+Tasker is an online marketplace where you can register as a "user" to post jobs and hire workers or register as a "worker" to apply for jobs. Users post jobs and include a "before" image. Users can assign a specific worker from a list of those who have applied to work their job. The worker assigned will receive an automatic message with the address of that job. Once assigned, the worker can message back-and-forth with the user who created the job. Once the worker completes the job, they upload an "after" image. Once the user who created the job has reviewed the work done by the worker, they will pay the user via a pre-made Stripe checkout page.
+
+### Best Way to See How it Works
+Since the core functionality of the application relies on asyncronous interactions between registered users and workers, the best way to test the application for yourself is to create two accounts, one as a "user" and one as a "worker."
+ - Start with the user account and create a new job with a title you will recognize
+ - Login to your worker account and apply to the job you posted from your user account
+ - Login to your user account and assign yourself to the job from the list of applicants
+ - Login to your worker account and go to "Messages" to view the automatic message that was sent when you were assigned to the job
+ - Reply to the message
+ - Go to "Jobs" and select "My Jobs"
+ - Select the job to begin work, end work, or to message the user directly from the job details
+ - Once work is complete, login to your user account and select "Pending Review"
+ - Check the before and after images and select "Review" to initiate the payment process
 
 ### The Goal 
 Create a full-stack replica of the popular application, Task Rabbit
