@@ -114,19 +114,6 @@ VALUES
   ('Carpet Cleaning', 'Deep cleaning for carpets in a large office space', 'pending', '567 Willow Way', 10, NULL, NULL, NULL, NULL, '', ''),
   ('Appliance Installation', 'Install a new dishwasher in the kitchen', 'pending', '890 Pinecone Rd', 7, 11, '2023-06-08 13:00:00', NULL, NULL, '', '');
 
--- Fake review data
-INSERT INTO "reviews" ("title", "body", "stars", "reviewed_by", "reviewed_for")
-VALUES
-  ('Great Job!', 'The worker did an excellent job.', 5, 1, 2),
-  ('Punctual and Professional', 'The worker arrived on time and was very professional.', 4, 4, 3),
-  ('Average Service', 'The service provided was average.', 3, 4, 6),
-  ('Highly Recommended!', 'I would highly recommend this worker. They exceeded my expectations.', 5, 7, 3),
-  ('Good Service', 'The service provided was good. The worker was polite and efficient.', 4, 5, 9),
-  ('Could be Better', 'There is room for improvement. The worker needs to pay more attention to detail.', 2, 4, 11),
-  ('Exceptional Work!', 'The worker went above and beyond. I am extremely satisfied with their service.', 5, 10, 6),
-  ('Average Performance', 'The worker did an average job. There were no major issues, but nothing exceptional either.', 3, 4, 8),
-  ('Not Recommended', 'I had a negative experience with this worker. I would not recommend their services.', 1, 12, 9);
-
 -- Fake conversation data
 INSERT INTO "conversations" ("id", "created_at")
 VALUES 

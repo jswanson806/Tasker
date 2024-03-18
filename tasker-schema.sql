@@ -24,15 +24,6 @@ CREATE TABLE jobs (
   after_image_url TEXT
 );
 
-CREATE TABLE reviews (
-  id SERIAL PRIMARY KEY,
-  title VARCHAR,
-  body VARCHAR,
-  stars INTEGER,
-  reviewed_by INTEGER REFERENCES users (id) ON DELETE CASCADE,
-  reviewed_for INTEGER REFERENCES users (id) ON DELETE CASCADE
-);
-
 CREATE TABLE conversations (
   id TEXT PRIMARY KEY,
   created_at TIMESTAMP NOT NULL
@@ -53,15 +44,3 @@ CREATE TABLE applications (
   applied_by INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
   applied_to INTEGER NOT NULL REFERENCES jobs (id) ON DELETE CASCADE
 );
-
-
-CREATE TABLE payouts (
-  id SERIAL PRIMARY KEY,
-  trans_to INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-  trans_by INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-  subtotal FLOAT NOT NULL,
-  tax FLOAT NOT NULL,
-  tip FLOAT NOT NULL,
-  total FLOAT NOT NULL,
-  created_at TIMESTAMP NOT NULL
-)
