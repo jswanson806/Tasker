@@ -1,4 +1,4 @@
-# Capstone_2
+# Tasker
 
 ### Link to Hosted Application
 ## [Tasker](https://tasker-market.surge.sh)
