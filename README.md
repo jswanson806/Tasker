@@ -7,15 +7,15 @@
 Tasker is an online marketplace where you can register as a "user" to post jobs and hire workers or register as a "worker" to apply for jobs. Users post jobs and include a "before" image. Users can assign a specific worker from a list of those who have applied to work their job. The worker assigned will receive an automatic message with the address of that job. Once assigned, the worker can message back-and-forth with the user who created the job. Once the worker completes the job, they upload an "after" image. Once the user who created the job has reviewed the work done by the worker, they will pay the user via a pre-made Stripe checkout page.
 
 ### Explore the App
-Demo **User** Login:
-user@demo.com
-Demo User Password:
-D3monstr@tion
+Demo **User** Login:  
+`user@demo.com`  
+Demo User Password:  
+`D3monstr@tion`  
 
-Demo **Worker** Login:
-worker@demo.com
-Demo Worker Password:
-D3monstr@tion
+Demo **Worker** Login:  
+`worker@demo.com`  
+Demo Worker Password:  
+`D3monstr@tion`  
 
 ### The Goal 
 Create a full-stack replica of the popular application, Task Rabbit
