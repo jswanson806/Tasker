@@ -34,6 +34,17 @@ API's used:
 - AWS S3 (image storage) - [AWS S3](https://aws.amazon.com/pm/serv-s3/?trk=fecf68c9-3874-4ae2-a7ed-72b6d19c8034&sc_channel=ps&ef_id=Cj0KCQjwm66pBhDQARIsALIR2zBcUaME3BSaFR5tJblTdI9SVPKhC9IRmTRzI0X1CmUlSgD5QKUFSv8aAk0NEALw_wcB:G:s&s_kwcid=AL!4422!3!536452728638!e!!g!!aws%20s3!11204620052!112938567994)
 - Stripe (payments) - [Stripe](https://stripe.com/docs/api)
 
+### My Experience With This Project
+This was my first experience building a full-stack application from scratch and I learned so much. It quickly became clear that the scope of the project was much bigger than my original intention, and that was exciting! Before this project, my experience with React was limited. This project gave me the opportunity to strengthen my React skills while simultanesouly making me a better backend developer. 
+
+The most challenging part of this project was creating two sides of the same application that would be used by "workers" and "users." Ensuring the logic was structured and abstracted in a way that made sense was a delightful puzzle.
+
+### How Would I Improve Upon This Project
+- Adding reviews where "users" review the "workers" who complete their jobs
+- Users would be able to view the "workers" review history before assigning them to the job to which they applied
+- Account management dashboards where "users" and "workers" can view payment history and change account details
+- Email notifications for things like new messages, accepted applications, new applications, etc...
+
 ### Application Flowchart
 ![Flow Chart](https://drive.google.com/uc?export=view&id=154CtWaYhWIYFQzD7j3bw5R7sZd44M_tC)
 
