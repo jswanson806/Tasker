@@ -36,4 +36,4 @@ API's used:
 - Stripe (payments) - [Stripe](https://stripe.com/docs/api)
 
 ### Application Flowchart
-[Flow Chart](https://drive.google.com/file/d/154CtWaYhWIYFQzD7j3bw5R7sZd44M_tC/view?usp=sharing)
+![Flow Chart](https://drive.google.com/uc?export=view&id=154CtWaYhWIYFQzD7j3bw5R7sZd44M_tC)
