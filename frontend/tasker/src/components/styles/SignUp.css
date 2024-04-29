@@ -10,11 +10,12 @@
 }
 
 .signup-message-container {
-  display: block;
-  background-color: #040404; /* Set a background color for the image container */
+  display: flex;
+  background-color: #040404; 
   padding: 20px;
-  padding-bottom: 15vh;
-  margin-top: -50px;
+  padding-bottom: 40px;
+  justify-content: center;
+  align-items: stretch;
 }
 
 .signup-message-header{
