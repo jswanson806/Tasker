@@ -1,27 +1,27 @@
 .login-container {
   display: flex;
   align-items: stretch;
-  height: 100vh; /* Make the login container full height */
+  height: 100vh; 
 }
 
 .login-message-container,
 .login-form-container {
-  flex: 1; /* Each container takes up half of the available space */
+  flex: 1; 
 }
 
 .login-message-container {
-  display: block;
-  background-color: #040404; /* Set a background color for the image container */
+  display: flex;
+  background-color: #040404; 
   padding: 20px;
-  padding-bottom: 40px
+  padding-bottom: 40px;
+  justify-content: center;
+  align-items: stretch;
 }
 
 .login-message-container p {
-  display: relative;
   font-size: 60px;
-  color: whitesmoke; /* Ensure the image doesn't exceed its container */
+  color: whitesmoke;
   margin-bottom: auto;
-
 }
 
 .login-form-container {
@@ -30,7 +30,7 @@
   text-align: center;
   justify-content: center;
   align-items: center;
-  padding: 20px; /* Add padding for spacing */
+  padding: 20px; 
   margin-bottom: 25vh;
 }
 
@@ -57,11 +57,11 @@
 /* Media query for smaller screens */
 @media screen and (max-width: 768px) {
   .login-container {
-    flex-direction: column; /* Stack elements vertically on smaller screens */
+    flex-direction: column; 
   }
 
   .login-form-container {
-    flex: 1; /* Take up the entire width of the screen */
-    padding: 20px; /* Add padding for spacing */
+    flex: 1; 
+    padding: 20px; 
   }
 }
