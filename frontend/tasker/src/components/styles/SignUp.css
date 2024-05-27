@@ -13,21 +13,12 @@
   display: flex;
   background-color: #040404; 
   padding: 20px;
-  padding-bottom: 40px;
   justify-content: center;
   align-items: stretch;
 }
 
 .signup-message-header{
-  display: relative;
   font-size: 60px;
-  color: whitesmoke; /* Ensure the image doesn't exceed its container */
-  margin-bottom: auto;
-}
-
-.signup-message-details {
-  display: relative;
-  font-size: 30px;
   color: whitesmoke;
   margin-bottom: auto;
 }

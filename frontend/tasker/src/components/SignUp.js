@@ -189,9 +189,6 @@ const SignUp = () => {
 
                 {/* render title depending on state of isWorker */}
                 <p className="signup-message-header">Welcome to Tasker!</p>
-                <p className="signup-message-details">
-                    Post Jobs as a {<span style={{color: "#14A2B8"}}>User</span>}<br></br> Find Jobs as a {<span style={{color: "#FFC008"}}>Worker</span>}
-                </p>
             </div>
 
             <div className="signup-form-container">
