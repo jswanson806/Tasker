@@ -16,3 +16,7 @@
     padding: 20px;
     transition: max-height 0.2s ease-in-out;
 }
+
+.button {
+    width: fit-content;
+}

@@ -70,7 +70,7 @@
 }
 
 .button {
-    width: 20vw;
+    width: fit-content;
 }
 
 .jobDetails-text {
